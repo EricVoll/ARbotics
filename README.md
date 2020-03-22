@@ -58,6 +58,7 @@ Alternative we can use MoveIt! in ROS1
 Includes the bridge to Unity.
 
 ### Useful link:
+[Really nice Project ROS/Docker ETH](https://github.com/gramaziokohler/ros_docker)
 [Writing Bash Scripts:](https://devhints.io/bash)
 [ROS1 Training](https://industrial-training-master.readthedocs.io/en/melodic/_source/session1/Installing-Existing-Packages.html)
 [Unix Shell Overview](https://swcarpentry.github.io/shell-novice/reference/)
