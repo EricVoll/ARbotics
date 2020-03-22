@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  ros1_sha:
+    build: ./ros1_ros-sharp
+    image: ros1_ros-sharp:1.0
+    network_mode: host
+    container_name: ros1_sha
+    #volumes:
+    #  - ./share_volume:/home/share_volume
+  ros2_exa:
+    build: ./ros2_example
+    image: ros2_example:1.0
+    network_mode: host
+    container_name: ros2_exa
+    #volumes:
+    # - ./share_volume:/home/share_volume
+  ros2_mov:
+    build: ./ros2_moveit
+    image: ros2_moveit:1.0
+    network_mode: host
+    container_name: ros2_mov
+    #volumes:
+    #  - ./share_volume:/home/share_volume
+    #environment:
+    # - "ROS_HOSTNAME=ros-2"
+    #command:
+    #  - ros2 run 
+
