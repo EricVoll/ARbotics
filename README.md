@@ -18,12 +18,14 @@
 ```docker ps``` let's you see all runing containers
 '-a' even stoped ones
 
-```docker stop ID/Name```
-```docker rm ID/Name`` `
+```docker stop ID/Name```  
+```docker rm ID/Name```
 
 ```docker exec ID/Name```
 ```docker exec -it ID/Name bash ``` Executes a second shell in running container
 
+```sudo docker system prune``` deletes all cache files 
+`-a` also all images
 ## Structure
 ### Design Considerations ROS
 Every ROS-node will belong to a single container. 
@@ -39,12 +41,14 @@ Simplest way to go is copy for example `ros2_example` folder and rename it.
 (Make sure to use the `FROM` command to create new base image)  
 Create and `newNode_install.sh` file in this folder.  
 Build the container and run it with the volume mapped so you can modify the `newNode_install.sh` with VSCode. (Use argument `docker run -v`) Do the bugfixing and debugging until the new node works. Therefore use the `newNode_install.sh` for all installation purposes. (`chmod +x newNode_install.sh`). When finished simply add the script to the Dockerfile (see for example ros2_gazebo). If you want to develop a ROS node to the same simply map a workspace between the node and your host PC with the `docker run -V` and do the development in VSCode. 
-
+### Dockerfile 
+[Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+[Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
 ### Docker compose up/down
 The compose command builts and runs all services/container specified in the docker-compose.yml
 Similar to ansible
 `docker-compose up -d`
-[Documentation](https://docs.docker.com/compose/compose-file/)
+[docker-compose Reference](https://docs.docker.com/compose/compose-file/)
 
 #### ros1_2_bridge 
 Is the bridge between ROS1 and ROS2. Problem we have to write interface nodes in ROS1 aswell as ROS2 in this docker-container

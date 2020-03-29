@@ -61,5 +61,4 @@ RUN  cd /home && mkdir /home/ws_ros2
 RUN  export COLCON_WS=/home/ws_ros2 
 RUN  mkdir  /home/ws_ros2/src
 
-ENTRYPOINT ["bash"] 
 WORKDIR /home

@@ -58,6 +58,4 @@ RUN /bin/bash -c  "source /opt/ros/melodic/setup.bash && \
 RUN /bin/bash -c  "echo 'source ~/catkin_ws/devel/local_setup.bash' >>  ~/.bashrc " 
 # RUN /bin/bash -c  " source ~/catkin_ws/devel/setup.bash"
 
-
-ENTRYPOINT ["bash"] 
 WORKDIR /home
