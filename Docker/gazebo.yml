@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  gazebo:
+    build:
+      context: ./gazebo/make 
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
