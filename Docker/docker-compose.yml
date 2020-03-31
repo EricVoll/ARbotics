@@ -1,28 +1,50 @@
 version: '3.7'
 services:
+
+  ros1_base:
+    build: ./ros1_base
+    image: ros1_base:1.0
+    network_mode: host
+    container_name: ros1_base
+    tty: true
+    command:
+      - roscore
+
+#starts the ros-sharp bridge
   ros1_sha:
+    depends_on: [ros1_base]
     build: ./ros1_ros-sharp
     image: ros1_ros-sharp:1.0
     network_mode: host
     container_name: ros1_sha
-    #volumes:
-    #  - ./share_volume:/home/share_volume
-  ros2_exa:
-    build: ./ros2_example
-    image: ros2_example:1.0
+    tty: true
+# command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true" 
+
+#   - roslaunch
+#   - --wait
+#   - file_server
+#   - ros_sharp_communication.launch 
+
+#starts the UR
+#roslaunch ur_gazebo ur5.launch limited:=true
+#roslaunch ur5_moveit_config moveit_rviz.launch config:=true
+  ros1_ur:
+    depends_on: [ros1_base]
+    build: ./ros1_ur
+    image: ros1_ur:1.0
     network_mode: host
-    container_name: ros2_exa
-    #volumes:
-    # - ./share_volume:/home/share_volume
-  ros2_mov:
-    build: ./ros2_moveit
-    image: ros2_moveit:1.0
+    container_name: ros1_ur
+    tty: true
+    command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true" 
+
+#container runs script generalizing moveit publishes topic
+  ros1_moveit:
+    depends_on: [ros1_base]
+    build: ./ros1_moveit
+    image: ros1_moveit:1.0
     network_mode: host
-    container_name: ros2_mov
-    #volumes:
-    #  - ./share_volume:/home/share_volume
-    #environment:
-    # - "ROS_HOSTNAME=ros-2"
-    #command:
-    #  - ros2 run 
+    container_name: ros1_moveit
+    tty: true
+    command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && rosrun --wait test_moveit_interface moveit_test.py"
+
 
