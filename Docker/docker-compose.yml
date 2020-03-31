@@ -47,4 +47,12 @@ services:
     tty: true
     command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && rosrun --wait test_moveit_interface moveit_test.py"
 
+#container runs script generalizing moveit publishes topic
+  ros1_gazebo:
+    build: ./ros1_gazebo
+    image: ros1_gazebo:1.0
+    network_mode: host
+    container_name: ros1_gazebo
+    tty: true
+    command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_gazebo ur5.launch limited:=true"
 

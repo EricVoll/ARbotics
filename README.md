@@ -66,3 +66,8 @@ Includes the bridge to Unity.
 [Writing Bash Scripts:](https://devhints.io/bash)
 [ROS1 Training](https://industrial-training-master.readthedocs.io/en/melodic/_source/session1/Installing-Existing-Packages.html)
 [Unix Shell Overview](https://swcarpentry.github.io/shell-novice/reference/)
+
+
+# Literature:
+Docker and ROS Tutorial: https://link.springer.com/chapter/10.1007/978-3-319-54927-9_9
+
