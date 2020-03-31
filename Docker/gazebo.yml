@@ -2,7 +2,9 @@ version: "3.7"
 services:
   gazebo:
     build:
-      context: ./gazebo/make 
+      context: ./gazebo/make
       dockerfile: Dockerfile
       args:
         buildno: 1
+    ports:
+      - "6080:80"
