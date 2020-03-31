@@ -56,19 +56,17 @@ namespace RosSharp.RosBridgeClient
         {
             message.header.Update();
 
-            Logger.Log("-------------------New Message---------------------");
-
             for (int i = 0; i < JoyAxisReaders.Length; i++)
             {
                 message.axes[i] = JoyAxisReaders[i].Read();
-                Logger.Log($"{JoyAxisReaders[i].Name}: {message.axes[i]}");
+                //Logger.Log($"{JoyAxisReaders[i].Name}: {message.axes[i]}");
             }
 
             for (int i = 0; i < JoyButtonReaders.Length; i++)
             {
                 message.buttons[i] = (i == 0 || (JoyButtonReaders[i].Read()) ? 1 : 0);
 
-                Logger.Log($"{JoyButtonReaders[i].Name}: {message.buttons[i]}");
+                //Logger.Log($"{JoyButtonReaders[i].Name}: {message.buttons[i]}");
             }
 
             Publish(message);
