@@ -21,7 +21,7 @@ echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc
 
 
 # #soruce workspace
-# source /home/catkin_ws/devel/setup.bash
+source /home/catkin_ws/devel/setup.bash
 # sudo apt-get install ros-melodic-moveit
 # sudo docker build -t ros1_ros-sharp:1.0 .
 #sudo docker run -it --network=host ros1_ros-sharp:1.0

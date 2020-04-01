@@ -64,4 +64,8 @@ RUN /bin/bash -c cd ~/ros_ws/ && \
 
 # COPY ./ur_install.sh /
 # RUN chmod +x /ur_install.sh && /ur_install.sh
-# WORKDIR /home
+# 
+RUN echo "working"
+COPY ./ur_install.sh /
+RUN chmod +x /ur_install.sh && /ur_install.sh
+WORKDIR /home

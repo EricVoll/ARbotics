@@ -14,7 +14,7 @@ RUN /bin/bash -c  "source /opt/ros/melodic/setup.bash && \
                   cd  /home/catkin_ws && \
                   catkin_make -DCMAKE_BUILD_TYPE=Release "
 
-SHELL ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash"] 
+#SHELL ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash"] 
 
 # RUN /bin/bash -c  " source ~/catkin_ws/devel/setup.bash"
 

@@ -7,8 +7,7 @@ services:
     network_mode: host
     container_name: ros1_base
     tty: true
-    command:
-      - roscore
+    command: roscore
 
 #starts the ros-sharp bridge
   ros1_sha:
@@ -18,12 +17,7 @@ services:
     network_mode: host
     container_name: ros1_sha
     tty: true
-# command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true" 
-
-#   - roslaunch
-#   - --wait
-#   - file_server
-#   - ros_sharp_communication.launch 
+    command: ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash && /home/ros-sharp_ws/devel/setup.bash && roslaunch --wait file_server ros_sharp_communication.launch"]
 
 #starts the UR
 #roslaunch ur_gazebo ur5.launch limited:=true
@@ -36,7 +30,6 @@ services:
     container_name: ros1_ur
     tty: true
     command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true" 
-
 #container runs script generalizing moveit publishes topic
   ros1_moveit:
     depends_on: [ros1_base]
@@ -47,12 +40,12 @@ services:
     tty: true
     command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && rosrun --wait test_moveit_interface moveit_test.py"
 
-#container runs script generalizing moveit publishes topic
-  ros1_gazebo:
-    build: ./ros1_gazebo
-    image: ros1_gazebo:1.0
-    network_mode: host
-    container_name: ros1_gazebo
-    tty: true
-    command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_gazebo ur5.launch limited:=true"
+# #container runs script generalizing moveit publishes topic
+#   ros1_gazebo:
+#     build: ./ros1_gazebo
+#     image: ros1_gazebo:1.0
+#     network_mode: host
+#     container_name: ros1_gazebo
+#     tty: true
+#     command: bash -c "source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_gazebo ur5.launch limited:=true"
 
