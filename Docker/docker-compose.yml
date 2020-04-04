@@ -6,7 +6,7 @@ services:
     container_name: ros1_base
     tty: true
     networks:
-      - bridge 
+      - rosnet
     command: 
       - "/bin/bash" 
       - "-c" 
@@ -21,14 +21,14 @@ services:
     environment:
       - "ROS_MASTER_URI=http://ros1_base:11311" 
     networks:
-      - bridge 
+      - rosnet 
     restart: always
     command: 
       - "/bin/bash" 
       - "-c" 
       - 'source /opt/ros/melodic/setup.bash && source /home/ros-sharp_ws/devel/setup.bash && roslaunch --wait file_server ros_sharp_communication.launch'
-# roslaunch ur_gazebo ur5.launch limited:=true
-# roslaunch ur5_moveit_config moveit_rviz.launch config:=true
+
+#launches ur5 in gazebo without vizu
   ros1_ur:
     depends_on: [ros1_base]
     build: ./ros1_ur
@@ -38,7 +38,7 @@ services:
     environment:
       - "ROS_MASTER_URI=http://ros1_base:11311" 
     networks:
-      - bridge 
+      - rosnet
     ports:
       - 11311:11311
       - 9090:9090
@@ -46,8 +46,25 @@ services:
     command: 
       - "/bin/bash" 
       - "-c" 
-      - 'source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true'
-# #container runs script generalizing moveit publishes topic
+      - 'source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur_gazebo ur5.launch limited:=true gui:=false' 
+#launches ur5 moveit backbone
+  ros1_ur2:
+    depends_on: [ros1_base]
+    build: ./ros1_ur
+    image: ros1_ur:1.0
+    container_name: ros1_ur2
+    tty: true
+    environment:
+      - "ROS_MASTER_URI=http://ros1_base:11311" 
+    networks:
+      - rosnet 
+    restart: always
+    command: 
+      - "/bin/bash" 
+      - "-c" 
+      - 'source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch --wait ur5_moveit_config ur5_moveit_planning_execution.launch limited:=true' 
+
+#start a /euclidean_goal_pose listener
   ros1_moveit:
     depends_on: [ros1_base]
     build: ./ros1_moveit
@@ -57,29 +74,30 @@ services:
     environment:
       - "ROS_MASTER_URI=http://ros1_base:11311" 
     networks:
-      - bridge
+      - rosnet
     restart: always
     command: 
       - "/bin/bash" 
       - "-c" 
       - 'source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && rosrun test_moveit_interface moveit_test.py' 
 
-#gazebo container
-  gazebo:
-    build: ./ros1_gazebo
-    image: ros1_gazebo:1.0
-    container_name: ros1_gazebo
-    tty: true
-    environment:
-      - "ROS_MASTER_URI=http://ros1_base:11311" 
-    networks:
-      - bridge 
-    command:
-      - "/bin/bash" 
-      - "-c" 
-      - 'source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_gazebo ur5.launch limited:=true'
-    ports:
-      - 6079:80   #port on local host: port in container
+# #gazebo container
+#   gazebo:
+#     build: ./ros1_gazebo
+#     image: ros1_gazebo:1.0
+#     container_name: ros1_gazebo
+#     tty: true
+#     environment:
+#       - "ROS_MASTER_URI=http://ros1_base:11311" 
+#     networks:
+#       - bridge 
+#     command:
+#       - "/bin/bash" 
+#       - "-c" 
+#       - 'source /opt/ros/melodic/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_gazebo ur5.launch limited:=true'
+#     ports:
+#       - 6079:80   #port on local host: port in container
 
 networks:
-  bridge:
+  rosnet:
+    driver: bridge
