@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/jonas/Documents/catkin_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_control/include/**",
+        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_example_controllers/include/**",
+        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_gripper/include/**",
+        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_hw/include/**",
+        "/home/jonas/Documents/catkin_ws/src/test_moveit_interface/include/**",
+        "/home/jonas/Documents/catkin_ws/src/universal_robot/ur_kinematics/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ sudo apt-get install -y apt-utils
 mkdir -p /home/catkin_ws/src
 cd /home/catkin_ws/src
 git clone -b $ROS_DISTRO-devel https://github.com/ros-industrial/universal_robot.git
-cd home/catkin_ws/
+cd /home/catkin_ws/
 rosdep update
 rosdep install --rosdistro $ROS_DISTRO --ignore-src --from-paths src -y
 # building

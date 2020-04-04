@@ -398,13 +398,20 @@ def rossharp_listener():
 	#rospy.init_node('rossharp_listener', anonymous=True)
 	rospy.Subscriber("euclidean_goal_pose", geometry_msgs.msg.Pose , move_manipulator, robot)
 	print('Started listing to /euclidean_goal_pose')
-	while True:
-	 	rospy.spin()
+	rate = rospy.Rate(10)
+	while not rospy.is_shutdown():
+		hello_str = "hello world %s" % rospy.get_time()
+		rospy.loginfo(hello_str)
+		rospy.spin()
+		rate.sleep()
 
 
 if __name__ == '__main__':
 	"""
 	Use this for testing if everything works properly! 
 	"""
-	rossharp_listener()
-
+	try:
+		rossharp_listener()
+	except rospy.ROSInterruptException:
+		pass
+	
