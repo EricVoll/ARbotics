@@ -42,7 +42,7 @@ RUN cd ~/ros_ws/ && \
 # Updating ROSDEP and installing dependencies
 RUN cd ~/ros_ws && \
     rosdep update && \
-    rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
+    rosdep install --from-paths src --ignore-src --rosdistro=melodic -y
 
 # # Sourcing
 RUN cd ~/ros_ws/ && \
