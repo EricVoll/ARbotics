@@ -2,13 +2,16 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.UI
+// Import for now
+using Microsoft.MixedReality.Toolkit.UI;
+
+namespace Microsoft.MixedReality.Toolkit.RobotVisualizer
 {
     /// <summary>
     /// Renders a background mesh for a tool tip using a mesh renderer
     /// If the mesh has an offset anchor point you will get odd results
     /// </summary>
-    [AddComponentMenu("Scripts/MRTK/SDK/ToolTipBackgroundMesh")]
+    [AddComponentMenu("Scripts/MRTK/SDK/PlotBackgroundMesh")]
     public class PlotBackgroundMesh : MonoBehaviour, IPlotBackground
     {
         [SerializeField]

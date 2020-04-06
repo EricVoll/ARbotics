@@ -130,6 +130,10 @@ namespace Microsoft.MixedReality.Toolkit.RobotVisualizer
         private GameObject label;
 
         [SerializeField]
+        [Tooltip("GameObject Canvas that is displayed on the tooltip.")]
+        private GameObject contentCanvas;
+
+        [SerializeField]
         [Tooltip("Parent of the Text and Background")]
         private GameObject contentParent;
 
@@ -369,7 +373,7 @@ namespace Microsoft.MixedReality.Toolkit.RobotVisualizer
             ValidateHeirarchy();
 
             label.EnsureComponent<TextMeshPro>();
-            gameObject.EnsureComponent<ToolTipConnector>();
+            gameObject.EnsureComponent<ExternalPlotConnector>();
 
             // Get our line if it exists
             if (toolTipLine == null)
@@ -464,9 +468,22 @@ namespace Microsoft.MixedReality.Toolkit.RobotVisualizer
                     // Get the world scale of the text
                     // Convert that to local scale using the content parent
                     Vector3 localScale = Vector3.Scale(cachedLabelText.transform.lossyScale / contentScale, cachedLabelText.textBounds.size);
+
                     localContentSize.x = localScale.x + backgroundPadding.x;
                     localContentSize.y = localScale.y + backgroundPadding.y;
+
+                    if (contentCanvas != null)
+                    {
+                        // Get the world scale of the text
+                        // Convert that to local scale using the content parent
+                        RectTransform ccRectTransform = contentCanvas.GetComponent<RectTransform>();
+                        //     float h = canvas.GetComponent<RectTransform>().rect.height;
+                        //     float w = canvas.GetComponent<RectTransform>().rect.width;
+                        localContentSize.x = Mathf.Max(ccRectTransform.rect.width + backgroundPadding.x, localContentSize.x);
+                        localContentSize.y += (float)1.5 * ccRectTransform.rect.height;
+                    }
                 }
+
 
                 // Now that we have the size of our content, get our pivots
                 ToolTipUtility.GetAttachPointPositions(ref localAttachPointPositions, localContentSize);
