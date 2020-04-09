@@ -376,3 +376,66 @@ To find available packages, use:
 ```
 apt search ros-melodic
 ```
+
+# Jonas lernt networking in Docker und unter Linux:
+start of with docker commands  
+
+```
+docker networks ls
+docker container ls
+docker network inspect bridge
+Here take a closer look at the Container you can see all containers that are connected to the bridge and there IPv$Adress
+```
+docker rm -f $(docker ps -aq)       #q options only return the container IDs
+
+create a costum bridge network 
+
+docker network create --driver=bridge CostumBridgeNetworkName
+
+--network=CostumBridgeNetworkName
+
+if created costum bridge network you can ping them with the name of the netwokr 
+this was not possible for the standard bridge network
+
+
+
+docker-compose up builds, (re)creates, starts, and attaches to containers for a service.
+
+Since your images are built and the containers of your service have started, you can then use docker-compose stop and docker-compose start to start/stop your service. This is different from docker-compose down
+
+docker-compose up && docker-compose rm -fsv
+
+docker system prune -a
+
+## Different Driver-Networks 
+### Bridge
+Host driven network 
+
+### Overlay 
+
+```
+On Linux: 
+apt install net-tools
+```
+netstat -v
+
+netstat -nr
+-n print seperated by dots
+-r shows networking routing tabke
+-a prints all present interfaces in the kernel
+-i get output statistics of a networkinterface thas is configured 
+
+netstat -ant
+can decide between activat and passive sockets shows RAW UDP TCP or UNIX connection sockets
+-a will show sockets ready for use (also see State LISTEN and not only ESTABLISHED sockets)
+
+
+
+
+netstat -pnltu
+To list services, their current state, and their corresponding ports, run the command
+
+
+View the networking Routing Tabke
+
+

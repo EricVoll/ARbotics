@@ -1,0 +1,29 @@
+components: 
+  - name: 'UnityCollision'
+    max_instances: 10
+    docker_container: 'some_id'
+    launch: 
+    - 'launch1'
+    - 'launch2'
+    topics:
+    - 'topic1'
+    - 'topic2'
+    - 'topic3'
+    services: 
+    - 'srv1'
+    - 'srv2'
+    - 'srv3'
+  - name: 'UnityLidar'
+    max_instances: 10
+    docker_container: 'some_id3'
+    launch: 
+    - 'launch13'
+    - 'launch23'
+    topics: 
+    - 'topic13'
+    - 'topic23'
+    - 'topic33'
+    services: 
+    - 'srv13'
+    - 'srv23'
+    - 'srv33'
