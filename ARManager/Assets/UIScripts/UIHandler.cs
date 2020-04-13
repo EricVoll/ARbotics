@@ -47,6 +47,8 @@ public class UIHandler : MonoBehaviour
             },
             availableRobots = new List<AvailableRobot>()
         };
-        return JsonUtility.ToJson(mock);
+        string json = Newtonsoft.Json.JsonConvert.SerializeObject(mock);
+
+        return json;
     }
 }

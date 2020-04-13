@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RosSharp.Urdf;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +26,15 @@ public class UrdfSyncher : MonoBehaviour
     /// <param name="urdf"></param>
     public void SynchUrdf(string urdf)
     {
+        var tooltipFactory = new AttachableComponentFactory<IAttachableComponent>("tooltip")
+        {
+            Constructor = () => new RosSharp.Urdf.Attachables.AttachedDataValue(),
+        };
+
+        Robot.attachableComponentFactories.Add(tooltipFactory);
+
+        Robot robot = Robot.FromContent(urdf);
+
 
     }
 }

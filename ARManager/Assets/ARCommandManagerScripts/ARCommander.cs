@@ -8,8 +8,8 @@ public class ARCommander : MonoBehaviour
 
     public void ReceiveMessage(string _msg)
     {
-        var msg = (ARCommanderMessage)JsonUtility.FromJson(_msg, typeof(ARCommanderMessage));
-
+        var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<ARCommanderMessage>(_msg);
+        
         foreach (var device in msg.devices)
         {
             urdfSyncher.SynchUrdf(device.data);
