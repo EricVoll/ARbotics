@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<robot name="turtlebot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name="base_footprint"/>
+  <joint name="base_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.0102"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+</robot>
