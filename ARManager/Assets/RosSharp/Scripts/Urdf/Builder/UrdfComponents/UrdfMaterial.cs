@@ -30,10 +30,21 @@ namespace RosSharp.Urdf.Editor
 
         public static Dictionary<string, Link.Visual.Material> Materials =
             new Dictionary<string, Link.Visual.Material>();
+
+        /// <summary>
+        /// A dictionery containing all created materials. The key : string is the name of the urdf material
+        /// </summary>
+        public static Dictionary<string, Material> MaterialsCreated = new Dictionary<string, Material>();
+
         
         #region Import
         private static Material CreateMaterial(this Link.Visual.Material urdfMaterial)
         {
+            if (MaterialsCreated.ContainsKey(urdfMaterial.name))
+            {
+                return MaterialsCreated[urdfMaterial.name];
+            }
+
             if (urdfMaterial.name == "")
                 urdfMaterial.name = GenerateMaterialName(urdfMaterial);
 
@@ -42,6 +53,9 @@ namespace RosSharp.Urdf.Editor
                 return material;
 
             material = InitializeMaterial();
+
+            //Store the material for later re-use
+            MaterialsCreated[urdfMaterial.name] = material;
 
             if (urdfMaterial.color != null)
                 material.color = CreateColor(urdfMaterial.color);
@@ -52,8 +66,11 @@ namespace RosSharp.Urdf.Editor
             return material;
         }
 
+        private static bool defaultMaterialCreated = false;
         private static void CreateDefaultMaterial()
         {
+            if (defaultMaterialCreated) return;
+
             var material = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
             if (material != null)
                 return;
@@ -62,6 +79,8 @@ namespace RosSharp.Urdf.Editor
             material.color = new Color(0.33f, 0.33f, 0.33f, 0.0f);
 
             AssetDatabase.CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+
+            defaultMaterialCreated = true;
         }
 
         private static Material InitializeMaterial()
