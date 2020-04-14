@@ -6,13 +6,24 @@ public class ARCommander : MonoBehaviour
 {
     public UrdfSyncher urdfSyncher;
 
+    Dictionary<int, UrdfSyncher> currentSceneDicionary = new Dictionary<int, UrdfSyncher>();
+
+    public GameObject SceneContainerObject;
+
     public void ReceiveMessage(string _msg)
     {
         var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<ARCommanderMessage>(_msg);
-        
+
         foreach (var device in msg.devices)
         {
-            urdfSyncher.SynchUrdf(device.data);
+            if (!currentSceneDicionary.ContainsKey(device.id))
+            {
+                //object does not exist. Create it.
+                UrdfSyncher syncher = new UrdfSyncher(SceneContainerObject);
+                currentSceneDicionary[device.id] = syncher;
+            }
+
+            currentSceneDicionary[device.id].SynchUrdf(device.data);
         }
     }
 }
@@ -33,4 +44,5 @@ public class AvailableRobot
 public class ObjectUrdf
 {
     public string data;
+    public int id;
 }

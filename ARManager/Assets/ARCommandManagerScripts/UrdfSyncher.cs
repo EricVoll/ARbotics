@@ -6,19 +6,26 @@ using UnityEngine;
 public class UrdfSyncher : MonoBehaviour
 {
     /// <summary>
-    /// The Root gameobject which will be used to spawn all robots. This will be the parent
+    /// 
     /// </summary>
-    public GameObject BaseGameObject;
+    /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
+    public UrdfSyncher(GameObject sceneContainerObject)
+    {
+        SceneContainerGameObject = sceneContainerObject; 
+    }
 
     /// <summary>
-    /// Sets the BaseGameObject which will be used to create and synch all robots coming in
-    /// Typically set in editor
+    /// The Root gameobject which will be used to spawn all robots. This will be the parent
     /// </summary>
-    /// <param name="obj"></param>
-    public void SetBaseGameObject(GameObject obj)
-    {
-        BaseGameObject = obj;
-    }
+    public GameObject SceneContainerGameObject;
+
+    /// <summary>
+    /// The root gameobject of this robot
+    /// </summary>
+    private GameObject RobotRootObject;
+    
+    private bool hasInitialUrdfModelImported= false;
+
 
     /// <summary>
     /// Compares the current devices in the scene with the urdf file and performs adjustments
@@ -26,6 +33,12 @@ public class UrdfSyncher : MonoBehaviour
     /// <param name="urdf"></param>
     public void SynchUrdf(string urdf)
     {
+        if(hasInitialUrdfModelImported == false)
+        {
+            ImportInitialUrdfModel();
+        }
+
+
         var tooltipFactory = new AttachableComponentFactory<IAttachableComponent>("tooltip")
         {
             Constructor = () => new RosSharp.Urdf.Attachables.AttachedDataValue(),
@@ -35,6 +48,14 @@ public class UrdfSyncher : MonoBehaviour
 
         Robot robot = Robot.FromContent(urdf);
 
+        if (RobotRootObject == null) RobotRootObject = new GameObject($"RobotRoot_{robot.name}");
+
+        RobotBuilder builder = new RobotBuilder();
+        builder.Synchronize(robot, RobotRootObject);
+    }
+
+    private void ImportInitialUrdfModel()
+    {
 
     }
 }

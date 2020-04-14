@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   urdfSyncher: {fileID: 116626230}
+  SceneContainerObject: {fileID: 38743112}
 --- !u!1 &4151058
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73c1593f2bfcfd47b636509efb1a9ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseGameObject: {fileID: 38743112}
+  SceneContainerGameObject: {fileID: 0}
 --- !u!4 &116626231
 Transform:
   m_ObjectHideFlags: 0
