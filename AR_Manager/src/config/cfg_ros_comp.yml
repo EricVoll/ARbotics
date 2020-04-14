@@ -1,7 +1,6 @@
 components: 
   - name: 'UR5'
     max_instances: 10
-
     docker_container: 'some_id'
     launch: 
     - 'launch1'

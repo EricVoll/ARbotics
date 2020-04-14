@@ -3,14 +3,74 @@ from client import Client
 import yaml
 from component import RosComponent
 import copy
+from flask import Flask
+from flask_restful import Resource, Api
+
+app = Flask(__name__)
+api = Api(app)
+
+
+	
+class RosComponents(Resource):
+	#is there an component available
+
+	def get(self,name):
+		#returns if a specific instance
+		return {'Running':True,
+						'Uptime':100,
+						'Started':'time'} #returns the id of the instance
+	
+	#create a new component -> write flag to add to yml
+	def post(self,name):
+		#starts a specific instance
+		return {'instance_id': 100} #returns the id of the instancep
+		
+	#delete component -> write flag to change yml
+	def delete(self,name):
+		#stop instance
+		return {	'suc': True,
+							'instance_id_stopped': 123}
+
+
+
+class Instances(Resource):
+	
+	def get(self,name):
+		#returns if a specific instance
+
+		return {'Running':True,
+						'Uptime':100,
+						'Started':'time'} #returns the id of the instance
+
+
+	def post(self,name):
+		#starts a specific instance
+		return {'instance_id': 100} #returns the id of the instancep
+		
+	def delete(self,name):
+		#stop instance
+		return {	'suc': True,
+							'instance_id_stopped': 123}
+
+api.add_resource(Instances,'/Instances/<string:name>')
+api.add_resource(RosComponents,'/RosComponents/<string:name>')
+
+if __name__ == '__main__':
+	app.run(debug=True) 
+	s = Server()
+
+
+"""
+This will be implemented based on flask and REST-API
+"""
+
 class Server():
 	"""
 	implements all functionality
 	"""
 	def __init__(	self, \
 								cfg_ros_comp = 'src/config/cfg_ros_comp.yml', \
-								cfg_unity_comp = 'src/config/cfg_unity_comp.yml', \
-								client = None):
+								cfg_unity_comp = 'src/config/cfg_unity_comp.yml'):
 		"""
 		cfg_ros_comp = stores all information about available ros comp
 		  is read in when initalized
@@ -53,13 +113,24 @@ class Server():
 		self._instance_counter = 0 
 
 	def __str__(self):
-		return "Server total started instances: {} \n \
-		 				Registered ROS Comp: {} \n \
-						Registered Unity Comp: {} \n \
-						Running Instances: {}".format(self._instance_counter, 
-						self._ros_comp_list, 
-						self._unity_comp_list, 
-						self._instances)
+		string = "Server Summary:\n"
+		
+		string += "="*45+' Instances '+'='*45 +'\n'
+		for inst in self._instances: 
+			string += ' {}\n'.format(inst)
+		string += '-'*101+'\n'+'\n'
+
+		string += "="*45+' ROS COMPN '+'='*45 +'\n'
+		for inst in self._ros_comp_list: 
+			string += ' {}\n'.format(inst)
+		string += '-'*101+'\n'+'\n'
+
+		string += "="*45+' ROS UNITY '+'='*45 +'\n'
+		for inst in self._unity_comp_list: 
+			string += ' {}\n'.format(inst)
+		string += '-'*101+'\n'+'\n'
+
+		return string
 
 	def server_close(self):
 		
@@ -128,6 +199,7 @@ class Server():
 				self.remove_instance(inst.id)
 
 def cfg_to_components(cfg_file):
+
 	"""
 	reads in yml-file: 
 	creates component objects based on this file
@@ -145,3 +217,4 @@ def cfg_to_components(cfg_file):
 		comp_list.append( RosComponent(cfg = single_cfg) )
 
 	return comp_list
+
