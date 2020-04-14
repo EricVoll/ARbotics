@@ -25,18 +25,31 @@ namespace RosSharp.Urdf
     {
         public static void Create(Transform robot, List<Plugin> plugins = null)
         {
-            GameObject pluginsObject = robot.FindChildIfExists("Plugins");
-
-            if (pluginsObject == null)
+            if(robot.FindChildOrCreate("Plugins", out GameObject pluginsObject))
             {
-                pluginsObject = new GameObject("Plugins");
-                pluginsObject.transform.SetParentAndAlign(robot);
                 pluginsObject.AddComponent<UrdfPlugins>();
             }
 
+            //Add or check all plugins
             foreach (var plugin in plugins)
                 UrdfPlugin.Create(pluginsObject.transform, plugin);
+
+            //Remove all plugins that are not in the plugin list
+            var existingPlugins = pluginsObject.GetComponentsInChildren<UrdfPlugin>();
+
+            if (existingPlugins != null)
+            {
+                for (int i = existingPlugins.Length - 1; i >= 0; i--)
+                {
+                    if (!plugins.Any(x => x.text == existingPlugins[i].PluginText))
+                    {
+                        //None of the new plugins contain this plugintext
+                        Destroy(existingPlugins[i]);
+                    }
+                }
+            }
         }
+
 
         public List<Plugin> ExportPluginsData()
         {

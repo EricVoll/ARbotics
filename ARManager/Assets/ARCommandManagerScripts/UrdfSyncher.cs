@@ -14,7 +14,7 @@ public class UrdfSyncher : MonoBehaviour
     /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
     public UrdfSyncher(GameObject sceneContainerObject)
     {
-        SceneContainerGameObject = sceneContainerObject; 
+        SceneContainerGameObject = sceneContainerObject;
     }
 
     /// <summary>
@@ -26,8 +26,10 @@ public class UrdfSyncher : MonoBehaviour
     /// The root gameobject of this robot
     /// </summary>
     private GameObject RobotRootObject;
-    
-    private bool hasInitialUrdfModelImported= false;
+
+    private bool hasInitialUrdfModelImported = false;
+
+    private string assetsRootDirectoryName;
 
 
     /// <summary>
@@ -46,10 +48,12 @@ public class UrdfSyncher : MonoBehaviour
         Robot robot = Robot.FromContent(urdf);
 
 
-        if(!hasInitialUrdfModelImported)
+        if (!hasInitialUrdfModelImported)
         {
             ImportInitialUrdfModel(robot);
         }
+
+        robot.filename = assetsRootDirectoryName;
 
         //we do not return here since we want to apply any possible changes that were passed in the last urdf update.
         //the imported downloads the urdf from the file_server so it might be an old version.
@@ -74,7 +78,7 @@ public class UrdfSyncher : MonoBehaviour
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
 
         handler.TransferUrdf(protocol, @"ws://192.168.119.129:9090", 10, assetPath, "robot_description");
-        RobotRootObject = handler.GenerateModelIfReady(true);
+        (RobotRootObject, assetsRootDirectoryName) = handler.GenerateModelIfReady(true);
 
         if (SceneContainerGameObject != null)
         {

@@ -36,7 +36,7 @@ namespace RosSharp.Urdf.Editor
         /// </summary>
         public static Dictionary<string, Material> MaterialsCreated = new Dictionary<string, Material>();
 
-        
+
         #region Import
         private static Material CreateMaterial(this Link.Visual.Material urdfMaterial)
         {
@@ -66,11 +66,8 @@ namespace RosSharp.Urdf.Editor
             return material;
         }
 
-        private static bool defaultMaterialCreated = false;
         private static void CreateDefaultMaterial()
         {
-            if (defaultMaterialCreated) return;
-
             var material = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
             if (material != null)
                 return;
@@ -78,9 +75,8 @@ namespace RosSharp.Urdf.Editor
             material = InitializeMaterial();
             material.color = new Color(0.33f, 0.33f, 0.33f, 0.0f);
 
-            AssetDatabase.CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
-
-            defaultMaterialCreated = true;
+            string newAssetPath = UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName);
+            AssetDatabase.CreateAsset(material, newAssetPath);
         }
 
         private static Material InitializeMaterial()
@@ -131,7 +127,7 @@ namespace RosSharp.Urdf.Editor
             foreach (var material in robot.materials)
                 CreateMaterial(material);
         }
-        
+
         public static void SetUrdfMaterial(GameObject gameObject, Link.Visual.Material urdfMaterial)
         {
             if (urdfMaterial != null)
@@ -200,7 +196,7 @@ namespace RosSharp.Urdf.Editor
         {
             string oldTexturePath = UrdfAssetPathHandler.GetFullAssetPath(AssetDatabase.GetAssetPath(texture));
             string newTexturePath = UrdfExportPathHandler.GetNewResourcePath(Path.GetFileName(oldTexturePath));
-            if(oldTexturePath != newTexturePath)
+            if (oldTexturePath != newTexturePath)
                 File.Copy(oldTexturePath, newTexturePath, true);
 
             string packagePath = UrdfExportPathHandler.GetPackagePathForResource(newTexturePath);

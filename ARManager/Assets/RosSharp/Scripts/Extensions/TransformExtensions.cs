@@ -147,5 +147,46 @@ namespace RosSharp
             if (child != null) return child.gameObject;
             else return null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="name"></param>
+        /// <param name="created"></param>
+        /// <returns></returns>
+        public static bool FindChildOrCreate(this Transform transform, string name, out GameObject child)
+        {
+            bool created = false;
+            GameObject obj = FindChildIfExists(transform, name);
+            if(obj == null)
+            {
+                obj = new GameObject(name);
+                obj.transform.SetParentAndAlign(transform);
+                created = true;
+            }
+            child = obj;
+            return created;
+        }
+
+        /// <summary>
+        /// Looks for a gameobject child with the specified name and creates one if none is found. After creation it also appends the defined component
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transform"></param>
+        /// <param name="name"></param>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        public static bool FindChildOrCreateWithComponent<T>(this Transform transform, string name, out GameObject child, out T component) where T : UnityEngine.Component
+        {
+            bool createdComponent = false;
+            if (transform.FindChildOrCreate(name, out child))
+            {
+                child.AddComponent<T>();
+                createdComponent = true;
+            }
+            component = child.GetComponent<T>();
+            return createdComponent;
+        }
     }
 }

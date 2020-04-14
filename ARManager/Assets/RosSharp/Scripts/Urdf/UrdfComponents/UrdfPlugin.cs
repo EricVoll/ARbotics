@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Linq;
 using System.Xml;
 using UnityEngine;
 
@@ -27,6 +28,12 @@ namespace RosSharp.Urdf
 
         public static void Create(Transform parent, Plugin plugin = null)
         {
+            if(parent.GetComponentsInChildren<UrdfPlugin>().Any(x => x.PluginText == plugin.text))
+            {
+                //Already added. Skip it.
+                return;
+            }
+
             UrdfPlugin urdfPlugin = parent.gameObject.AddComponent<UrdfPlugin>();
             if (plugin != null)
                 urdfPlugin.PluginText = plugin.text;

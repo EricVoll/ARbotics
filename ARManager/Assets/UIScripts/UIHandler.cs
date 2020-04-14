@@ -9,6 +9,7 @@ public class UIHandler : MonoBehaviour
 
     public TextAsset TurtleBot;
     public TextAsset TurtleBotExtended;
+    public TextAsset TurtleBotPluginLess;
     public TextAsset SingleNode;
     public TextAsset SingleNodeExtended;
 
@@ -18,7 +19,7 @@ public class UIHandler : MonoBehaviour
     }
     public void SendExtendedTurtleBot()
     {
-        SendMsg(TurtleBotExtended);
+        SendMsg(TurtleBotPluginLess);
     }
 
     public void SendSingleNode()
@@ -36,19 +37,26 @@ public class UIHandler : MonoBehaviour
             Commander.ReceiveMessage(MockCommanderMessage(asset.text));
     }
 
-
+    bool isScond = false;
     private string MockCommanderMessage(string urdf)
     {
         ARCommanderMessage mock = new ARCommanderMessage()
         {
             devices = new List<ObjectUrdf>()
             {
-                new ObjectUrdf(){ data = urdf }
+                new ObjectUrdf(){ data = urdf, id = 1 }
             },
             availableRobots = new List<AvailableRobot>()
         };
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(mock);
 
+        //if (isScond)
+        //{
+        //    mock.devices.Add(new ObjectUrdf() { data = urdf, id = 2 });
+        //}
+
+
+        string json = Newtonsoft.Json.JsonConvert.SerializeObject(mock);
+        isScond = true;
         return json;
     }
 }

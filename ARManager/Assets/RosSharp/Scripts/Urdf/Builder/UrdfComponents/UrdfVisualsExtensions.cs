@@ -24,9 +24,12 @@ namespace RosSharp.Urdf.Editor
     {
         public static void Create(Transform parent, List<Link.Visual> visuals = null)
         {
-            GameObject visualsObject = new GameObject("Visuals");
-            visualsObject.transform.SetParentAndAlign(parent);
-            UrdfVisuals urdfVisuals = visualsObject.AddComponent<UrdfVisuals>();
+            if(parent.FindChildOrCreate("Visuals", out GameObject visualsObject))
+            {
+                visualsObject.AddComponent<UrdfVisuals>();
+            }
+
+            UrdfVisuals urdfVisuals = visualsObject.GetComponent<UrdfVisuals>();
 
             visualsObject.hideFlags = HideFlags.NotEditable;
             urdfVisuals.hideFlags = HideFlags.None;
@@ -35,6 +38,16 @@ namespace RosSharp.Urdf.Editor
             {
                 foreach (Link.Visual visual in visuals)
                     UrdfVisualExtensions.Create(urdfVisuals.transform, visual);
+            }
+
+            UrdfVisual[] vis = visualsObject.GetComponentsInChildren<UrdfVisual>();
+            for (int i = vis.Length-1; i >= 0; i--)
+            {
+                var visual = vis[i];
+                //if(visuals.Any(x => x.name == visual.name && x.Ge))
+                //{
+                //  Destroy(visual);
+                //}
             }
         }
 

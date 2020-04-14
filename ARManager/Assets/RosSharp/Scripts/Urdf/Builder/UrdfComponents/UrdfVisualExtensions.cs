@@ -34,13 +34,14 @@ namespace RosSharp.Urdf.Editor
 
         public static void Create(Transform parent, Link.Visual visual)
         {
-            GameObject visualObject = new GameObject(visual.name ?? "unnamed");
-            visualObject.transform.SetParentAndAlign(parent);
-            UrdfVisual urdfVisual = visualObject.AddComponent<UrdfVisual>();
+            if (parent.FindChildOrCreateWithComponent<UrdfVisual>(visual.name ?? "unnamed", out GameObject visualObject, out UrdfVisual urdfVisual))
+            {
+                //only create these visuals if the gameobject had to be created itself
+                urdfVisual.GeometryType = UrdfGeometry.GetGeometryType(visual.geometry);
+                UrdfGeometryVisual.Create(visualObject.transform, urdfVisual.GeometryType, visual.geometry);
+            }
 
-            urdfVisual.GeometryType = UrdfGeometry.GetGeometryType(visual.geometry);
-            UrdfGeometryVisual.Create(visualObject.transform, urdfVisual.GeometryType, visual.geometry);
-
+            //update these values every time
             UrdfMaterial.SetUrdfMaterial(visualObject, visual.material);
             UrdfOrigin.ImportOriginData(visualObject.transform, visual.origin);
         }

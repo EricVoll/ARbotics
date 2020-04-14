@@ -20,16 +20,19 @@ using UnityEngine;
 namespace RosSharp.Urdf.Editor
 {
     public static class UrdfLinkExtensions
-    { 
+    {
         public static UrdfLink Create(Transform parent, Link link = null, Joint joint = null)
         {
-            GameObject linkObject = new GameObject("link");
-            linkObject.transform.SetParentAndAlign(parent);
-            UrdfLink urdfLink = linkObject.AddComponent<UrdfLink>();
+            if (parent.FindChildOrCreate("link", out GameObject linkObject))
+            {
+                linkObject.AddComponent<UrdfLink>();
+            }
+
+            UrdfLink urdfLink = linkObject.GetComponent<UrdfLink>();
 
             UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
-            
+
             if (link != null)
                 urdfLink.ImportLinkData(link, joint);
             else
@@ -67,11 +70,11 @@ namespace RosSharp.Urdf.Editor
                 Link child = childJoint.ChildLink;
                 UrdfLinkExtensions.Create(urdfLink.transform, child, childJoint);
             }
-        } 
-        
+        }
+
         public static Link ExportLinkData(this UrdfLink urdfLink)
         {
-            if(urdfLink.transform.localScale != Vector3.one)
+            if (urdfLink.transform.localScale != Vector3.one)
                 Debug.LogWarning("Only visuals should be scaled. Scale on link \"" + urdfLink.gameObject.name + "\" cannot be saved to the URDF file.", urdfLink.gameObject);
 
             UrdfInertial urdfInertial = urdfLink.gameObject.GetComponent<UrdfInertial>();
@@ -81,7 +84,7 @@ namespace RosSharp.Urdf.Editor
                 collisions = urdfLink.GetComponentInChildren<UrdfCollisions>().ExportCollisionsData(),
                 inertial = urdfInertial == null ? null : urdfInertial.ExportInertialData()
             };
-            
+
             return link;
         }
     }

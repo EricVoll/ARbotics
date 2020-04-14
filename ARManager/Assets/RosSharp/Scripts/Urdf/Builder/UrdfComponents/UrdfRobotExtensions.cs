@@ -49,6 +49,17 @@ namespace RosSharp.Urdf.Editor
         {
             Robot robot = new Robot(filename);
 
+            return Create(robot);
+        }
+
+        public static GameObject Create(Robot robot)
+        {
+            if (string.IsNullOrEmpty(robot.filename))
+            {
+                Debug.LogError("Filename on Robot must not be empty");
+                return null;
+            }
+
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
             {
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
