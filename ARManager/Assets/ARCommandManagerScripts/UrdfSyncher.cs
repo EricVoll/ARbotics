@@ -1,6 +1,9 @@
-﻿using RosSharp.Urdf;
+﻿using RosSharp.RosBridgeClient;
+using RosSharp.Urdf;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class UrdfSyncher : MonoBehaviour
@@ -33,12 +36,6 @@ public class UrdfSyncher : MonoBehaviour
     /// <param name="urdf"></param>
     public void SynchUrdf(string urdf)
     {
-        if(hasInitialUrdfModelImported == false)
-        {
-            ImportInitialUrdfModel();
-        }
-
-
         var tooltipFactory = new AttachableComponentFactory<IAttachableComponent>("tooltip")
         {
             Constructor = () => new RosSharp.Urdf.Attachables.AttachedDataValue(),
@@ -48,14 +45,42 @@ public class UrdfSyncher : MonoBehaviour
 
         Robot robot = Robot.FromContent(urdf);
 
-        if (RobotRootObject == null) RobotRootObject = new GameObject($"RobotRoot_{robot.name}");
+
+        if(!hasInitialUrdfModelImported)
+        {
+            ImportInitialUrdfModel(robot);
+        }
+
+        //we do not return here since we want to apply any possible changes that were passed in the last urdf update.
+        //the imported downloads the urdf from the file_server so it might be an old version.
+        //If there are no changes to be made - even better.
 
         RobotBuilder builder = new RobotBuilder();
         builder.Synchronize(robot, RobotRootObject);
     }
 
-    private void ImportInitialUrdfModel()
+    /// <summary>
+    /// Imports the URDF Model initially to download all textures, assets and store them correctly etc.
+    /// </summary>
+    /// <param name="robot"></param>
+    private void ImportInitialUrdfModel(Robot robot)
     {
+        hasInitialUrdfModelImported = false;
 
+        var protocol = RosConnector.Protocols.WebSocketNET;
+        RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
+
+
+        string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
+
+        handler.TransferUrdf(protocol, @"ws://192.168.119.129:9090", 10, assetPath, "robot_description");
+        RobotRootObject = handler.GenerateModelIfReady(true);
+
+        if (SceneContainerGameObject != null)
+        {
+            RobotRootObject.transform.SetParent(SceneContainerGameObject.transform);
+        }
+
+        hasInitialUrdfModelImported = true;
     }
 }

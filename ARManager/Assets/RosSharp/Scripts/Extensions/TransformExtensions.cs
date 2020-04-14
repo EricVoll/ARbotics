@@ -15,6 +15,7 @@ limitations under the License.
 
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -130,6 +131,21 @@ namespace RosSharp
         public static string SetSeparatorChar(this string path)
         {
             return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+        }
+
+        /// <summary>
+        /// Returns the first GameObject with the name if any is found. If no children exist or the named does not exist it returns null
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        public static GameObject FindChildIfExists(this Transform transform, string name)
+        {
+            var children = transform.GetComponentsInChildren<Transform>();
+            if (children == null || children.Length == 0) return null;
+
+            var child = children.FirstOrDefault(x => x.name == name);
+            if (child != null) return child.gameObject;
+            else return null;
         }
     }
 }

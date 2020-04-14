@@ -39,17 +39,24 @@ namespace RosSharp.Urdf.Editor
 
         #region Import
 
-        public static void Create(string filename)
+        /// <summary>
+        /// Generates the Robot-GameObject from the urdf content in the specified file and returns the GameObject created
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="containerObject"></param>
+        /// <returns></returns>
+        public static GameObject Create(string filename)
         {
             Robot robot = new Robot(filename);
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
             {
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
-                return;
+                return null;
             }
 
-            GameObject robotGameObject = new GameObject(robot.name);
+            GameObject robotGameObject = new GameObject($"RobotRoot_{robot.name}");
+
             robotGameObject.AddComponent<UrdfRobot>();
 
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
@@ -61,6 +68,8 @@ namespace RosSharp.Urdf.Editor
             GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
             Selection.activeObject = robotGameObject;
+
+            return robotGameObject;
         }
 
         #endregion

@@ -95,24 +95,37 @@ namespace RosSharp.RosBridgeClient
             rosSocket.Close();
         }
 
-        public void GenerateModelIfReady()
+        public GameObject GenerateModelIfReady(bool skipUserInput = false, GameObject containerObject = null)
         {
             if (!StatusEvents["resourceFilesReceived"].WaitOne(0) || StatusEvents["importComplete"].WaitOne(0))
-                return;
+                return null;
 
             AssetDatabase.Refresh();
 
-            if (EditorUtility.DisplayDialog(
+            bool createModel = skipUserInput;
+
+
+
+            if (!skipUserInput && EditorUtility.DisplayDialog(
                 "Urdf Assets imported.",
                 "Do you want to generate a " + robotName + " GameObject now?",
                 "Yes", "No"))
             {
-                Urdf.Editor.UrdfRobotExtensions.Create(Path.Combine(
-                    localDirectory,
-                    Path.GetFileNameWithoutExtension(urdfParameter) + ".urdf"));
+                createModel = true;
+            }
+
+            GameObject robotGenerated = null;
+
+            if (createModel)
+            {
+                robotGenerated = Urdf.Editor.UrdfRobotExtensions.Create(Path.Combine(
+                       localDirectory,
+                       Path.GetFileNameWithoutExtension(urdfParameter) + ".urdf"));
             }
 
             StatusEvents["importComplete"].Set();
+
+            return robotGenerated;
         }
 
         private void OnClosed(object sender, EventArgs e)
