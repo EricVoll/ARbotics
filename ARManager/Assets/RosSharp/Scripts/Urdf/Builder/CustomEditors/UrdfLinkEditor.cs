@@ -40,8 +40,8 @@ namespace RosSharp.Urdf.Editor
 
             if (GUILayout.Button("Add child link (with joint)"))
             {
-                UrdfLink childLink = UrdfLinkExtensions.Create(urdfLink.transform);
-                UrdfJoint.Create(childLink.gameObject, jointType);
+                UrdfLink childLink = UrdfLinkExtensions.Synchronize(urdfLink.transform);
+                UrdfJoint.Synchronize(childLink.gameObject, jointType);
             }
             EditorGUILayout.EndVertical();
         }

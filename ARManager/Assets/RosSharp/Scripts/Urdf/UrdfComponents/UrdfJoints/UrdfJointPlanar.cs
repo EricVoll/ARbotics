@@ -22,22 +22,22 @@ namespace RosSharp.Urdf
     {
         public override JointTypes JointType => JointTypes.Planar;
 
-        public static UrdfJoint Create(GameObject linkObject)
+        public static UrdfJoint Synchronize(GameObject linkObject)
         {
-            UrdfJointPlanar urdfJoint = linkObject.AddComponent<UrdfJointPlanar>();
+            linkObject.AddComponentIfNotExists<UrdfJointPlanar>(out UrdfJointPlanar urdfJoint);
+            if (linkObject.AddComponentIfNotExists<ConfigurableJoint>(out ConfigurableJoint joint))
+            {
+                urdfJoint.UnityJoint = joint;
+                urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
 
-            urdfJoint.UnityJoint = linkObject.AddComponent<ConfigurableJoint>();
-            urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
-
-            ConfigurableJoint configurableJoint = (ConfigurableJoint) urdfJoint.UnityJoint;
-
-            // degrees of freedom:
-            configurableJoint.xMotion = ConfigurableJointMotion.Free;
-            configurableJoint.yMotion = ConfigurableJointMotion.Free;
-            configurableJoint.zMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
+                // degrees of freedom:
+                joint.xMotion = ConfigurableJointMotion.Free;
+                joint.yMotion = ConfigurableJointMotion.Free;
+                joint.zMotion = ConfigurableJointMotion.Locked;
+                joint.angularXMotion = ConfigurableJointMotion.Locked;
+                joint.angularYMotion = ConfigurableJointMotion.Locked;
+                joint.angularZMotion = ConfigurableJointMotion.Locked;
+            }
 
             return urdfJoint;
         }
@@ -50,7 +50,7 @@ namespace RosSharp.Urdf
 
         protected override void ImportJointData(Joint joint)
         {
-            ConfigurableJoint configurableJoint = (ConfigurableJoint) UnityJoint;
+            ConfigurableJoint configurableJoint = (ConfigurableJoint)UnityJoint;
 
             Vector3 normal = (joint.axis != null) ? GetAxis(joint.axis) : GetDefaultAxis();
             Vector3 axisX = Vector3.forward;
@@ -74,7 +74,7 @@ namespace RosSharp.Urdf
 
         protected override Joint ExportSpecificJointData(Joint joint)
         {
-            ConfigurableJoint configurableJoint = (ConfigurableJoint) UnityJoint;
+            ConfigurableJoint configurableJoint = (ConfigurableJoint)UnityJoint;
 
             joint.axis = GetAxisData(Vector3.Cross(configurableJoint.axis, configurableJoint.secondaryAxis));
             joint.dynamics = new Joint.Dynamics(configurableJoint.xDrive.positionDamper, configurableJoint.xDrive.positionSpring);

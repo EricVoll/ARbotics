@@ -22,24 +22,24 @@ namespace RosSharp.Urdf
     {
         public override JointTypes JointType => JointTypes.Prismatic;
 
-        public static UrdfJoint Create(GameObject linkObject)
+        public static UrdfJoint Synchronize(GameObject linkObject)
         {
-            UrdfJointPrismatic urdfJoint = linkObject.AddComponent<UrdfJointPrismatic>();
+            linkObject.AddComponentIfNotExists<UrdfJointPrismatic>(out var urdfJoint);
+            if (linkObject.AddComponentIfNotExists<ConfigurableJoint>(out var joint))
+            {
+                urdfJoint.UnityJoint = joint;
+                urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
+                
+                // degrees of freedom:
+                joint.xMotion = ConfigurableJointMotion.Limited;
+                joint.yMotion = ConfigurableJointMotion.Locked;
+                joint.zMotion = ConfigurableJointMotion.Locked;
+                joint.angularXMotion = ConfigurableJointMotion.Locked;
+                joint.angularYMotion = ConfigurableJointMotion.Locked;
+                joint.angularZMotion = ConfigurableJointMotion.Locked;
+            }
 
-            urdfJoint.UnityJoint = linkObject.AddComponent<ConfigurableJoint>();
-            urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
-
-            ConfigurableJoint configurableJoint = (ConfigurableJoint) urdfJoint.UnityJoint;
-
-            // degrees of freedom:
-            configurableJoint.xMotion = ConfigurableJointMotion.Limited;
-            configurableJoint.yMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.zMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
-
-            linkObject.AddComponent<PrismaticJointLimitsManager>();
+            linkObject.AddComponentIfNotExists<PrismaticJointLimitsManager>();
 
             return urdfJoint;
         }
@@ -62,7 +62,7 @@ namespace RosSharp.Urdf
 
         protected override void ImportJointData(Joint joint)
         {
-            ConfigurableJoint prismaticJoint = (ConfigurableJoint) UnityJoint;
+            ConfigurableJoint prismaticJoint = (ConfigurableJoint)UnityJoint;
             prismaticJoint.axis = (joint.axis != null) ? GetAxis(joint.axis) : GetDefaultAxis();
 
             if (joint.dynamics != null)

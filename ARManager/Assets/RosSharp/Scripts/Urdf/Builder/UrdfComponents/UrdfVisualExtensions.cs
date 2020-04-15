@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace RosSharp.Urdf.Editor
@@ -34,7 +35,10 @@ namespace RosSharp.Urdf.Editor
 
         public static void Create(Transform parent, Link.Visual visual)
         {
-            if (parent.FindChildOrCreateWithComponent<UrdfVisual>(visual.name ?? "unnamed", out GameObject visualObject, out UrdfVisual urdfVisual))
+            if (String.IsNullOrEmpty(visual.name))
+                visual.name = visual.GenerateNonReferenceID(parent);
+
+            if (parent.FindChildOrCreateWithComponent<UrdfVisual>(visual.name, out GameObject visualObject, out UrdfVisual urdfVisual))
             {
                 //only create these visuals if the gameobject had to be created itself
                 urdfVisual.GeometryType = UrdfGeometry.GetGeometryType(visual.geometry);

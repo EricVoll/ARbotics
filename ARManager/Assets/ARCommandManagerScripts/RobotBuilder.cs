@@ -41,7 +41,7 @@ public class RobotBuilder
         UrdfMaterial.InitializeRobotMaterials(robot);
         UrdfPlugins.Create(robotGameObject.transform, robot.plugins);
 
-        //UrdfLinkExtensions.Create(robotGameObject.transform, robot.root);
+        UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
 
         //GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
         //Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);

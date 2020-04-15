@@ -20,25 +20,42 @@ using System.Linq;
 using UnityEngine;
 
 namespace RosSharp.Urdf.Editor
-{ 
+{
     public static class UrdfCollisionsExtensions
     {
-        public static void Create(Transform parent, List<Link.Collision> collisions = null)
+        public static void Synchronize(Transform parent, List<Link.Collision> collisions = null)
         {
-            GameObject collisionsObject = new GameObject("Collisions");
-            collisionsObject.transform.SetParentAndAlign(parent);
-            UrdfCollisions urdfCollisions = collisionsObject.AddComponent<UrdfCollisions>();
+            if (parent.FindChildOrCreateWithComponent<UrdfCollisions>("Collisions", out GameObject collisionsObject, out UrdfCollisions urdfCollisions))
+            {
+                //created the object
+                collisionsObject.hideFlags = HideFlags.NotEditable;
+                urdfCollisions.hideFlags = HideFlags.None;
+            }
+            else
+            {
+                //object existed already
+            }
 
-            collisionsObject.hideFlags = HideFlags.NotEditable;
-            urdfCollisions.hideFlags = HideFlags.None;
 
             if (collisions != null)
             {
                 foreach (Link.Collision collision in collisions)
                     UrdfCollisionExtensions.Create(urdfCollisions.transform, collision);
             }
+
+            //Remove removed children
+            var existingChildren = parent.GetComponentsInChildren<Transform>();
+            for (int i = existingChildren.Length - 1; i >= 0; i--)
+            {
+                if(!collisions.Any(x => x.name == existingChildren[i].name))
+                {
+                    //object does not exist in the collisions list
+                    Object.Destroy(existingChildren[i]);
+                }
+            }
+
         }
-        
+
         public static List<Link.Collision> ExportCollisionsData(this UrdfCollisions urdfCollisions)
         {
             UrdfCollision[] urdfCollisionsList = urdfCollisions.GetComponentsInChildren<UrdfCollision>();

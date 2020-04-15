@@ -21,23 +21,18 @@ namespace RosSharp.Urdf.Editor
 {
     public static class UrdfLinkExtensions
     {
-        public static UrdfLink Create(Transform parent, Link link = null, Joint joint = null)
-        {
-            if (parent.FindChildOrCreate("link", out GameObject linkObject))
-            {
-                linkObject.AddComponent<UrdfLink>();
-            }
+        public static UrdfLink Synchronize(Transform parent, Link link = null, Joint joint = null)
+        {            
+            parent.FindChildOrCreateWithComponent<UrdfLink>("link", out GameObject linkObject, out UrdfLink urdfLink);
 
-            UrdfLink urdfLink = linkObject.GetComponent<UrdfLink>();
-
-            UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
-            UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
+            UrdfVisualsExtensions.Synchronize(linkObject.transform, link?.visuals);
+            UrdfCollisionsExtensions.Synchronize(linkObject.transform, link?.collisions);
 
             if (link != null)
                 urdfLink.ImportLinkData(link, joint);
             else
             {
-                UrdfInertial.Create(linkObject);
+                UrdfInertial.Synchronize(linkObject);
                 UnityEditor.EditorGUIUtility.PingObject(linkObject);
             }
 
@@ -56,10 +51,10 @@ namespace RosSharp.Urdf.Editor
 
             if (link.inertial != null)
             {
-                UrdfInertial.Create(urdfLink.gameObject, link.inertial);
+                UrdfInertial.Synchronize(urdfLink.gameObject, link.inertial);
 
                 if (joint != null)
-                    UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
+                    UrdfJoint.Synchronize(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
             }
             else if (joint != null)
                 Debug.LogWarning("No Joint Component will be created in GameObject \"" + urdfLink.gameObject.name + "\" as it has no Rigidbody Component.\n"
@@ -68,7 +63,7 @@ namespace RosSharp.Urdf.Editor
             foreach (Joint childJoint in link.joints)
             {
                 Link child = childJoint.ChildLink;
-                UrdfLinkExtensions.Create(urdfLink.transform, child, childJoint);
+                UrdfLinkExtensions.Synchronize(urdfLink.transform, child, childJoint);
             }
         }
 

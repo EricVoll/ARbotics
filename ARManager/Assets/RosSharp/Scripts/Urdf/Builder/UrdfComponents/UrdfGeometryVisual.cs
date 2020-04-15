@@ -24,7 +24,7 @@ namespace RosSharp.Urdf.Editor
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
-
+                       
             switch (geometryType)
             {
                 case GeometryTypes.Box:

@@ -21,21 +21,24 @@ namespace RosSharp.Urdf
     public class UrdfJointRevolute : UrdfJoint
     {
         public override JointTypes JointType => JointTypes.Revolute;
-        
-        public static UrdfJoint Create(GameObject linkObject)
-        {
-            UrdfJointRevolute urdfJoint = linkObject.AddComponent<UrdfJointRevolute>();
 
-            urdfJoint.UnityJoint = linkObject.AddComponent<HingeJoint>();
-            urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
-            ((HingeJoint)urdfJoint.UnityJoint).useLimits = true;
-            linkObject.AddComponent<HingeJointLimitsManager>();
+        public static UrdfJoint Synchronize(GameObject linkObject)
+        {
+            linkObject.AddComponentIfNotExists<UrdfJointRevolute>(out UrdfJointRevolute urdfJoint);
+            if (linkObject.AddComponentIfNotExists<HingeJoint>(out HingeJoint joint))
+            {
+                urdfJoint.UnityJoint = joint;
+                urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
+                ((HingeJoint)urdfJoint.UnityJoint).useLimits = true;
+            }
+
+            linkObject.AddComponentIfNotExists<HingeJointLimitsManager>();
 
             return urdfJoint;
         }
 
         #region Runtime
-        
+
         public override float GetPosition()
         {
             return -((HingeJoint)UnityJoint).angle * Mathf.Deg2Rad;

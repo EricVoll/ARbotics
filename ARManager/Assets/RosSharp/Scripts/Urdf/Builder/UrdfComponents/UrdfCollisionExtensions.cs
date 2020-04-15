@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using UnityEngine;
 
 namespace RosSharp.Urdf.Editor
@@ -49,15 +50,17 @@ namespace RosSharp.Urdf.Editor
 
         public static void Create(Transform parent, Link.Collision collision)
         {
-            GameObject collisionObject = new GameObject("unnamed");
-            collisionObject.transform.SetParentAndAlign(parent);
-            UrdfCollision urdfCollision = collisionObject.AddComponent<UrdfCollision>();
-            urdfCollision.geometryType = UrdfGeometry.GetGeometryType(collision.geometry);
+            if (String.IsNullOrEmpty(collision.name)) collision.name = collision.GenerateNonReferenceID(parent);
 
-            UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
-            UrdfOrigin.ImportOriginData(collisionObject.transform, collision.origin);
+            if (parent.FindChildOrCreateWithComponent(collision.name, out GameObject collisionObject, out UrdfCollision urdfCollision))
+            {
+                urdfCollision.geometryType = UrdfGeometry.GetGeometryType(collision.geometry);
+
+                UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
+                UrdfOrigin.ImportOriginData(collisionObject.transform, collision.origin);
+            }
         }
-    
+
         public static Link.Collision ExportCollisionData(this UrdfCollision urdfCollision)
         {
             UrdfGeometry.CheckForUrdfCompatibility(urdfCollision.transform, urdfCollision.geometryType);

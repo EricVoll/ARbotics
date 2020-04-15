@@ -32,7 +32,7 @@ namespace RosSharp.Urdf.Editor
 
             UrdfPlugins.Create(robotGameObject.transform);
 
-            UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform);
+            UrdfLink urdfLink = UrdfLinkExtensions.Synchronize(robotGameObject.transform);
             urdfLink.name = "base_link";
             urdfLink.IsBaseLink = true;
         }
@@ -74,7 +74,7 @@ namespace RosSharp.Urdf.Editor
             UrdfMaterial.InitializeRobotMaterials(robot);
             UrdfPlugins.Create(robotGameObject.transform, robot.plugins);
 
-            UrdfLinkExtensions.Create(robotGameObject.transform, robot.root);
+            UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
 
             GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);

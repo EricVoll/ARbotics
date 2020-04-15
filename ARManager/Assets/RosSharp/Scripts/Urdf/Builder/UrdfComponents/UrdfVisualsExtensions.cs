@@ -22,32 +22,32 @@ namespace RosSharp.Urdf.Editor
 {
     public static class UrdfVisualsExtensions
     {
-        public static void Create(Transform parent, List<Link.Visual> visuals = null)
+        public static void Synchronize(Transform parent, List<Link.Visual> visuals = null)
         {
-            if(parent.FindChildOrCreate("Visuals", out GameObject visualsObject))
+            if (parent.FindChildOrCreateWithComponent<UrdfVisuals>("Visuals", out GameObject visualsObject, out UrdfVisuals urdfVisuals))
             {
-                visualsObject.AddComponent<UrdfVisuals>();
+                visualsObject.hideFlags = HideFlags.NotEditable;
+                urdfVisuals.hideFlags = HideFlags.None;
             }
 
-            UrdfVisuals urdfVisuals = visualsObject.GetComponent<UrdfVisuals>();
-
-            visualsObject.hideFlags = HideFlags.NotEditable;
-            urdfVisuals.hideFlags = HideFlags.None;
-
+            //Create all visuals that are in the list but do not yet exist
             if (visuals != null)
             {
                 foreach (Link.Visual visual in visuals)
+                {
                     UrdfVisualExtensions.Create(urdfVisuals.transform, visual);
+                }
             }
 
+            //Destroy existing visuals that are not in the list
             UrdfVisual[] vis = visualsObject.GetComponentsInChildren<UrdfVisual>();
-            for (int i = vis.Length-1; i >= 0; i--)
+            for (int i = vis.Length - 1; i >= 0; i--)
             {
                 var visual = vis[i];
-                //if(visuals.Any(x => x.name == visual.name && x.Ge))
-                //{
-                //  Destroy(visual);
-                //}
+                if (!visuals.Any(x => x.name == visual.name))
+                {
+                    Object.Destroy(visual);
+                }
             }
         }
 

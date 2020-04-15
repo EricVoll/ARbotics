@@ -51,6 +51,7 @@ public class UrdfSyncher : MonoBehaviour
         if (!hasInitialUrdfModelImported)
         {
             ImportInitialUrdfModel(robot);
+            return;
         }
 
         robot.filename = assetsRootDirectoryName;

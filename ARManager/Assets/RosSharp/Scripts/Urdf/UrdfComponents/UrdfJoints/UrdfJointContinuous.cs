@@ -21,12 +21,14 @@ namespace RosSharp.Urdf
     {
         public override JointTypes JointType => JointTypes.Continuous;
 
-        public static UrdfJoint Create(GameObject linkObject)
+        public static UrdfJoint Synchronize(GameObject linkObject)
         {
-            UrdfJointContinuous urdfJoint = linkObject.AddComponent<UrdfJointContinuous>();
-
-            urdfJoint.UnityJoint = linkObject.AddComponent<HingeJoint>();
-            urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
+            linkObject.AddComponentIfNotExists<UrdfJointContinuous>(out UrdfJointContinuous urdfJoint);
+            if (linkObject.AddComponentIfNotExists<HingeJoint>(out HingeJoint joint))
+            {
+                urdfJoint.UnityJoint = joint;
+                urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
+            }
 
             return urdfJoint;
         }
@@ -66,9 +68,9 @@ namespace RosSharp.Urdf
         {
             joint.axis = GetAxisData(UnityJoint.axis);
             joint.dynamics = new Joint.Dynamics(
-                ((HingeJoint)UnityJoint).spring.damper, 
+                ((HingeJoint)UnityJoint).spring.damper,
                 ((HingeJoint)UnityJoint).spring.spring);
-            
+
             return joint;
         }
     }
