@@ -1,7 +1,8 @@
 # 3D_Vision_AR_RobotVis
 ![](project_overview.png)
-# Docker 
+# AR-Manager Overview
 ![](OverviewARManagerREST.svg)
+# Docker 
 [Installation Tutorial](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 ## Docker commands:
 ```docker build -t nice_image_name:1.0 .```
