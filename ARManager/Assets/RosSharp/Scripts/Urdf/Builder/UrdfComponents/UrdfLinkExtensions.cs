@@ -23,7 +23,7 @@ namespace RosSharp.Urdf.Editor
     {
         public static UrdfLink Synchronize(Transform parent, Link link = null, Joint joint = null)
         {            
-            parent.FindChildOrCreateWithComponent<UrdfLink>("link", out GameObject linkObject, out UrdfLink urdfLink);
+            parent.FindChildOrCreateWithComponent<UrdfLink>(link != null ? link.name : "link" , out GameObject linkObject, out UrdfLink urdfLink);
 
             UrdfVisualsExtensions.Synchronize(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Synchronize(linkObject.transform, link?.collisions);

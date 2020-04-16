@@ -40,15 +40,9 @@ namespace RosSharp.Urdf.Editor
             }
 
             //Destroy existing visuals that are not in the list
-            UrdfVisual[] vis = visualsObject.GetComponentsInChildren<UrdfVisual>();
-            for (int i = vis.Length - 1; i >= 0; i--)
-            {
-                var visual = vis[i];
-                if (!visuals.Any(x => x.name == visual.name))
-                {
-                    Object.Destroy(visual);
-                }
-            }
+            var vis = visualsObject.GetComponentsInDirectChildren<UrdfVisual>();
+            vis.RemoveAll(x => visuals.Any(y => y.name == x.name));
+            Utils.DestroyAll(vis);
         }
 
         public static List<Link.Visual> ExportVisualsData(this UrdfVisuals urdfVisuals)

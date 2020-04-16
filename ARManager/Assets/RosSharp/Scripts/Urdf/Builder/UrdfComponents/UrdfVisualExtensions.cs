@@ -36,7 +36,7 @@ namespace RosSharp.Urdf.Editor
         public static void Create(Transform parent, Link.Visual visual)
         {
             if (String.IsNullOrEmpty(visual.name))
-                visual.name = visual.GenerateNonReferenceID(parent);
+                visual.name = visual.GenerateNonReferenceID();
 
             if (parent.FindChildOrCreateWithComponent<UrdfVisual>(visual.name, out GameObject visualObject, out UrdfVisual urdfVisual))
             {

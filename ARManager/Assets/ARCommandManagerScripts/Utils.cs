@@ -12,7 +12,8 @@ public static class Utils
     /// The resulting value hopefully is unique.
     /// <para></para>
     /// If information about the parent exists, it includes it in its calculation
-    /// 
+    /// <para></para>
+    /// Do not use this method for Unity objects such as Transform and GameObjects, since a movement will change the id
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -34,12 +35,12 @@ public static class Utils
     /// <returns></returns>
     public static GameObject FindChildIfExists(this Transform transform, string name)
     {
-        var children = transform.GetComponentsInChildren<Transform>();
-        if (children == null || children.Length == 0) return null;
+        foreach (Transform directChild in transform)
+        {
+            if (directChild.name == name) return directChild.gameObject;
+        }
 
-        var child = children.FirstOrDefault(x => x.name == name);
-        if (child != null) return child.gameObject;
-        else return null;
+        return null;
     }
 
     /// <summary>
@@ -115,5 +116,51 @@ public static class Utils
     public static bool AddComponentIfNotExists<T>(this GameObject transform) where T : UnityEngine.Component
     {
         return transform.AddComponentIfNotExists<T>(out T _);
+    }
+
+    /// <summary>
+    /// Fetches the components in the direct children of this gameobject.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    public static List<T> GetComponentsInDirectChildren<T>(this GameObject go) where T : UnityEngine.Component
+    {
+        List<T> list = new List<T>();
+
+        var all = go.GetComponentsInChildren<T>();
+
+        foreach (var item in all)
+        {
+            if (GameObject.ReferenceEquals(item.transform.parent.gameObject, go))
+                list.Add(item);
+        }
+
+        return list;
+    }
+    /// <summary>
+    /// see <see cref="GetComponentsInDirectChildren{T}(GameObject)"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    public static List<T> GetComponentsInDirectChildren<T>(this Transform go) where T : UnityEngine.Component
+    {
+        return go.gameObject.GetComponentsInDirectChildren<T>();
+    }
+
+
+    /// <summary>
+    /// Destroys all object in the list
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="items"></param>
+    public static void DestroyAll<T>(List<T> items) where T : UnityEngine.Object
+    {
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            Debug.Log("I destroyed something");
+            Object.Destroy(items[i]);
+        }
     }
 }

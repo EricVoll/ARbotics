@@ -34,13 +34,12 @@ public class RobotBuilder
     {
         GameObject robotGameObject = rootObject;
 
-        if (robotGameObject.GetComponent<UrdfRobot>() == null)
-            robotGameObject.AddComponent<UrdfRobot>();
-
+        robotGameObject.AddComponentIfNotExists<UrdfRobot>();
+        
         UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
         UrdfMaterial.InitializeRobotMaterials(robot);
-        UrdfPlugins.Create(robotGameObject.transform, robot.plugins);
-
+        UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
+        
         UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
 
         //GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);

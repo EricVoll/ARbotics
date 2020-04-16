@@ -23,7 +23,7 @@ namespace RosSharp.Urdf
 {
     public class UrdfPlugins : MonoBehaviour
     {
-        public static void Create(Transform robot, List<Plugin> plugins = null)
+        public static void Synchronize(Transform robot, List<Plugin> plugins = null)
         {
             if(robot.FindChildOrCreate("Plugins", out GameObject pluginsObject))
             {
@@ -35,19 +35,9 @@ namespace RosSharp.Urdf
                 UrdfPlugin.Create(pluginsObject.transform, plugin);
 
             //Remove all plugins that are not in the plugin list
-            var existingPlugins = pluginsObject.GetComponentsInChildren<UrdfPlugin>();
-
-            if (existingPlugins != null)
-            {
-                for (int i = existingPlugins.Length - 1; i >= 0; i--)
-                {
-                    if (!plugins.Any(x => x.text == existingPlugins[i].PluginText))
-                    {
-                        //None of the new plugins contain this plugintext
-                        Destroy(existingPlugins[i]);
-                    }
-                }
-            }
+            var existingPlugins = pluginsObject.GetComponentsInDirectChildren<UrdfPlugin>();
+            existingPlugins.RemoveAll(x => plugins.Any(y => y.text == x.PluginText));
+            Utils.DestroyAll(existingPlugins);
         }
 
 
