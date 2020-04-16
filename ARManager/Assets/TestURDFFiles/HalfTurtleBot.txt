@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+
+<robot name="turtlebot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <link name="base_footprint"/>
+  <joint name="base_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.0102"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://kobuki_description/meshes/main_body.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.001 0 0.05199"/>
+    </visual>
+    <collision name="base">
+      <geometry>
+        <cylinder length="0.10938" radius="0.178"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.0 0 0.05949"/>
+    </collision>
+    <inertial>
+      <origin xyz="0.01 0 0"/>
+      <mass value="2.4"/>
+      <inertia ixx="0.019995" ixy="0.0" ixz="0.0" iyy="0.019995" iyz="0.0" izz="0.03675"/>
+    </inertial>
+  </link>
+  <joint name="wheel_left_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_left_link"/>
+    <origin rpy="-1.57079632679 0 0" xyz="0.00 0.115 0.0250"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="wheel_left_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://kobuki_description/meshes/wheel.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.0352"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="wheel_right_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_right_link"/>
+    <origin rpy="-1.57079632679 0 0" xyz="0.00 -0.115 0.0250"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="wheel_right_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://kobuki_description/meshes/wheel.dae"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.0350"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="caster_front_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_front_link"/>
+    <origin rpy="-1.57079632679 0 0" xyz="0.115 0.0 0.007"/>
+  </joint>
+  <link name="caster_front_link">
+    <collision>
+      <geometry>
+        <cylinder length="0.0176" radius="0.017"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="caster_back_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_back_link"/>
+    <origin rpy="-1.57079632679 0 0" xyz="-0.135 0.0 0.009"/>
+  </joint>
+  <link name="caster_back_link">
+    <collision>
+      <geometry>
+        <cylinder length="0.0176" radius="0.017"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+</robot>

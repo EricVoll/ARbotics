@@ -35,7 +35,7 @@ namespace RosSharp.Urdf
                 UrdfPlugin.Create(pluginsObject.transform, plugin);
 
             //Remove all plugins that are not in the plugin list
-            var existingPlugins = pluginsObject.GetComponentsInDirectChildren<UrdfPlugin>();
+            var existingPlugins = pluginsObject.GetComponentsInSelf<UrdfPlugin>();
             existingPlugins.RemoveAll(x => plugins.Any(y => y.text == x.PluginText));
             Utils.DestroyAll(existingPlugins);
         }

@@ -44,9 +44,9 @@ namespace RosSharp.Urdf.Editor
             }
 
             //Remove removed children
-            var existingChildren = parent.GetComponentsInDirectChildren<UrdfCollision>();
-            existingChildren.RemoveAll(x => collisions.Any(y => y.name == x.name));
-            Utils.DestroyAll(existingChildren);
+            var existingCollisions = collisionsObject.GetComponentsInSelf<UrdfCollision>();
+            existingCollisions.RemoveAll(x => collisions.Any(y => y.name == x.name));
+            Utils.DestroyAll(existingCollisions);
         }
 
         public static List<Link.Collision> ExportCollisionsData(this UrdfCollisions urdfCollisions)

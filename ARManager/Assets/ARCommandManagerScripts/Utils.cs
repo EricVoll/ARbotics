@@ -138,6 +138,7 @@ public static class Utils
 
         return list;
     }
+
     /// <summary>
     /// see <see cref="GetComponentsInDirectChildren{T}(GameObject)"/>
     /// </summary>
@@ -149,6 +150,26 @@ public static class Utils
         return go.gameObject.GetComponentsInDirectChildren<T>();
     }
 
+    /// <summary>
+    /// Returns all components which are directly on the GameObject <paramref name="go"/> itself
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    public static List<T> GetComponentsInSelf<T>(this GameObject go) where T : UnityEngine.Component
+    {
+        List<T> list = new List<T>();
+
+        var all = go.GetComponentsInChildren<T>();
+
+        foreach (var item in all)
+        {
+            if (GameObject.ReferenceEquals(item.gameObject, go))
+                list.Add(item);
+        }
+
+        return list;
+    }
 
     /// <summary>
     /// Destroys all object in the list

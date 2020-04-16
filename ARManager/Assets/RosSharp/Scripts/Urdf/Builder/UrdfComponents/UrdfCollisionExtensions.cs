@@ -50,7 +50,7 @@ namespace RosSharp.Urdf.Editor
 
         public static void Create(Transform parent, Link.Collision collision)
         {
-            if (String.IsNullOrEmpty(collision.name)) collision.name = collision.GenerateNonReferenceID(parent);
+            if (String.IsNullOrEmpty(collision.name)) collision.name = collision.GenerateNonReferenceID();
 
             if (parent.FindChildOrCreateWithComponent(collision.name, out GameObject collisionObject, out UrdfCollision urdfCollision))
             {

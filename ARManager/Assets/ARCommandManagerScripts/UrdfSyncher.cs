@@ -6,15 +6,35 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class UrdfSyncher : MonoBehaviour
+public class UrdfSyncher 
 {
+
+    #region Static Inits
+    private static AttachableComponentFactory<IAttachableComponent> tooltipFactory;
+
+    /// <summary>
+    /// Initializes all static classes needed for the urdfSyncher to work
+    /// </summary>
+    public static void InitializeUrdfSyncher()
+    {
+        //Attach tooltip factory to the Robot Parser
+        tooltipFactory = new AttachableComponentFactory<IAttachableComponent>("tooltip")
+        {
+            Constructor = () => new RosSharp.Urdf.Attachables.AttachedDataValue(),
+        };
+
+        Robot.attachableComponentFactories.Add(tooltipFactory);
+    }
+    #endregion
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
-    public UrdfSyncher(GameObject sceneContainerObject)
+    public UrdfSyncher(GameObject sceneContainerObject, int recreateObjectAfterSynchronizations = -1)
     {
         SceneContainerGameObject = sceneContainerObject;
+        synchronizationCounterMax = recreateObjectAfterSynchronizations;
     }
 
     /// <summary>
@@ -27,9 +47,12 @@ public class UrdfSyncher : MonoBehaviour
     /// </summary>
     private GameObject RobotRootObject;
 
-    private bool hasInitialUrdfModelImported = false;
+    private bool hasUrdfAssetsImported = false;
 
     private string assetsRootDirectoryName;
+
+    private int synchronizationCounterWithoutFullRegeneration = 0;
+    private int synchronizationCounterMax = -1;
 
 
     /// <summary>
@@ -38,21 +61,23 @@ public class UrdfSyncher : MonoBehaviour
     /// <param name="urdf"></param>
     public void SynchUrdf(string urdf)
     {
-        var tooltipFactory = new AttachableComponentFactory<IAttachableComponent>("tooltip")
-        {
-            Constructor = () => new RosSharp.Urdf.Attachables.AttachedDataValue(),
-        };
-
-        Robot.attachableComponentFactories.Add(tooltipFactory);
+        ReportSynch();
 
         Robot robot = Robot.FromContent(urdf);
 
-
-        if (!hasInitialUrdfModelImported)
+        hasUrdfAssetsImported = true;
+        if (!hasUrdfAssetsImported)
         {
             ImportInitialUrdfModel(robot);
             return;
         }
+        if (RobotRootObject == null)
+        {
+            RobotRootObject = new GameObject("MyCoolRoot");
+            RobotRootObject.transform.SetParent(SceneContainerGameObject.transform);
+        }
+
+        assetsRootDirectoryName = @"C:\Users\ericv\Documents\ETH\ETH 2020\3D Vision\3D_Vision_AR_RobotVis\ARManager\Assets\Urdf\Models\turtlebot\Turtlebot2\robot_description.urdf";
 
         robot.filename = assetsRootDirectoryName;
 
@@ -62,6 +87,8 @@ public class UrdfSyncher : MonoBehaviour
 
         RobotBuilder builder = new RobotBuilder();
         builder.Synchronize(robot, RobotRootObject);
+
+        synchronizationCounterWithoutFullRegeneration++;
     }
 
     /// <summary>
@@ -70,7 +97,7 @@ public class UrdfSyncher : MonoBehaviour
     /// <param name="robot"></param>
     private void ImportInitialUrdfModel(Robot robot)
     {
-        hasInitialUrdfModelImported = false;
+        hasUrdfAssetsImported = false;
 
         var protocol = RosConnector.Protocols.WebSocketNET;
         RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
@@ -86,6 +113,18 @@ public class UrdfSyncher : MonoBehaviour
             RobotRootObject.transform.SetParent(SceneContainerGameObject.transform);
         }
 
-        hasInitialUrdfModelImported = true;
+        hasUrdfAssetsImported = true;
+    }
+
+    private void ReportSynch()
+    {
+        if (synchronizationCounterMax == -1) return;
+
+        if (synchronizationCounterWithoutFullRegeneration == synchronizationCounterMax)
+        {
+            Object.Destroy(RobotRootObject);
+            RobotRootObject = null;
+            synchronizationCounterWithoutFullRegeneration = 0;
+        }
     }
 }

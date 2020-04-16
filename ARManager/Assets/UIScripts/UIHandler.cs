@@ -1,4 +1,4 @@
-using RosSharp.RosBridgeClient;
+﻿using RosSharp.RosBridgeClient;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,13 +9,14 @@ public class UIHandler : MonoBehaviour
 
     public TextAsset TurtleBot;
     public TextAsset TurtleBotExtended;
+    public TextAsset TurtleBotHalf;
     public TextAsset TurtleBotPluginLess;
     public TextAsset SingleNode;
     public TextAsset SingleNodeExtended;
-
+    public GameObject test;
     public void SendFullTurtleBot()
     {
-        SendMsg(TurtleBot);
+        SendMsg(TurtleBotHalf);
     }
     public void SendExtendedTurtleBot()
     {
