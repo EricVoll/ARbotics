@@ -6,7 +6,7 @@ public class ARCommander : MonoBehaviour
 {
     public UrdfSyncher urdfSyncher;
 
-    Dictionary<int, UrdfSyncher> currentSceneDicionary = new Dictionary<int, UrdfSyncher>();
+    Dictionary<string, UrdfSyncher> currentSceneDicionary = new Dictionary<string, UrdfSyncher>();
 
     public GameObject SceneContainerObject;
 
@@ -31,18 +31,28 @@ public class ARCommander : MonoBehaviour
 
 public class ARCommanderMessage
 {
-    public List<AvailableRobot> availableRobots = new List<AvailableRobot>();
-    public List<ObjectUrdf> devices = new List<ObjectUrdf>();
+    //All available devices that are requestable by the Unity side.
+    public List<AvailableRobot> availableDevices;
+
+    //All devices that should be displayed
+    public List<DeviceUrdf> devices;
 }
 
 public class AvailableRobot
 {
+    //FriendlyName for UI
     public string name;
+    //Id to request the publisher to be started
     public string id;
+    //URL where the Stationary Side will publish the urdf contents
+    public string publishingServerUrl; 
 }
 
-public class ObjectUrdf
+public class DeviceUrdf
 {
+    //URDF content of the device
     public string data;
-    public int id;
+    //The ID of the current instance
+    public string id;                  
 }
+

@@ -1,4 +1,4 @@
-﻿using RosSharp.RosBridgeClient;
+using RosSharp.RosBridgeClient;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,11 +42,11 @@ public class UIHandler : MonoBehaviour
     {
         ARCommanderMessage mock = new ARCommanderMessage()
         {
-            devices = new List<ObjectUrdf>()
+            devices = new List<DeviceUrdf>()
             {
-                new ObjectUrdf(){ data = urdf, id = 1 }
+                new DeviceUrdf(){ data = urdf, id = "1" }
             },
-            availableRobots = new List<AvailableRobot>()
+            availableDevices = new List<AvailableRobot>()
         };
 
         //if (isScond)
