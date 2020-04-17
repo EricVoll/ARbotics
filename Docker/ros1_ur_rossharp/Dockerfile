@@ -20,4 +20,5 @@ source /home/catkin_ws/devel/setup.bash && \
 source /home/ros-sharp_ws/devel/setup.bash && \
 cd /home/catkin_ws && catkin_make"
 
+RUN bash -c "echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc "
 WORKDIR /home
