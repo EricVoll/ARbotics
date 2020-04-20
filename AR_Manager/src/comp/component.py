@@ -4,16 +4,13 @@ from abc import ABC, abstractmethod
 
 import datetime 
 from dataclasses import dataclass
-
+import docker 
 
 @dataclass
 class AvailCompInfo:
 	PRETTY_NAME: str
 	max_instances: int
-	urdf_content: str
-	urdf_tooltip: str
-	docker_info: str
-	instances : 0
+	instances: int
 
 @dataclass
 class InstInfo:
@@ -24,7 +21,14 @@ class InstInfo:
 	running: bool
 	killed: bool
 	stop: bool
-	
+	docker_id: str
+
+@dataclass
+class RosCompInfo:
+	urdf_content: str
+	urdf_tooltip: str
+	docker_cmd: str
+	docker_image: str
 
 class Instance():
 	def __init__(self, comp, inst_id):
@@ -46,7 +50,9 @@ class Instance():
 			active = True, 
 			running = False,
 			killed = False,
-			stop = False 	)
+			stop = False,
+			docker_id ='TBD' 	)
+		self._container = self._comp.start()
 	
 	def __str__(self):
 			return 'Comp: %15s,   ID: %3s,   Started: %10s ,   UpTime: %10s'%(\
@@ -57,7 +63,7 @@ class Instance():
 		returns unique id which is set when instanciated
 		"""
 		if self._ii.active:
-			return time.time()  -self._ii.start_time
+			return time.time() - self._ii.start_time
 		else:
 			return 0
 
@@ -75,11 +81,8 @@ class Instance():
 	def remove(self):
 		self._comp.instance_closed()
 
-	def start(self):
-		pass
-
 	def stop(self):
-		pass
+		self._container.stop()
 
 	def update(self):
 		return True
@@ -89,15 +92,13 @@ class Component(ABC):
 	"""
 	a component defines how to actually interact with a container
 	"""
-	def __init__ (self, cfg):
+	def __init__ (self, cfg, docker_client):
 		self._aci = AvailCompInfo(
 			PRETTY_NAME = cfg['pretty_name'],
 			max_instances = cfg['max_instances'],
-			urdf_content = cfg['urdf_content'],
-			urdf_tooltip = cfg['urdf_tooltip'],
-			docker_info = cfg['docker_info'],
 			instances = 0
 		)
+		self.docker_client = docker_client
 
 	def __str__(self):
 		return 'Comp: %15s, Instances: %3s'%(self._aci.PRETTY_NAME, self._aci.instances)
@@ -141,31 +142,47 @@ class Component(ABC):
 	@abstractmethod 
 	def stop(self):
 		print("STOP", self._aci.PRETTY_NAME)
-	
+
 		#goes into container and stops
 	
 	@abstractmethod 
 	def update(self):
 		pass
 
-import docker 
+
 
 class RosComponent(Component):
 		
-	def __init__ (self, cfg):
+	def __init__ (self, cfg, docker_client):
 		"""
 		ToDo: Check if cfg valid
 		"""
-		super(RosComponent, self).__init__(cfg)
+		super(RosComponent, self).__init__(cfg, docker_client)
+		print(cfg)
+		self._rci = RosCompInfo(
+			urdf_content = cfg['urdf']['content'],
+			urdf_tooltip = cfg['urdf']['tooltip'],
+			docker_cmd = cfg['docker']['cmd'],
+			docker_image = cfg['docker']['image'])
+
 
 	def start(self):
 
 		super(RosComponent, self).start()
+		cmd = '''bash -c '%s' '''%self._rci.docker_cmd
+
+		container = self.docker_client.containers.run(self._rci.docker_image, 
+			detach=True, 
+			command = cmd,
+			network_mode='host' )
+	
+		return container 
 		#goes into container and launches/runs
 
 	def stop(self):
 
 		super(RosComponent, self).stop()
+
 		#goes into container and stops
 
 	def update(self):
@@ -175,11 +192,11 @@ class RosComponent(Component):
 
 class UnityComponent(Component):
 
-	def __init__ (self, cfg):
+	def __init__ (self, cfg, docker_client):
 		"""
 		ToDo: Check if cfg valid
 		"""
-		super(UnityComponent, self).__init__(cfg)
+		super(UnityComponent, self).__init__(cfg, docker_client)
 
 	def start(self): 
 		super(UnityComponent, self).start()
@@ -194,11 +211,42 @@ class UnityComponent(Component):
 
 
 
-
 #class AvailCompInfo():
 if __name__ == '__main__':
-	inst = AvailCompInfo('s1',2,'s3','s5','s5',1)
+	#inst = AvailCompInfo('s1',2,'s3','s5','s5',1)
 
-	inst.docker_info = 'assda'
-	print(inst.docker_info)
-	print(inst)
+	# inst.docker_info = 'assda'
+	# print(inst.docker_info)
+	# print(inst)
+
+	start = time()
+	client = docker.from_env()
+	
+	containers = client.containers.list()
+	print(containers)
+	# cmd = '/bin/bash  ' +\
+	# 		' -c "echo "HELLO" && source /opt/ros/melodic/setup.bash &&' +\
+	# 		' source /home/catkin_ws/devel/setup.bash &&' +\
+	# 		' source /home/ros-sharp_ws/devel/setup.bash &&' +\
+	# 		' roslaunch ur_rossharp ur5_rossharp.launch" '
+	# print(cmd)
+
+	# command="/bin/bash",
+	cmd = '''bash -c 'roscore' ''' 
+
+	#cmd = '''bash -c 'roslaunch' '''
+
+	cmd = '''bash -c 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch' ''' 
+	
+	container = client.containers.run("ros1_ur_rossharp:1.0", detach=False, command = cmd, network_mode='host' )
+	
+	print(container)
+
+	# cmd = '/bin/bash -c "echo hel123lo stdout ; echo hello stderr >&2"'
+	# res = container.exec_run(cmd, stream=False, demux=False)
+	# print(res.output)
+
+
+
+
+	

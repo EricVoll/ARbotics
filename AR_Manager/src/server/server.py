@@ -10,7 +10,7 @@ from flask import Flask
 from flask_restful import Resource, Api
 from apscheduler.schedulers.background import BackgroundScheduler
 
-
+import docker
 """
 This will be implemented based on flask and REST-API
 """
@@ -44,16 +44,18 @@ class Server():
 		Extension later: Allow groups in config (set of mutiple instances) (nice to have)
 		In most cases this will be done by roslaunch directly
 		"""
+		self._docker_client = docker.from_env()
 
-
-		self._avail_comps = cfg_to_comps( cfg_ros_comp )
-		self._avail_comps += cfg_to_comps( cfg_unity_comp )
+		self._avail_comps = cfg_to_comps( cfg_ros_comp, self._docker_client, comp_type='ros' )
+		self._avail_comps += cfg_to_comps( cfg_unity_comp, self._docker_client, comp_type='unity')
 		
 		#containes all running components
 		#components are always copied and then they are instances
 		#instances might be ros or unity comp
 		self._instances = [] 
 		self._instance_counter = 0 
+
+
 
 	def __str__(self):
 		string = "Server Summary:\n"
@@ -80,7 +82,7 @@ class Server():
 			if comp.name == comp_name:
 
 				self._instances.append( Instance(comp=comp,inst_id=self._instance_counter) )
-				self._instances[-1].start()
+			
 
 				
 				return self._instance_counter
@@ -108,7 +110,7 @@ class Server():
 			if not running: 
 				self.remove_instance(inst.id)
 		print("spin")
-def cfg_to_comps(cfg_file):
+def cfg_to_comps(cfg_file, docker_client, comp_type='ros'):
 
 	"""
 	reads in yml-file: 
@@ -124,8 +126,12 @@ def cfg_to_comps(cfg_file):
 
 	comps = []
 	for single_cfg in data['components']:
-		comps.append( RosComponent(cfg = single_cfg) )
-
+		if comp_type == 'ros':
+			comps.append( RosComponent(single_cfg, docker_client) )
+		elif comp_type == 'unity':
+			comps.append( UnityComponent(single_cfg, docker_client) )
+		else:
+			logging.warning('Comp type ({}) not defined'.format(comp_type))
 	return comps
 
 

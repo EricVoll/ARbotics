@@ -1,11 +1,17 @@
 components:
   - pretty_name: 'UR3'
     max_instances: 10
-    urdf_content: 'string'
-    urdf_tooltip: 'string'
-    docker_info: "ur"
+    urdf:
+      content: 'string'
+      tooltip: 'string'
+    docker:
+      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch'
+      image: 'ros1_ur_rossharp:1.0'
   - pretty_name: 'UR5'
     max_instances: 10
-    urdf_content: 'string'
-    urdf_tooltip: 'string'
-    docker_info: "ur"
+    urdf:
+      content: 'string'
+      tooltip: 'string'
+    docker:
+      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch'
+      image: 'ros1_ur_rossharp:1.0'
