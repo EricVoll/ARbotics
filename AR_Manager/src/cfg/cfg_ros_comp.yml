@@ -1,0 +1,11 @@
+components:
+  - pretty_name: 'UR3'
+    max_instances: 10
+    urdf_content: 'string'
+    urdf_tooltip: 'string'
+    docker_info: "ur"
+  - pretty_name: 'UR5'
+    max_instances: 10
+    urdf_content: 'string'
+    urdf_tooltip: 'string'
+    docker_info: "ur"

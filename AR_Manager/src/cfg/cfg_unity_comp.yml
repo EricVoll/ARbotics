@@ -1,0 +1,6 @@
+components: 
+  - pretty_name: 'UnityCollision'
+    max_instances: 10
+    urdf_content: 'string'
+    urdf_tooltip: 'string'
+    docker_info: "ur"
