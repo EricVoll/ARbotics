@@ -1,16 +1,18 @@
 import sys
 sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/src')
-sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/src/')
+sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/')
 
 import logging
 import yaml
+
 from comp import RosComponent, UnityComponent, Instance
+
+
 import copy
-from flask import Flask
-from flask_restful import Resource, Api
-from apscheduler.schedulers.background import BackgroundScheduler
+
 
 import docker
+
 """
 This will be implemented based on flask and REST-API
 """
@@ -73,8 +75,11 @@ class Server():
 		return string
 
 	def server_close(self):
+		logging.info('Close Server')
+		print('close server')
+		for inst in self._instances:
+			inst.stop()
 		
-		pass
 
 	def start(self, comp_name):
 
@@ -82,9 +87,7 @@ class Server():
 			if comp.name == comp_name:
 
 				self._instances.append( Instance(comp=comp,inst_id=self._instance_counter) )
-			
 
-				
 				return self._instance_counter
 		logging.error('Cant find component')
 		return -1
@@ -109,7 +112,22 @@ class Server():
 			running = inst.update()
 			if not running: 
 				self.remove_instance(inst.id)
-		print("spin")
+		
+	def get_instace(self, inst_id):
+		for inst in self._instances:
+			
+			if inst.id == inst_id:
+				return inst.getData()
+		print("id not found")
+		return -1
+
+	def get_instances(self):
+		ls = []
+		for inst in self._instances:
+			ls.append( inst.getData() )
+		print ('ls;',ls)
+		return ls
+
 def cfg_to_comps(cfg_file, docker_client, comp_type='ros'):
 
 	"""
@@ -121,8 +139,7 @@ def cfg_to_comps(cfg_file, docker_client, comp_type='ros'):
 	#open the template
 	with open(cfg_file) as f:
 		data = yaml.load(f, Loader=yaml.FullLoader)
-		print(data)
-	print(data['components'])
+	print('data[components]' , data['components'])
 
 	comps = []
 	for single_cfg in data['components']:
@@ -136,25 +153,3 @@ def cfg_to_comps(cfg_file, docker_client, comp_type='ros'):
 
 
 
-
-if __name__ == '__main__':
-	app = Flask(__name__)
-	api = Api(app)
-
-	# api.add_resource(Instances,'/Instances/<string:name>')
-	# api.add_resource(RosComponents,'/RosComponents/<string:name>')
-
-
-	s = Server()
-	s.start("UR3")
-	s.start("UR5")
-
-	scheduler = BackgroundScheduler()
-	def spin_job():
-		s.spin()
-	job = scheduler.add_job(spin_job, 'interval', minutes=1/60)
-	scheduler.start()
-
-	app.run(debug=True) 
-	
-	print(s)

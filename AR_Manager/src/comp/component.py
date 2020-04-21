@@ -5,13 +5,17 @@ from abc import ABC, abstractmethod
 import datetime 
 from dataclasses import dataclass
 import docker 
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
+@dataclass_json
 @dataclass
 class AvailCompInfo:
 	PRETTY_NAME: str
 	max_instances: int
 	instances: int
 
+@dataclass_json
 @dataclass
 class InstInfo:
 	inst_id : int
@@ -23,6 +27,7 @@ class InstInfo:
 	stop: bool
 	docker_id: str
 
+@dataclass_json
 @dataclass
 class RosCompInfo:
 	urdf_content: str
@@ -52,6 +57,7 @@ class Instance():
 			killed = False,
 			stop = False,
 			docker_id ='TBD' 	)
+		print("instance launched"+ self._comp.name, self.getData() )
 		self._container = self._comp.start()
 	
 	def __str__(self):
@@ -83,8 +89,17 @@ class Instance():
 
 	def stop(self):
 		self._container.stop()
+		self._container.remove()
+	
+	def getData(self):
+		#.to_dict()
+		d = {'inst': self._ii.to_dict(), 'comp' : self._comp.getData()['comp']  }
+		return d
 
 	def update(self):
+		if self._container.status == 'exited':
+			return False
+
 		return True
 		
 
@@ -116,7 +131,10 @@ class Component(ABC):
 	@property
 	def instances(self):
 		return self._aci.instances
-
+	
+	def getData(self):
+		d = {'comp': self._aci.to_dict() }
+		return d
 	@property
 	def name(self):
 		"""
@@ -135,13 +153,13 @@ class Component(ABC):
 
 	@abstractmethod 
 	def start(self):
-		
-		print("STARTED", self._aci.PRETTY_NAME)
+		self.add_instance()
+		print("STARTED: ", self._aci.PRETTY_NAME)
 		#goes into container and launches/runs
 	
 	@abstractmethod 
 	def stop(self):
-		print("STOP", self._aci.PRETTY_NAME)
+		print("STOP: ", self._aci.PRETTY_NAME)
 
 		#goes into container and stops
 	
@@ -175,14 +193,13 @@ class RosComponent(Component):
 			detach=True, 
 			command = cmd,
 			network_mode='host' )
-	
+		print('executed docker run got container:', container)
 		return container 
 		#goes into container and launches/runs
 
 	def stop(self):
 
 		super(RosComponent, self).stop()
-
 		#goes into container and stops
 
 	def update(self):
@@ -219,7 +236,7 @@ if __name__ == '__main__':
 	# print(inst.docker_info)
 	# print(inst)
 
-	start = time()
+
 	client = docker.from_env()
 	
 	containers = client.containers.list()

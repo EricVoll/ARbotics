@@ -1,139 +1,60 @@
 import os 
-
-from client import CommandLineClient, RosClient
 from server import Server
+from rest_res import ResInstances, ResInstance, ResAvailComps, ResAvailComp
+from apscheduler.schedulers.background import BackgroundScheduler
 
 import logging
+from flask import Flask
+from flask_restful import Resource, Api
 
-if __name__ == "__main__":
-	client = CommandLineClient(id=10)
-	client2 = RosClient(id=20)
-	server = Server(client = client) 
-	server.add_client(client2)
-	ids = server.client_ids
-	server.my_clients_do_something()
+import signal
+import time
+import sys
 
-	print(server)
-	id1 = server.start('UR3')
-	id2 = server.start('UR5')
-	id3 = server.start('UnityCollision')
-	id4 = server.start('UnityCollision')
-	print(server)
+if __name__ == '__main__':
 
-# PEP8 
-
-# Variables:
-# name_of_variable = 'Name'
-
-# CONSTANTS:
-# LIST_SETTING = [
-# 	'setting1',
-# 	'setting2'
-# ]
-
-# functions:
-# #empty
-# #empty
-# def function_name():
-# 	#empty
-# 	return "something"
-# #empty
-# #empty
-
-# Classes:
-# #empty
-# #empty
-# class FunctionClass:
-# 	#empty
-# 	def __init__(self,name):
-# 		#empty
-# 		self.name = name
-# 	#empty
-# 	def fuc_number():
-# 		#empty		
-# 		return 0
-# #empty
-# #empty
-
-
-# FactoryFunctions (functions return instances of classes)
-# #in this case name of function upperletter
-
-# def FunctionClassImp():
+	app = Flask(__name__)
 	
-# 	return FunctionClass("Name") 
 
-
-# class SomeClass():
-
-# 	def __init__(self,name):
-
-# 		self._name = name #implies no one should change the name
-# 		return "Hello"
+	api = Api(app)
 	
-# 	@property	#getter method for name
-# 	def name(self):
-		
-# 		return self.name
+	s = Server()
 
-"""
-sprint list: 
-- server functions std 
-- server config (best way)
-- server functionality (starting ROS Nodes stopping ros nodes)
-- how does this work in detail ?
+	def signal_handler(signal, frame):
+			# your code here
+		s.server_close()
+		if len(s.get_instances()) == 0:
+			sys.exit(0)
+		else:
+			print("Container still running")
+	signal.signal(signal.SIGINT, signal_handler)
+	
+	
+	print('RUNRUN!RUN!RUN!RUN!RUN!RUN!RUN!RUN!!')
 
-MVP(all containers are created and up and running!)
-Everything is configured on the ROS side !!! 
-Just roslaunch possible no furter interactions
+	api.add_resource(ResInstances,'/Instances/',
+		resource_class_kwargs={'server': s})
+	api.add_resource(ResInstance,'/Instances/<string:inst_id>',
+		resource_class_kwargs={'server': s})
 
-	CONFIG the capabilities of the server:
+	api.add_resource(ResAvailComps,'/AvailComp/',
+		resource_class_kwargs={'server': s})
+	api.add_resource(ResAvailComp,'/AvailComp/<string:name>',
+		resource_class_kwargs={'server': s})
+	
+	# api.add_resource(ResComps,'/Comp/',
+	# 	resource_class_kwargs={'server': s})
 
-		ROS_Components:
-			ROS_SHARP_Bridge(default launched):
-				-
-				-
-				-
-				-
+	scheduler = BackgroundScheduler()
 
-			UR5:
-				- name:
-				- container:
-				- launche:
-				- topics_published:
-				- services_offered:
-			Camera:
-				- name:
-				- container:
-				- launche: #container and launch file
-				- topics_published:
-				- services_offered:
+	s.start("UR5")
+
+	def spin_job():
+		s.spin()
+		print(s)
+		print(s.get_instace(0))
+	job = scheduler.add_job(spin_job, 'interval', minutes=1/60)
+	scheduler.start()
 
 	
-		Unity_Components: 
-			LidarSim: 
-				- name:
-				- container:
-				- launch: #ROS sharp massage
-				- topics_published: 
-				- services_offered:		
-			CollisionDetecter:
-				- name:
-				- container:
-				- launch: #ROS sharp massage
-				- topics_published: 
-				- services_offered:
-
-- config files must be updatable via the clients
-
-
-
-When first implementation is running write unit test for this
-
-
-
-
--client functions (what must be able to be done)
-- terminal client application
-- ros client application
-"""
+	app.run(debug=True) 
