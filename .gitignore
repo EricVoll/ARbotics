@@ -61,7 +61,7 @@ crashlytics-build.properties
 
 Docker/dev_script/
 
-__pycache__/
+**/__pycache__/
 *.pyc
 **/.vscode
 */.vscode/c_cpp_properties.json
