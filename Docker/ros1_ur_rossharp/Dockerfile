@@ -1,11 +1,12 @@
 
-FROM ros1_ur:1.0
+FROM ros1_ur:latest
 
 COPY ./rossharp_install.sh /
+RUN dos2unix /ur_install.sh
+
 RUN apt-get update 
 
 RUN bash -c "chmod +x /rossharp_install.sh  && /rossharp_install.sh "
-
 
 RUN bash -c "source /opt/ros/melodic/setup.bash && \
 source /home/catkin_ws/devel/setup.bash && \

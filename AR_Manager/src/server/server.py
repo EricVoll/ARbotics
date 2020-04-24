@@ -23,26 +23,6 @@ class Server():
 								cfg_ros_comp = 'src/cfg/cfg_ros_comp.yml', \
 								cfg_unity_comp = 'src/cfg/cfg_unity_comp.yml'):
 		"""
-		cfg_ros_comp = stores all information about available ros comp
-		  is read in when initalized
-		cfg_unity_comp = stores all information about available unity comp
-		  is read in when initalized
-		every client is able to start or stop components
-
-		Idee of components: 
-		YML-files -> ComponentList
-		RosComponent UR3
-		RosComponent UR5
-
-		call create_component(UR3)
-			if UR3 in list:
-				if CompInstanceCounter < UR3.cfg:
-					copy UR3 to instances list
-					instance UR3.start()
-					increase ComponentInstance counter
-
-		Extension later: Allow groups in config (set of mutiple instances) (nice to have)
-		In most cases this will be done by roslaunch directly
 		"""
 		self._docker_client = docker.from_env()
 

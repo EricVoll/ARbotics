@@ -21,7 +21,6 @@ cd /home/catkin_ws
 catkin_make 
 source /home/catkin_ws/devel/setup.bash
 
-echo 'source /opt/ros/melodic/setup.bash' >> ~/.bashrc 
 echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc 
 
 

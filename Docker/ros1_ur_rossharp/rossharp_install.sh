@@ -17,10 +17,6 @@ cd /home/ros-sharp_ws
 source /opt/ros/melodic/setup.bash
 catkin_make
 
-
-echo 'source /opt/ros/melodic/setup.bash' >> ~/.bashrc 
-
-echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc 
 echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc 
 # sudo docker build -t ros1_ros-sharp:1.0 .
 #sudo docker run -it --network=host ros1_ros-sharp:1.0
