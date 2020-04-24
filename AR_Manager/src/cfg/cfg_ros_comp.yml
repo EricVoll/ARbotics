@@ -1,5 +1,6 @@
 components:
   - pretty_name: 'UR3'
+    comp_type : 'ros'
     max_instances: 10
     urdf:
       content: 'string'
@@ -9,6 +10,7 @@ components:
       image: 'ros1_ur_rossharp:1.0'
   - pretty_name: 'UR5'
     max_instances: 10
+    comp_type: 'ros'
     urdf:
       content: 'string'
       tooltip: 'string'

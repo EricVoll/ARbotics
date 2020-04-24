@@ -7,9 +7,7 @@ import yaml
 
 from comp import RosComponent, UnityComponent, Instance
 
-
 import copy
-
 
 import docker
 
@@ -48,8 +46,8 @@ class Server():
 		"""
 		self._docker_client = docker.from_env()
 
-		self._avail_comps = cfg_to_comps( cfg_ros_comp, self._docker_client, comp_type='ros' )
-		self._avail_comps += cfg_to_comps( cfg_unity_comp, self._docker_client, comp_type='unity')
+		self._avail_comps = cfg_to_comps( cfg_ros_comp, self._docker_client)
+		self._avail_comps += cfg_to_comps( cfg_unity_comp, self._docker_client)
 		
 		#containes all running components
 		#components are always copied and then they are instances
@@ -75,8 +73,12 @@ class Server():
 		return string
 
 	def server_close(self):
+
 		logging.info('Close Server')
-		print('close server')
+		self.stop_instances()
+		
+	def stop_instances(self):
+
 		for inst in self._instances:
 			inst.stop()
 		
@@ -87,8 +89,9 @@ class Server():
 			if comp.name == comp_name:
 
 				self._instances.append( Instance(comp=comp,inst_id=self._instance_counter) )
+				self._instance_counter += 1
+				return self._instances[-1].getData()
 
-				return self._instance_counter
 		logging.error('Cant find component')
 		return -1
 
@@ -96,9 +99,10 @@ class Server():
 		for inst in self._instances:
 			if inst.id() == inst_id:
 				inst.remove()
-				
 				self._instances.remove(inst)
-			
+				return {'suc': True}	
+		
+		return -1
 		logging.error('Cant find instance id')
 
 
@@ -113,7 +117,7 @@ class Server():
 			if not running: 
 				self.remove_instance(inst.id)
 		
-	def get_instace(self, inst_id):
+	def get_instance(self, inst_id):
 		for inst in self._instances:
 			
 			if inst.id == inst_id:
@@ -125,10 +129,49 @@ class Server():
 		ls = []
 		for inst in self._instances:
 			ls.append( inst.getData() )
-		print ('ls;',ls)
+
+		if len(ls) == 0:	
+			return {'suc': False}
+		return ls
+		
+	def add_comps(self,cfg,store=False):
+		to_remove =[]
+		for i in range(0,len(cfg)): 
+			if self.get_avail_comp(cfg[i]['pretty_name']) != -1:
+				logging.warning('Component with name {} already exists'.format(cfg[i]['pretty_name']))
+				to_remove.append(cfg[i])
+		for i in to_remove:
+			cfg.remove(i)
+
+		self._avail_comps += cfg_to_comps( cfg, self._docker_client )
+
+	def get_avail_comps(self):
+
+		ls = []
+		for comp in self._avail_comps:
+			ls.append( comp.getData() )
+
+		if len(ls) == 0:	
+			return -1
 		return ls
 
-def cfg_to_comps(cfg_file, docker_client, comp_type='ros'):
+	def get_avail_comp(self, name):
+
+		for comp in self._avail_comps:
+			if comp.name == name:
+				
+				return comp.getData()
+		return -1
+
+	def remove_avail_comp(self, name):
+
+		for comp in self._avail_comps:
+			if comp.name == name:
+				self._avail_comps.remove(comp)
+				return comp.getData()
+		return -1
+
+def cfg_to_comps(cfg_file, docker_client):
 
 	"""
 	reads in yml-file: 
@@ -137,18 +180,26 @@ def cfg_to_comps(cfg_file, docker_client, comp_type='ros'):
 	ToDo: Check if cfg file is valid
 	"""
 	#open the template
-	with open(cfg_file) as f:
-		data = yaml.load(f, Loader=yaml.FullLoader)
-	print('data[components]' , data['components'])
+	print(type(cfg_file))
 
+	if isinstance(cfg_file, str):
+		with open(cfg_file) as f:
+			data = yaml.load(f, Loader=yaml.FullLoader)['components']
+		print('data[components]' , data)
+	elif isinstance(cfg_file, list):
+		data = cfg_file
+		print("GOT CFG AS LIST")
+	else:
+		logging.error('invalid cfg type')
+	
 	comps = []
-	for single_cfg in data['components']:
-		if comp_type == 'ros':
+	for single_cfg in data:
+		if single_cfg['comp_type'] == 'ros':
 			comps.append( RosComponent(single_cfg, docker_client) )
-		elif comp_type == 'unity':
+		elif single_cfg['comp_type'] == 'unity':
 			comps.append( UnityComponent(single_cfg, docker_client) )
 		else:
-			logging.warning('Comp type ({}) not defined'.format(comp_type))
+			logging.warning('Comp type ({}) not defined'.format(single_cfg['comp_type']))
 	return comps
 
 

@@ -14,6 +14,7 @@ class AvailCompInfo:
 	PRETTY_NAME: str
 	max_instances: int
 	instances: int
+	comp_type: str
 
 @dataclass_json
 @dataclass
@@ -109,6 +110,7 @@ class Component(ABC):
 	"""
 	def __init__ (self, cfg, docker_client):
 		self._aci = AvailCompInfo(
+			comp_type= cfg['comp_type'], 
 			PRETTY_NAME = cfg['pretty_name'],
 			max_instances = cfg['max_instances'],
 			instances = 0
@@ -188,7 +190,7 @@ class RosComponent(Component):
 
 		super(RosComponent, self).start()
 		cmd = '''bash -c '%s' '''%self._rci.docker_cmd
-
+		
 		container = self.docker_client.containers.run(self._rci.docker_image, 
 			detach=True, 
 			command = cmd,

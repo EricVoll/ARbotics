@@ -26,18 +26,19 @@ if __name__ == '__main__':
 		if len(s.get_instances()) == 0:
 			sys.exit(0)
 		else:
-			print("Container still running")
+			print("good")
+
 	signal.signal(signal.SIGINT, signal_handler)
 	
 	
-	print('RUNRUN!RUN!RUN!RUN!RUN!RUN!RUN!RUN!!')
+	print('hello')
 
-	api.add_resource(ResInstances,'/Instances/',
+	api.add_resource(ResInstances,'/Instances',
 		resource_class_kwargs={'server': s})
-	api.add_resource(ResInstance,'/Instances/<string:inst_id>',
+	api.add_resource(ResInstance,'/Instances/<int:inst_id>',
 		resource_class_kwargs={'server': s})
 
-	api.add_resource(ResAvailComps,'/AvailComp/',
+	api.add_resource(ResAvailComps,'/AvailComp',
 		resource_class_kwargs={'server': s})
 	api.add_resource(ResAvailComp,'/AvailComp/<string:name>',
 		resource_class_kwargs={'server': s})
@@ -51,9 +52,8 @@ if __name__ == '__main__':
 
 	def spin_job():
 		s.spin()
-		print(s)
-		print(s.get_instace(0))
-	job = scheduler.add_job(spin_job, 'interval', minutes=1/60)
+		#print(s)
+	job = scheduler.add_job(spin_job, 'interval', minutes=1/10)
 	scheduler.start()
 
 	

@@ -9,40 +9,43 @@ class ResInstances(Resource):
 		self.s = server
 
 	def get(self):
-		return {'Running':True,
-						'Uptime':100,
-						'Started':'time'} #returns the id of the instance
+		data = self.s.get_instances()
+		print(data)
+		return data #returns the id of the instance
+
+	def post(self):
+		print(self.s)
+		parser = reqparse.RequestParser()
+		parser.add_argument('comp_name', type=str, required=True, location='json')
+		args = parser.parse_args()
+
+		return self.s.start(args['comp_name'])
 	def delete(self):
 		#delete all runing comps
-		return {'Running':True,
-					'Uptime':100,
-					'Started':'time'} #returns the id of the instance
+		print(self.s)
+		self.s.stop_instances()
+		return {'Suc':True}
 	
-
 class ResInstance(Resource):
 	def __init__(self, server):
 		self.s = server
 
 	def get(self,inst_id):
-		parser = reqparse.RequestParser()
-		parser.add_argument('int_bar', type=int)
-		args = parser.parse_args()
+		print(self.s)
+		return self.s.get_instance(inst_id)
 
-		return {'Running':True,
-						'Uptime':100,
-						'Started':'time'} #returns the id of the instance
 	
 	def post(self,inst_id):
-		
-		return {'Running':True,
-						'Uptime':100,
-						'Started':'time'} #returns the id of the instance
-	
-	def delete(self,inst_id):
-		return {'Running':True,
-						'Uptime':100,
-						'Started':'time'} #returns the id of the instance
+		print(self.s)
+		parser = reqparse.RequestParser()
+		parser.add_argument('comp_name', type=list, required=True, location='json')
+		args = parser.parse_args()
 
+		return self.s.start(args['comp_name'])
+
+		
+	def delete(self,inst_id):
+		return self.s.remove_instance(inst_id)
 
 class ResAvailComps(Resource):
 
@@ -50,13 +53,21 @@ class ResAvailComps(Resource):
 		self.s = server
 
 	def get(self):
-		return {'Running':True,
-						'Uptime':100,
-						'Started':'time'} #returns the id of the instance
-
+		print(self.s)
+		return self.s.get_avail_comps()
+		
 	def post(self):
+		print(self.s)
 		#add mutiple avail res
-		return {'instance_id': 100} #returns the id of the instancep
+
+		parser = reqparse.RequestParser()
+		parser.add_argument('components', type=list, required=True, location='json')
+		args = parser.parse_args()
+		print("input                    ",len( args['components']) , type(args['components']) , args['components'])
+		self.s.add_comps(args['components'])
+		res = self.s.get_avail_comps() 
+		print(self.s)
+		return res
 
 
 class ResAvailComp(Resource):
@@ -65,16 +76,16 @@ class ResAvailComp(Resource):
 		self.s = server
 
 	def get(self,name):
+		print(self.s)
 	
-		return {'Running':True,
-						'Uptime':100,
-						'Started':'time'} #returns the id of the instance
-
-	def post(self,name):
-		#add mutiple avail res
-		return {'instance_id': 100} #returns the id of the instancep
+		return self.s.get_avail_comp(name) 
 	
+	# def post(self,name):
+	# 	#add mutiple avail res
+	# 	return {'instance_id': 100} #returns the id of the instancep
+			
 	def delete(self,name):
 		#delete avail 
-		return {	'suc': True,
-							'instance_id_stopped': 123}
+		res = self.s.remove_avail_comp(name)
+		print(self.s)
+		return res
