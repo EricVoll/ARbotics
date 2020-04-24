@@ -1,6 +1,6 @@
 import os 
 from server import Server
-from rest_res import ResInstances, ResInstance, ResAvailComps, ResAvailComp
+from rest_res import ResInstances, ResInstance, ResAvailComps, ResAvailComp,ResInstanceUrdfDyn
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import logging
@@ -38,9 +38,12 @@ if __name__ == '__main__':
 	api.add_resource(ResInstance,'/Instances/<int:inst_id>',
 		resource_class_kwargs={'server': s})
 
-	api.add_resource(ResAvailComps,'/AvailComp',
+	api.add_resource(ResAvailComps,'/AvailComps',
 		resource_class_kwargs={'server': s})
-	api.add_resource(ResAvailComp,'/AvailComp/<string:name>',
+	api.add_resource(ResAvailComp,'/AvailComps/<string:name>',
+		resource_class_kwargs={'server': s})
+
+	api.add_resource(ResInstanceUrdfDyn,'/Instances/<int:inst_id>/inst/urdf_dyn',
 		resource_class_kwargs={'server': s})
 	
 	# api.add_resource(ResComps,'/Comp/',
@@ -48,7 +51,7 @@ if __name__ == '__main__':
 
 	scheduler = BackgroundScheduler()
 
-	s.start("UR5")
+	#s.start("UR5")
 
 	def spin_job():
 		s.spin()

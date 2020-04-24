@@ -43,6 +43,16 @@ Simplest way to go is copy for example `ros2_example` folder and rename it.
 Create and `newNode_install.sh` file in this folder.  
 Build the container and run it with the volume mapped so you can modify the `newNode_install.sh` with VSCode. (Use argument `docker run -v`) Do the bugfixing and debugging until the new node works. Therefore use the `newNode_install.sh` for all installation purposes. (`chmod +x newNode_install.sh`). When finished simply add the script to the Dockerfile (see for example ros2_gazebo). If you want to develop a ROS node to the same simply map a workspace between the node and your host PC with the `docker run -V` and do the development in VSCode. 
 ### Dockerfile 
+
+Install all containers:
+''' 
+docker build --no-cache -t ros1_base ./ros1_base/ &&\
+docker build --no-cache -t ros1_ur ./ros1_ur/ &&\
+docker build --no-cache -t ros1_ur_rossharp ./ros1_ur_rossharp/
+'''
+
+
+
 [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
 ### Docker compose up/down

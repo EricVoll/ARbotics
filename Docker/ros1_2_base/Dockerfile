@@ -1,4 +1,4 @@
-FROM ros2_base:1.0
+FROM ros2_base
 
 ###############################copied from here##################### 
 #https://github.com/osrf/docker_images/blob/b075c7dbe56055d862f331f19e1e74ba653e181a/ros/melodic/ubuntu/bionic/ros-core/ros_entrypoint.sh

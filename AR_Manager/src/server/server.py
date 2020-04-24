@@ -13,6 +13,10 @@ import docker
 
 """
 This will be implemented based on flask and REST-API
+
+joint_states
+name: [elbow_joint, shoulder_lift_joint, shoulder_pan_joint, wrist_1_joint, wrist_2_joint,
+  wrist_3_joint]
 """
 
 class Server():
@@ -34,7 +38,6 @@ class Server():
 		#instances might be ros or unity comp
 		self._instances = [] 
 		self._instance_counter = 0 
-
 
 
 	def __str__(self):
@@ -70,7 +73,7 @@ class Server():
 
 				self._instances.append( Instance(comp=comp,inst_id=self._instance_counter) )
 				self._instance_counter += 1
-				return self._instances[-1].getData()
+				return self._instances[-1].get_data()
 
 		logging.error('Cant find component')
 		return -1
@@ -101,18 +104,27 @@ class Server():
 		for inst in self._instances:
 			
 			if inst.id == inst_id:
-				return inst.getData()
+				return inst.get_data()
 		print("id not found")
 		return -1
 
 	def get_instances(self):
 		ls = []
 		for inst in self._instances:
-			ls.append( inst.getData() )
+			ls.append( inst.get_data())
 
 		if len(ls) == 0:	
-			return {'suc': False}
+			return []
 		return ls
+
+	def update_instance_urdf(self, inst_id, data):
+		for inst in self._instances:
+			
+			if inst.id == inst_id:
+				inst.update_urdf_dyn(data)
+				return inst.get_data()
+		logging.warning("id not found")
+		return -1
 		
 	def add_comps(self,cfg,store=False):
 		to_remove =[]
@@ -129,18 +141,19 @@ class Server():
 
 		ls = []
 		for comp in self._avail_comps:
-			ls.append( comp.getData() )
+			ls.append( comp.get_data()['comp'] )
 
 		if len(ls) == 0:	
 			return -1
-		return ls
+		return {'components': ls}
 
 	def get_avail_comp(self, name):
 
 		for comp in self._avail_comps:
+
 			if comp.name == name:
 				
-				return comp.getData()
+				return comp.get_data()
 		return -1
 
 	def remove_avail_comp(self, name):
@@ -148,7 +161,7 @@ class Server():
 		for comp in self._avail_comps:
 			if comp.name == name:
 				self._avail_comps.remove(comp)
-				return comp.getData()
+				return comp.get_data()
 		return -1
 
 def cfg_to_comps(cfg_file, docker_client):
@@ -159,16 +172,12 @@ def cfg_to_comps(cfg_file, docker_client):
 
 	ToDo: Check if cfg file is valid
 	"""
-	#open the template
-	print(type(cfg_file))
 
 	if isinstance(cfg_file, str):
 		with open(cfg_file) as f:
 			data = yaml.load(f, Loader=yaml.FullLoader)['components']
-		print('data[components]' , data)
 	elif isinstance(cfg_file, list):
 		data = cfg_file
-		print("GOT CFG AS LIST")
 	else:
 		logging.error('invalid cfg type')
 	

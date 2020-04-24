@@ -4,6 +4,7 @@ services:
     build: ./ros1_base
     image: ros1_base
     container_name: ros1_base
+
     networks:
       - rosnet
 
@@ -23,8 +24,9 @@ services:
     image: ros1_ur_rossharp
     container_name: ros1_ur_rossharp
     tty: true
-    networks:
-      - rosnet 
+    network_mode: host
+#    networks:
+#      - host
     ports:
       - 11311:11311
       - 9090:9090

@@ -27,12 +27,12 @@ class InstInfo:
 	killed: bool
 	stop: bool
 	docker_id: str
+	urdf_dyn: str
 
 @dataclass_json
 @dataclass
 class RosCompInfo:
-	urdf_content: str
-	urdf_tooltip: str
+	urdf_stat: str
 	docker_cmd: str
 	docker_image: str
 
@@ -49,6 +49,11 @@ class Instance():
 
 		"""
 		self._comp = comp #base component
+		if self._comp.comp_type == 'unity':
+			urdf_dyn = 'empty'
+		elif self._comp.comp_type == 'ros':
+			urdf_dyn = self._comp.get_data()['comp']['urdf_stat']
+
 		self._ii = InstInfo(
 			inst_id = inst_id,
 			start_time= time.time(),
@@ -57,8 +62,9 @@ class Instance():
 			running = False,
 			killed = False,
 			stop = False,
-			docker_id ='TBD' 	)
-		print("instance launched"+ self._comp.name, self.getData() )
+			docker_id ='TBD',
+			urdf_dyn= urdf_dyn)
+
 		self._container = self._comp.start()
 	
 	def __str__(self):
@@ -91,10 +97,13 @@ class Instance():
 	def stop(self):
 		self._container.stop()
 		self._container.remove()
+
+	def update_urdf_dyn(self, data):
+		self._ii.urdf_dyn = data
 	
-	def getData(self):
+	def get_data(self):
 		#.to_dict()
-		d = {'inst': self._ii.to_dict(), 'comp' : self._comp.getData()['comp']  }
+		d = {'inst': self._ii.to_dict(), 'comp' : self._comp.get_data()['comp']  }
 		return d
 
 	def update(self):
@@ -134,9 +143,7 @@ class Component(ABC):
 	def instances(self):
 		return self._aci.instances
 	
-	def getData(self):
-		d = {'comp': self._aci.to_dict() }
-		return d
+
 	@property
 	def name(self):
 		"""
@@ -152,6 +159,9 @@ class Component(ABC):
 	def available(self):
 		return self._aci.instances <= self._aci.max_instances
 
+	@property
+	def comp_type(self):
+		return self._aci.comp_type
 
 	@abstractmethod 
 	def start(self):
@@ -168,6 +178,13 @@ class Component(ABC):
 	@abstractmethod 
 	def update(self):
 		pass
+	
+	@abstractmethod 
+	def get_data(self):
+		#.to_dict()
+		d = {'comp': self._aci.to_dict()}
+		return d
+
 
 
 
@@ -178,10 +195,8 @@ class RosComponent(Component):
 		ToDo: Check if cfg valid
 		"""
 		super(RosComponent, self).__init__(cfg, docker_client)
-		print(cfg)
 		self._rci = RosCompInfo(
-			urdf_content = cfg['urdf']['content'],
-			urdf_tooltip = cfg['urdf']['tooltip'],
+			urdf_stat = cfg['urdf']['stat'],
 			docker_cmd = cfg['docker']['cmd'],
 			docker_image = cfg['docker']['image'])
 
@@ -208,6 +223,9 @@ class RosComponent(Component):
 
 		super(RosComponent, self).update()
 
+	def get_data(self):
+		d = {'comp': dict(self._aci.to_dict(), **self._rci.to_dict())}
+		return d
 
 class UnityComponent(Component):
 
@@ -228,7 +246,9 @@ class UnityComponent(Component):
 	def update(self):
 		super(UnityComponent, self).update()
 
-
+	def get_data(self):
+		return super(UnityComponent, self).get_data()
+		
 
 #class AvailCompInfo():
 if __name__ == '__main__':

@@ -1,9 +1,11 @@
 
-FROM gazebo:1.0 
+FROM gazebo
 
-COPY ./ur_install.sh /
+COPY ./gazebo_install.sh /
+RUN dos2unix /gazebo_install.sh
+
 RUN mkdir /newdir
-RUN /bin/bash -c 'chmod +x /ur_install.sh  && cd / && ./ur_install.sh'
+RUN /bin/bash -c 'chmod +x /gazebo_install.sh  && cd / && ./gazebo_install.sh'
 RUN mkdir /test
 
 RUN echo "Completly build faslsch"
