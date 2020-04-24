@@ -27,24 +27,65 @@ def post(ip,json_data):
 
 ip = 'http://127.0.0.1:5000/'
 
+input("GET: AvailComps")
 get(ip+'AvailComps')
+
+input("GET: AvailComps/UR3")
 get(ip+'AvailComps/UR3')
 
+input("GET: AvailInstances")
 get(ip+'Instances')
-
 
 wd = '/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/src/'
 with open('src/client/two_avail_comps.json') as json_file:
 	data = json.load(json_file)
 	
-print('\n\n\n\n\n',data)
+input("POST: Two New AvailComps")
 post(ip+'AvailComps',data)
+
+input("GET: AvailComps")
+get(ip+'AvailComps')
+
+input("POST: Post them again")
+post(ip+'AvailComps',data)
+
+input("GET: AvailComps")
+get(ip+'AvailComps')
 
 with open('src/client/start_inst.json') as json_file:
 	data = json.load(json_file)
 	print(data)
-post(ip+'Instances',data)
+
+input("POST: Instance UR5")
 post(ip+'Instances',data)
 
+input("GET: AvailInstances")
+get(ip+'Instances')
+
+input("POST: Second Instance UR5")
+post(ip+'Instances',data)
+
+input("GET: AvailInstances")
+get(ip+'Instances')
+
+input("POST: New URDF Tag for Instance 1")
 data = {'data': "best urdf string ever"}
 post(ip+'Instances/1/inst/urdf_dyn',data)
+
+input("GET: AvailInstances")
+get(ip+'Instances')
+
+input("DELETE: Instance 0")
+requests.delete(ip +'Instances/0')
+
+input("GET: AvailInstances")
+get(ip+'Instances')
+
+input("DELETE: All Instances")
+requests.delete(ip +'Instances')
+
+input("GET: AvailInstances")
+get(ip+'Instances')
+
+input("GET: AvailInstances")
+get(ip+'Instances')

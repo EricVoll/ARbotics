@@ -65,6 +65,14 @@ class Server():
 		for inst in self._instances:
 			inst.stop()
 		
+	def stop_instance(self, inst_id):
+
+		for inst in self._instances:
+			if inst.id == inst_id:
+				inst.stop()
+				return self.get_instances()
+		logging.error('Instance {} not found to stop'.format(inst_id))
+		return -1
 
 	def start(self, comp_name):
 
@@ -75,12 +83,14 @@ class Server():
 				self._instance_counter += 1
 				return self._instances[-1].get_data()
 
-		logging.error('Cant find component')
+		logging.error('Component {} not found to start'.format(comp_name))
+
 		return -1
 
 	def remove_instance(self, inst_id):  		
+		print("remove instance from list")
 		for inst in self._instances:
-			if inst.id() == inst_id:
+			if inst.id == inst_id:
 				inst.remove()
 				self._instances.remove(inst)
 				return {'suc': True}	

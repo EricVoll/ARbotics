@@ -39,14 +39,6 @@ class RosCompInfo:
 class Instance():
 	def __init__(self, comp, inst_id):
 		"""
-		an instances manages a container.
-
-		if active instance is doing stuff 
-		if running container is running
-
-		if killed container is closed 
-		if stop (instances tries to stop container)
-
 		"""
 		self._comp = comp #base component
 		if self._comp.comp_type == 'unity':
@@ -95,8 +87,17 @@ class Instance():
 		self._comp.instance_closed()
 
 	def stop(self):
-		self._container.stop()
-		self._container.remove()
+		try:
+			#print('My continaer is: ', self._container.id)			
+			#self._container.stop()
+			self._container.kill()
+			self._container.remove()
+
+			#print("Told container to stop")
+		except:
+			pass
+			#print("Object already destroyed")
+		
 
 	def update_urdf_dyn(self, data):
 		self._ii.urdf_dyn = data
@@ -107,10 +108,17 @@ class Instance():
 		return d
 
 	def update(self):
-		if self._container.status == 'exited':
-			return False
-
-		return True
+		try: 
+			self._container.reload()
+			if self._container.status == 'exited':
+				self._ii.running = False
+			else:
+				self._ii.running = True
+			#print('My continaer is: ', self._container.id, self._container.status)
+		
+		except:
+			self._ii.running = False
+		return self._ii.running
 		
 
 class Component(ABC):
@@ -248,44 +256,4 @@ class UnityComponent(Component):
 
 	def get_data(self):
 		return super(UnityComponent, self).get_data()
-		
-
-#class AvailCompInfo():
-if __name__ == '__main__':
-	#inst = AvailCompInfo('s1',2,'s3','s5','s5',1)
-
-	# inst.docker_info = 'assda'
-	# print(inst.docker_info)
-	# print(inst)
-
-
-	client = docker.from_env()
-	
-	containers = client.containers.list()
-	print(containers)
-	# cmd = '/bin/bash  ' +\
-	# 		' -c "echo "HELLO" && source /opt/ros/melodic/setup.bash &&' +\
-	# 		' source /home/catkin_ws/devel/setup.bash &&' +\
-	# 		' source /home/ros-sharp_ws/devel/setup.bash &&' +\
-	# 		' roslaunch ur_rossharp ur5_rossharp.launch" '
-	# print(cmd)
-
-	# command="/bin/bash",
-	cmd = '''bash -c 'roscore' ''' 
-
-	#cmd = '''bash -c 'roslaunch' '''
-
-	cmd = '''bash -c 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch' ''' 
-	
-	container = client.containers.run("ros1_ur_rossharp:1.0", detach=False, command = cmd, network_mode='host' )
-	
-	print(container)
-
-	# cmd = '/bin/bash -c "echo hel123lo stdout ; echo hello stderr >&2"'
-	# res = container.exec_run(cmd, stream=False, demux=False)
-	# print(res.output)
-
-
-
-
 	

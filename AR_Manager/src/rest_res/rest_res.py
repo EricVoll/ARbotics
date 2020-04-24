@@ -1,9 +1,5 @@
 import sys
-sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/src')
-sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/')
-
 from flask_restful import Resource, reqparse
-
 
 class ResInstances(Resource):
 	def __init__(self, server):
@@ -14,7 +10,7 @@ class ResInstances(Resource):
 
 		data = self.s.get_instances()
 		print(self.s)
-		return data #returns the id of the instance
+		return data
 
 	def post(self):
 
@@ -28,7 +24,6 @@ class ResInstances(Resource):
 
 	def delete(self):
 		#delete all runing comps
-		
 		self.s.stop_instances()
 
 		print(self.s)
@@ -53,8 +48,8 @@ class ResInstance(Resource):
 		return res
 
 	def delete(self,inst_id):
-		
-		res = self.s.remove_instance(inst_id)
+		print(inst_id, type(inst_id))
+		res = self.s.stop_instance(inst_id)
 		print(self.s)
 		return res
 
@@ -64,7 +59,7 @@ class ResInstanceUrdfDyn(Resource):
 		self.s = server
 
 	def post(self,inst_id):
-		
+
 		parser = reqparse.RequestParser()
 		parser.add_argument('data', type=str, required=True, location='json')
 		args = parser.parse_args()
