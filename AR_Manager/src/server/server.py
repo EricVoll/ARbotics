@@ -4,12 +4,12 @@ sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/')
 
 import logging
 import yaml
+import copy
+import docker
 
 from comp import RosComponent, UnityComponent, Instance
+from ros_nodes import ARServerStatePublisher
 
-import copy
-
-import docker
 
 """
 This will be implemented based on flask and REST-API
@@ -29,7 +29,7 @@ class Server():
 		"""
 		"""
 		self._docker_client = docker.from_env()
-
+		self._aassp = ARServerStatePublisher()
 		self._avail_comps = cfg_to_comps( cfg_ros_comp, self._docker_client)
 		self._avail_comps += cfg_to_comps( cfg_unity_comp, self._docker_client)
 		
@@ -54,6 +54,11 @@ class Server():
 		string += '-'*101+'\n'+'\n'
 
 		return string
+
+	def ros_publish(self):
+		data = self.get_instances()
+		print('data', type(data)) 
+		self._aassp.publish(data= { 'data': data } )
 
 	def server_close(self):
 

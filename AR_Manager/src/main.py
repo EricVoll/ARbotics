@@ -57,6 +57,7 @@ if __name__ == '__main__':
 
 		def spin_job():
 			s.spin()
+			s.ros_publish()
 			#print(s)
 		job = scheduler.add_job(spin_job, 'interval', minutes=1/120)
 		scheduler.start()
