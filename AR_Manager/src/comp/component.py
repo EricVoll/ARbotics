@@ -33,8 +33,7 @@ class InstInfo:
 @dataclass
 class RosCompInfo:
 	urdf_stat: str
-	docker_cmd: str
-	docker_image: str
+	docker: dict
 
 class Instance():
 	def __init__(self, comp, inst_id):
@@ -54,7 +53,6 @@ class Instance():
 			running = False,
 			killed = False,
 			stop = False,
-			docker_id ='TBD',
 			urdf_dyn= urdf_dyn)
 
 		self._container = self._comp.start()
@@ -205,19 +203,18 @@ class RosComponent(Component):
 		super(RosComponent, self).__init__(cfg, docker_client)
 		self._rci = RosCompInfo(
 			urdf_stat = cfg['urdf']['stat'],
-			docker_cmd = cfg['docker']['cmd'],
-			docker_image = cfg['docker']['image'])
-
+			docker = cfg['docker'])
 
 	def start(self):
 
 		super(RosComponent, self).start()
-		cmd = '''bash -c '%s' '''%self._rci.docker_cmd
-		
-		container = self.docker_client.containers.run(self._rci.docker_image, 
+		cmd = '''bash -c '%s' '''%self._rci.docker['cmd']
+
+		container = self.docker_client.containers.run(self._rci.docker['image'], 
 			detach=True, 
 			command = cmd,
-			network_mode='host' )
+			networks =  self._rci.docker['networks'],
+			ports = self._rci.docker['ports'])
 		print('executed docker run got container:', container)
 		return container 
 		#goes into container and launches/runs

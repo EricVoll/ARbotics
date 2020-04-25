@@ -6,7 +6,11 @@ services:
     container_name: ros1_base
     networks:
       - rosnet
+    tty: true
     command:
+      - "/bin/bash" 
+      - "-c" 
+      - "source /opt/ros/melodic/setup.bash && roscore"
 
   #build ur-container
   ros1_ur:
@@ -23,36 +27,42 @@ services:
     build: ./ros1_ur_rossharp
     image: ros1_ur_rossharp
     container_name: ros1_ur_rossharp
-    tty: true
-    network_mode: host
-#    networks:
-#      - host
-    ports:
-      - 11311:11311
-      - 9090:9090
-    restart: always
+    # tty: true
+    networks:
+      - rosnet
+    # ports:
+    #   - 11311:11311
+    #   - 9090:9090
+#    restart: always
 #    command:
 #      - "/bin/bash" 
 #      - "-c" 
 #     - 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch' 
 
-ros1_ar_manager:
+  ros1_ar_manager:
     depends_on: [ros1_ur_rossharp]
     build: ./ros1_ar_manager
     image: ros1_ar_manager
     container_name: ros1_ar_manager
+    environment:
+      - "ROS_MASTER_URI=http://ros1_base:11311" 
     tty: true
-    network_mode: host
-#    networks:
-#      - host
+    #network_mode: host
+    networks:
+      - rosnet
     volumes:
        - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 11311:11311
       - 9090:9090
+      - 5000:5000
     restart: always
     command:
-    - 'cd /home/3D_Vision_AR_RobotVis/AR_Manager python3 src/main.py'
+      - "/bin/bash" 
+      - "-c" 
+      - "source /opt/ros/melodic/setup.bash && \
+        cd /home/3D_Vision_AR_RobotVis/AR_Manager && \
+        python3 src/main.py"
 
 networks:
   rosnet:
