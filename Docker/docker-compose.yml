@@ -4,11 +4,11 @@ services:
     build: ./ros1_base
     image: ros1_base
     container_name: ros1_base
-
     networks:
       - rosnet
+    command:
 
-#build ur container
+  #build ur-container
   ros1_ur:
     depends_on: [ros1_base]
     build: ./ros1_ur
@@ -17,7 +17,7 @@ services:
     networks:
       - rosnet
 
-#launches ur5 and rossharp
+  #build ur-rossharp container
   ros1_ur_rossharp:
     depends_on: [ros1_ur]
     build: ./ros1_ur_rossharp
@@ -31,10 +31,28 @@ services:
       - 11311:11311
       - 9090:9090
     restart: always
+#    command:
+#      - "/bin/bash" 
+#      - "-c" 
+#     - 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch' 
+
+ros1_ar_manager:
+    depends_on: [ros1_ur_rossharp]
+    build: ./ros1_ar_manager
+    image: ros1_ar_manager
+    container_name: ros1_ar_manager
+    tty: true
+    network_mode: host
+#    networks:
+#      - host
+    volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 11311:11311
+      - 9090:9090
+    restart: always
     command:
-      - "/bin/bash" 
-      - "-c" 
-      - 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch' 
+    - 'cd /home/3D_Vision_AR_RobotVis/AR_Manager python3 src/main.py'
 
 networks:
   rosnet:

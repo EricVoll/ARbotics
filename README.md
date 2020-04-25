@@ -2,6 +2,26 @@
 ![](project_overview.png)
 # AR-Manager Overview
 ![](OverviewARManagerREST.svg)
+
+## How to use:
+1. Build all containers:
+
+'''
+cd <PATH>/3D_Vision_AR_RobotVis/Docker/
+docker-compose up
+'''
+
+2. Start AR-Manger containers:
+'''
+docker stop $(docker ps)
+'''
+
+ 
+
+docker run -it -v /var/run/docker.sock:/var/run/docker.sock --network=host ros1_ar_manager
+
+
+
 # Docker 
 [Installation Tutorial](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 ## Docker commands:

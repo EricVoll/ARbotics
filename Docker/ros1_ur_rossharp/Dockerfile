@@ -1,25 +1,37 @@
 
 FROM ros1_ur:latest
 
-COPY ./rossharp_install.sh /
-RUN dos2unix /ur_install.sh
+#INSTALL ROSSHARP
 
-RUN apt-get update 
+RUN mkdir -p /home/ros-sharp_ws/src
+RUN source /opt/ros/melodic/setup.bash && \
+    cd /home/ros-sharp_ws && catkin_make
 
-RUN bash -c "chmod +x /rossharp_install.sh  && /rossharp_install.sh "
+RUN apt-get -y install ros-melodic-rosbridge-server 
 
-RUN bash -c "source /opt/ros/melodic/setup.bash && \
+RUN source /home/ros-sharp_ws/devel/setup.bash
+
+RUN cd /home/ && git clone https://github.com/siemens/ros-sharp.git -b master
+RUN mv /home/ros-sharp/ROS/file_server /home/ros-sharp_ws/src
+RUN source /opt/ros/melodic/setup.bash && \
+		source /home/ros-sharp_ws/devel/setup.bash && \
+		cd /home/ros-sharp_ws && \
+		catkin_make
+
+RUN rm -r -f /home/ros-sharp
+
+#add lauch to ur_package and rebuild ws
+RUN source /opt/ros/melodic/setup.bash && \
 source /home/catkin_ws/devel/setup.bash && \
 source /home/ros-sharp_ws/devel/setup.bash && \
-cd /home/catkin_ws && catkin_make"
+cd /home/catkin_ws && catkin_make
 
 RUN mkdir -p /home/catkin_ws/src/universal_robot/ur_rossharp
 COPY ./ur_rossharp/* /home/catkin_ws/src/universal_robot/ur_rossharp/
 
-RUN bash -c "source /opt/ros/melodic/setup.bash && \
+RUN source /opt/ros/melodic/setup.bash && \
 source /home/catkin_ws/devel/setup.bash && \
 source /home/ros-sharp_ws/devel/setup.bash && \
-cd /home/catkin_ws && catkin_make"
+cd /home/catkin_ws && catkin_make
 
-RUN bash -c "echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc "
-WORKDIR /home
+RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc
