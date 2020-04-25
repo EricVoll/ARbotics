@@ -11,7 +11,7 @@ components:
       ports:
         9090/tcp: 9090
         11311/tcp: 11311
-      networks: docker_rosnet 
+      network: 'docker_rosnet'
   - pretty_name: 'UR5'
     max_instances: 10
     comp_type: 'ros'
@@ -24,4 +24,4 @@ components:
       ports:
         9090/tcp: 9090
         11311/tcp: 11311
-      networks: docker_rosnet 
+      network: 'docker_rosnet'

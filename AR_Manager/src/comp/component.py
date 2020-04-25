@@ -26,7 +26,6 @@ class InstInfo:
 	running: bool
 	killed: bool
 	stop: bool
-	docker_id: str
 	urdf_dyn: str
 
 @dataclass_json
@@ -209,11 +208,13 @@ class RosComponent(Component):
 
 		super(RosComponent, self).start()
 		cmd = '''bash -c '%s' '''%self._rci.docker['cmd']
+		print('START ROS CONTAINER')
 
+		print(self._rci.docker['image'], self._rci.docker['network'],self._rci.docker['ports'] )
 		container = self.docker_client.containers.run(self._rci.docker['image'], 
 			detach=True, 
 			command = cmd,
-			networks =  self._rci.docker['networks'],
+			network =  self._rci.docker['network'],
 			ports = self._rci.docker['ports'])
 		print('executed docker run got container:', container)
 		return container 
