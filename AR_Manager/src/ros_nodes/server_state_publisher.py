@@ -18,7 +18,7 @@ def shutdown_hook():
 class ARServerStatePublisher():
 
 	def __init__(self):
-		print("INIT")
+
 		rospy.init_node('ar_state_publisher', anonymous=False)
 		
 		self.pub = rospy.Publisher('ar_state', String, queue_size=10)
