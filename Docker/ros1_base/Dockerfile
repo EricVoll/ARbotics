@@ -17,5 +17,4 @@ RUN /bin/bash -c  "source /opt/ros/melodic/setup.bash && \
                   cd  /home/catkin_ws && \
                   catkin_make -DCMAKE_BUILD_TYPE=Release && \
                   echo 'source /opt/ros/melodic/setup.bash' >> ~/.bashrc "
-
 WORKDIR /home
