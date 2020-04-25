@@ -61,6 +61,8 @@ if __name__ == '__main__':
 			#print(s)
 		job = scheduler.add_job(spin_job, 'interval', minutes=1/120)
 		scheduler.start()
+
+		s.start('ros-sharp-com')
 		
 		app.run(debug=True,host='0.0.0.0') 
 	except Exception as e:

@@ -1,4 +1,17 @@
 components:
+  - pretty_name: 'ros-sharp-com'
+    comp_type : 'ros'
+    max_instances: 1
+    urdf:
+      stat: 'string'
+      dyn: 'string'
+    docker:
+      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && roslaunch file_server ros_sharp_communication.launch'
+      image: 'ros1_ros-sharp'
+      ports:
+        9090/tcp: 9090
+      network: 'docker_rosnet'
+
   - pretty_name: 'UR3'
     comp_type : 'ros'
     max_instances: 10
@@ -8,10 +21,10 @@ components:
     docker:
       cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch'
       image: 'ros1_ur_rossharp'
-      ports:
-        9090/tcp: 9090
-        11311/tcp: 11311
+      ports: 
+        
       network: 'docker_rosnet'
+
   - pretty_name: 'UR5'
     max_instances: 10
     comp_type: 'ros'
@@ -22,6 +35,5 @@ components:
       cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch'
       image: 'ros1_ur_rossharp'
       ports:
-        9090/tcp: 9090
-        11311/tcp: 11311
+        
       network: 'docker_rosnet'

@@ -67,3 +67,5 @@ services:
 networks:
   rosnet:
     driver: bridge
+
+# docker run -it -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock ros1_ar_manager 

@@ -25,7 +25,7 @@ def post(ip,json_data):
 	response = resp.json()
 	print (json.dumps(response, sort_keys=True, indent=2))
 
-ip = 'http://127.0.0.1:5000/'
+ip = 'http://127.17.0.1:5000/'
 
 input("GET: AvailComps")
 get(ip+'AvailComps')

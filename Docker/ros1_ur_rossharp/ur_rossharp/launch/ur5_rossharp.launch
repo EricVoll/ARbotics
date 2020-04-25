@@ -1,23 +1,16 @@
 <?xml version="1.0"?>
 <launch>
-	<include file="$(find file_server)/launch/ros_sharp_communication.launch">
-		<arg name="port" value="9090" />
-	</include>
-
 	<include file="$(find ur_gazebo)/launch/ur5.launch">
 		<arg name="limited" value="true" />
 		<arg name="gui" value="false" />
 	</include>
 	
-
 	<include file="$(find ur5_moveit_config)/launch/ur5_moveit_planning_execution.launch">
 		<arg name="limited" value="true" />
 	</include>
 
-
 	 <arg name="urdf_file" default="$(find xacro)/xacro.py '$(find ur_description)/urdf/ur5_joint_limited_robot.urdf.xacro'" />
 	
-
 	<param name="robot/name" value="UR5" />
 	<param name="robot_description" command="$(arg urdf_file)" /> 
 
