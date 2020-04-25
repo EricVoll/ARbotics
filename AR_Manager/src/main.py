@@ -61,8 +61,7 @@ if __name__ == '__main__':
 			#print(s)
 		job = scheduler.add_job(spin_job, 'interval', minutes=1/120)
 		scheduler.start()
-
 		
-		app.run(debug=False) 
+		app.run(debug=False,host='0.0.0.0') 
 	except Exception as e:
 		print("ERROR", e)
