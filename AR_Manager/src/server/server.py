@@ -27,8 +27,10 @@ class Server():
 								cfg_ros_comp = 'src/cfg/cfg_ros_comp.yml', \
 								cfg_unity_comp = 'src/cfg/cfg_unity_comp.yml'):
 		"""
+		additional error handling needed for DockerClient
 		"""
-		self._docker_client = docker.from_env()
+
+		self._docker_client = docker.DockerClient(base_url='unix:///var/run/docker.sock' )
 		self._aassp = ARServerStatePublisher()
 		self._avail_comps = cfg_to_comps( cfg_ros_comp, self._docker_client)
 		self._avail_comps += cfg_to_comps( cfg_unity_comp, self._docker_client)
@@ -57,7 +59,6 @@ class Server():
 
 	def ros_publish(self):
 		data = self.get_instances()
-		print('data', type(data)) 
 		self._aassp.publish(data= { 'data': data } )
 
 	def server_close(self):
