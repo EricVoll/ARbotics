@@ -6,7 +6,7 @@ components:
       stat: 'string'
       dyn: 'string'
     docker:
-      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && roslaunch file_server ros_sharp_communication.launch'
+      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && export ROS_MASTER_URI=http://ros1_base:11311 && roslaunch file_server ros_sharp_communication.launch'
       image: 'ros1_ros-sharp'
       ports:
         9090/tcp: 9090
@@ -19,7 +19,7 @@ components:
       stat: 'string'
       dyn: 'string'
     docker:
-      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch'
+      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && export ROS_MASTER_URI=http://ros1_base:11311 && roslaunch ur_rossharp ur5_rossharp.launch'
       image: 'ros1_ur_rossharp'
       ports: 
         
@@ -32,7 +32,7 @@ components:
       stat: 'string'
       dyn: 'string'
     docker:
-      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch'
+      cmd: 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && export ROS_MASTER_URI=http://ros1_base:11311 && roslaunch ur_rossharp ur5_rossharp.launch'
       image: 'ros1_ur_rossharp'
       ports:
         
