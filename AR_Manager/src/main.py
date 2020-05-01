@@ -64,6 +64,6 @@ if __name__ == '__main__':
 
 		s.start('ros-sharp-com')
 		
-		app.run(debug=True,host='0.0.0.0') 
+		app.run(debug=False,host='0.0.0.0') 
 	except Exception as e:
 		print("ERROR", e)
