@@ -16,5 +16,12 @@ RUN source /opt/ros/melodic/setup.bash && \
 		source /home/ros-sharp_ws/devel/setup.bash && \
 		cd /home/ros-sharp_ws && \
 		catkin_make
+RUN apt-get install -y python-twisted
+RUN apt-get update
+RUN apt install -y python3-pip
+RUN apt-get install -y python-pip 
+RUN pip install autobahn tornado bson pymongo pillow
+RUN echo "HELLO"
+RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc
 
 RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc 

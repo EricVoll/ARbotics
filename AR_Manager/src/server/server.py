@@ -83,7 +83,7 @@ class Server():
 	def start(self, comp_name):
 
 		for comp in self._avail_comps:
-			if comp.name == comp_name:
+			if comp.name == comp_name and comp.available:
 
 				self._instances.append( Instance(comp=comp,inst_id=self._instance_counter) )
 				self._instance_counter += 1

@@ -11,6 +11,15 @@ services:
       - "/bin/bash" 
       - "-c" 
       - "source /opt/ros/melodic/setup.bash && roscore"
+      
+  #build rossharp
+  ros1_ros-sharp:
+    depends_on: [ros1_base]
+    build: ./ros1_ros-sharp
+    image: ros1_ros-sharp
+    container_name: ros1_ros-sharp
+    networks:
+      - rosnet
 
   #build ur-container
   ros1_ur:
@@ -54,7 +63,7 @@ services:
        - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 11311:11311
-      - 9090:9090
+# - 9090:9090
       - 5000:5000
     restart: always
     command:
