@@ -11,7 +11,7 @@ from dataclasses_json import dataclass_json
 @dataclass_json
 @dataclass
 class AvailCompInfo:
-	PRETTY_NAME: str
+	pretty_name: str
 	max_instances: int
 	instances: int
 	comp_type: str
@@ -125,14 +125,14 @@ class Component(ABC):
 	def __init__ (self, cfg, docker_client):
 		self._aci = AvailCompInfo(
 			comp_type= cfg['comp_type'], 
-			PRETTY_NAME = cfg['pretty_name'],
+			pretty_name = cfg['pretty_name'],
 			max_instances = cfg['max_instances'],
 			instances = 0
 		)
 		self.docker_client = docker_client
 
 	def __str__(self):
-		return 'Comp: %15s, Instances: %3s'%(self._aci.PRETTY_NAME, self._aci.instances)
+		return 'Comp: %15s, Instances: %3s'%(self._aci.pretty_name, self._aci.instances)
 
 	def instance_closed(self):
 
@@ -154,7 +154,7 @@ class Component(ABC):
 		"""
 		returns unique id which is set when instanciated
 		"""
-		return self._aci.PRETTY_NAME
+		return self._aci.pretty_name
 
 	@property
 	def max_instances(self):
@@ -171,12 +171,12 @@ class Component(ABC):
 	@abstractmethod 
 	def start(self):
 		self.add_instance()
-		print("STARTED: ", self._aci.PRETTY_NAME)
+		print("STARTED: ", self._aci.pretty_name)
 		#goes into container and launches/runs
 	
 	@abstractmethod 
 	def stop(self):
-		print("STOP: ", self._aci.PRETTY_NAME)
+		print("STOP: ", self._aci.pretty_name)
 
 		#goes into container and stops
 	
