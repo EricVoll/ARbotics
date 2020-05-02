@@ -3,23 +3,48 @@
 # AR-Manager Overview
 ![](OverviewARManagerREST.svg)
 
-## How to use:
-1. Build all containers:
+## Starting the AR-Manager:
+1. Build all containers and start everything:
 
 '''
 cd <PATH>/3D_Vision_AR_RobotVis/Docker/
 docker-compose up
 '''
 
-2. Start AR-Manger containers:
-'''
+## REST-API
+At first have a look at [client implementation](https://github.com/luchspeter/3D_Vision_AR_RobotVis/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
+
+To test REST_API use google chrome plug in ```Advanced REST```
+**http://127.17.0.1:5000**
+
+**/AvailComps**
+- **GET**: returns avail comps
+- **POST** [json -> comonent_full_infos]: adds new cfg to AvailComps
+
+**/AvailComps/<str:comp_name>**
+- **GET**: returns avail comp
+- **DELETE**: delets this comp -> cant be started
+
+**/AvailInstances**
+- **GET**: returns all running instances
+- **POST** [json -> {comp_name:  'UR5'}]: starts instance of comp_name
+- **DELETE** []: deletes all
+
+**/Instances/<int:instance_id>**
+- **GET**: returns this running instance
+- **POST** [json -> {comp_name:  'UR5'}]: starts instance of comp_name
+- **DELETE** []: this instance with instance_id
+
+**/Instances/<int:inst_id>/inst/urdf_dyn**
+- **POST** [json -> {data: 'updated urdf as str'}]: string argument
+
+### Debugging Commands
+```
 docker stop $(docker ps)
-'''
-
- 
-
+```
+```
 docker run -it -v /var/run/docker.sock:/var/run/docker.sock --network=host ros1_ar_manager
-
+```
 
 
 # Docker 
