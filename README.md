@@ -6,10 +6,10 @@
 ## Starting the AR-Manager:
 1. Build all containers and start everything:
 
-'''
+```
 cd <PATH>/3D_Vision_AR_RobotVis/Docker/
 docker-compose up
-'''
+```
 
 ## REST-API
 At first have a look at [client implementation](https://github.com/luchspeter/3D_Vision_AR_RobotVis/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
