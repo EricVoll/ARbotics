@@ -24,7 +24,7 @@ public class AttachedDataSynchronizer
         {
             if (attachedComponent.component is AttachedDataValue)
             {
-                //Instaniate GameObject with Raffi's ToolTip Manager
+                //Instaniate GameObject with Raffi's ToolTip Manager 
             }
         }
     }
