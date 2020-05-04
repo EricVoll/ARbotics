@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class ARCommander : MonoBehaviour
 {
+    public void Awake()
+    {
+        UrdfSyncher.InitializeUrdfSyncher();
+    }
+
     public UrdfSyncher urdfSyncher;
 
     Dictionary<string, UrdfSyncher> currentSceneDicionary = new Dictionary<string, UrdfSyncher>();

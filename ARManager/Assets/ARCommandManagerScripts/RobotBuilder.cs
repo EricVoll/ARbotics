@@ -42,11 +42,7 @@ public class RobotBuilder
         UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
 
         UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
-        //GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
-        //Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
-        //Selection.activeObject = robotGameObject;
     }
-
 
 }
 
