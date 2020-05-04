@@ -15,6 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RosSharp.Urdf.Editor
@@ -22,8 +25,8 @@ namespace RosSharp.Urdf.Editor
     public static class UrdfLinkExtensions
     {
         public static UrdfLink Synchronize(Transform parent, Link link = null, Joint joint = null)
-        {            
-            parent.FindChildOrCreateWithComponent<UrdfLink>(link != null ? link.name : "link" , out GameObject linkObject, out UrdfLink urdfLink);
+        {
+            parent.FindChildOrCreateWithComponent<UrdfLink>(link != null ? link.name : Utils.GenerateNonReferenceID(link), out GameObject linkObject, out UrdfLink urdfLink);
 
             UrdfVisualsExtensions.Synchronize(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Synchronize(linkObject.transform, link?.collisions);
@@ -60,11 +63,20 @@ namespace RosSharp.Urdf.Editor
                 Debug.LogWarning("No Joint Component will be created in GameObject \"" + urdfLink.gameObject.name + "\" as it has no Rigidbody Component.\n"
                                  + "Please define an Inertial for Link \"" + link.name + "\" in the URDF file to create a Rigidbody Component.\n", urdfLink.gameObject);
 
-            foreach (Joint childJoint in link.joints)
+            foreach (Joint childJoint in link.joints.Where(x => x.ChildLink != null))
             {
                 Link child = childJoint.ChildLink;
                 UrdfLinkExtensions.Synchronize(urdfLink.transform, child, childJoint);
             }
+
+            var linkChildren = Utils.GetComponentsInDirectChildrenFromGameobject<UrdfLink>(urdfLink.gameObject);
+            List<string> wantedObjectNames = link.joints
+                .Where(x => x.ChildLink != null)
+                .Select(x => String.IsNullOrEmpty(x.child) ? Utils.GenerateNonReferenceID(x.ChildLink) : x.child)
+                .ToList();
+
+            linkChildren.RemoveAll(x => wantedObjectNames.Contains(x.name));
+            Utils.DestroyAll(linkChildren.Select(x => x.gameObject));
         }
 
         public static Link ExportLinkData(this UrdfLink urdfLink)

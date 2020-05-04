@@ -17,6 +17,7 @@ limitations under the License.
 
 using RosSharp.Urdf;
 using RosSharp.Urdf.Editor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,13 +36,12 @@ public class RobotBuilder
         GameObject robotGameObject = rootObject;
 
         robotGameObject.AddComponentIfNotExists<UrdfRobot>();
-        
+
         UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
         UrdfMaterial.InitializeRobotMaterials(robot);
         UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
-        
-        UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
 
+        UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
         //GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
         //Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
         //Selection.activeObject = robotGameObject;
@@ -49,3 +49,54 @@ public class RobotBuilder
 
 
 }
+
+
+
+
+
+public interface ISensorManager
+{
+    GameObject GetSensor();
+}
+
+public class SensorMAnager : ISensorManager
+{
+    public GameObject GetSensor()
+    {
+        return new GameObject("Cool");
+    }
+}
+
+public class SecondClass : ISensorManager
+{
+    public GameObject GetSensor()
+    {
+        return new GameObject("SuperCool");
+    }
+}
+
+
+public class MainClass
+{
+    public void Main()
+    {
+        ISensorManager obj = new SensorMAnager();
+
+        for (int i = 0; i < 123; i++)
+        {
+            obj.GetSensor();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

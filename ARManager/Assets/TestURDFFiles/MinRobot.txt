@@ -37,10 +37,4 @@
       <inertia ixx="0.019995" ixy="0.0" ixz="0.0" iyy="0.019995" iyz="0.0" izz="0.03675"/>
     </inertial>
   </link>
-  <joint name="wheel_left_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="wheel_left_link"/>
-    <origin rpy="-1.57079632679 0 0" xyz="0.00 0.115 0.0250"/>
-    <axis xyz="0 0 1"/>
-  </joint>
 </robot>

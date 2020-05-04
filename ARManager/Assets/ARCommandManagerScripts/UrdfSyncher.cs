@@ -6,7 +6,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class UrdfSyncher 
+public class UrdfSyncher
 {
 
     #region Static Inits
@@ -54,6 +54,7 @@ public class UrdfSyncher
     private int synchronizationCounterWithoutFullRegeneration = 0;
     private int synchronizationCounterMax = -1;
 
+    private bool debugMode = true;
 
     /// <summary>
     /// Compares the current devices in the scene with the urdf file and performs adjustments
@@ -65,21 +66,27 @@ public class UrdfSyncher
 
         Robot robot = Robot.FromContent(urdf);
 
-        hasUrdfAssetsImported = true;
-        if (!hasUrdfAssetsImported)
+        if (!debugMode)
         {
-            ImportInitialUrdfModel(robot);
-            return;
+            if (!hasUrdfAssetsImported)
+            {
+                ImportInitialUrdfModel(robot);
+                return;
+            }
         }
-        if (RobotRootObject == null)
+        else
         {
-            RobotRootObject = new GameObject("MyCoolRoot");
-            RobotRootObject.transform.SetParent(SceneContainerGameObject.transform);
+
+            if (RobotRootObject == null)
+            {
+                RobotRootObject = new GameObject("MyCoolRoot");
+                RobotRootObject.transform.SetParent(SceneContainerGameObject.transform);
+            }
+            assetsRootDirectoryName = @"C:\Users\ericv\Documents\ETH\ETH 2020\3D Vision\3D_Vision_AR_RobotVis\ARManager\Assets\Urdf\Models\turtlebot\Turtlebot2\robot_description.urdf";
+
+            robot.filename = assetsRootDirectoryName;
         }
 
-        assetsRootDirectoryName = @"C:\Users\ericv\Documents\ETH\ETH 2020\3D Vision\3D_Vision_AR_RobotVis\ARManager\Assets\Urdf\Models\turtlebot\Turtlebot2\robot_description.urdf";
-
-        robot.filename = assetsRootDirectoryName;
 
         //we do not return here since we want to apply any possible changes that were passed in the last urdf update.
         //the imported downloads the urdf from the file_server so it might be an old version.
@@ -105,7 +112,7 @@ public class UrdfSyncher
 
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
 
-        handler.TransferUrdf(protocol, @"ws://192.168.119.129:9090", 10, assetPath, "robot_description");
+        handler.TransferUrdf(protocol, @"ws://localhost:9090", 10, assetPath, "robot_description");
         (RobotRootObject, assetsRootDirectoryName) = handler.GenerateModelIfReady(true);
 
         if (SceneContainerGameObject != null)

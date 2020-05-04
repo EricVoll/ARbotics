@@ -124,7 +124,7 @@ public static class Utils
     /// <typeparam name="T"></typeparam>
     /// <param name="go"></param>
     /// <returns></returns>
-    public static List<T> GetComponentsInDirectChildren<T>(this GameObject go) where T : UnityEngine.Component
+    public static List<T> GetComponentsInDirectChildrenFromGameobject<T>(this GameObject go) where T : UnityEngine.Component
     {
         List<T> list = new List<T>();
 
@@ -140,14 +140,14 @@ public static class Utils
     }
 
     /// <summary>
-    /// see <see cref="GetComponentsInDirectChildren{T}(GameObject)"/>
+    /// see <see cref="GetComponentsInDirectChildrenFromGameobject{T}(GameObject)"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="go"></param>
     /// <returns></returns>
-    public static List<T> GetComponentsInDirectChildren<T>(this Transform go) where T : UnityEngine.Component
+    public static List<T> GetComponentsInDirectChildrenFromTransform<T>(this Transform go) where T : UnityEngine.Component
     {
-        return go.gameObject.GetComponentsInDirectChildren<T>();
+        return go.gameObject.GetComponentsInDirectChildrenFromGameobject<T>();
     }
 
     /// <summary>
@@ -180,8 +180,17 @@ public static class Utils
     {
         for (int i = items.Count - 1; i >= 0; i--)
         {
-            Debug.Log("I destroyed something");
+            Debug.Log($"Destroyed GameObject {items[i].name}");
             Object.Destroy(items[i]);
         }
+    }
+    /// <summary>
+    /// see <see cref="DestroyAll{T}(List{T})"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="items"></param>
+    public static void DestroyAll<T>(IEnumerable<T> items) where T : UnityEngine.Object
+    {
+        DestroyAll(items.ToList());
     }
 }
