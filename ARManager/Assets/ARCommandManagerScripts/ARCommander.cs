@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public class ARCommander : MonoBehaviour
     public void Awake()
     {
         UrdfSyncher.InitializeUrdfSyncher();
+
+        InitializeAvailableComponents();
     }
 
     public UrdfSyncher urdfSyncher;
@@ -31,33 +34,14 @@ public class ARCommander : MonoBehaviour
             currentSceneDicionary[device.id].SynchUrdf(device.data);
         }
     }
+
+    private void InitializeAvailableComponents()
+    {
+        var availableComponents = this.GetComponent<RestCommunicator>().RequestAvailableRobots();
+        foreach (var item in availableComponents.components)
+        {
+            Debug.Log(item.pretty_name);
+        }
+    }
+
 }
-
-
-public class ARCommanderMessage
-{
-    //All available devices that are requestable by the Unity side.
-    public List<AvailableRobot> availableDevices;
-
-    //All devices that should be displayed
-    public List<DeviceUrdf> devices;
-}
-
-public class AvailableRobot
-{
-    //FriendlyName for UI
-    public string name;
-    //Id to request the publisher to be started
-    public string id;
-    //URL where the Stationary Side will publish the urdf contents
-    public string publishingServerUrl; 
-}
-
-public class DeviceUrdf
-{
-    //URDF content of the device
-    public string data;
-    //The ID of the current instance
-    public string id;                  
-}
-
