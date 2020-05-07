@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  ros1_base:
+  ros1_base: #docker run --network=docker_rosnet -it --network-alias="ros1_base" ros1_base bash
     build: ./ros1_base
     image: ros1_base
     container_name: ros1_base
@@ -47,7 +47,6 @@ services:
 #      - "/bin/bash" 
 #      - "-c" 
 #     - 'source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && source /home/catkin_ws/devel/setup.bash && roslaunch ur_rossharp ur5_rossharp.launch' 
-
   ros1_ar_manager:
     depends_on: [ros1_ur_rossharp]
     build: ./ros1_ar_manager
@@ -76,5 +75,8 @@ services:
 networks:
   rosnet:
     driver: bridge
+
+volumes:
+   MeshVolume:
 
 # docker run -it -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock ros1_ar_manager 

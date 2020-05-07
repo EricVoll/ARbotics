@@ -207,16 +207,12 @@ class RosComponent(Component):
 	def start(self):
 
 		super(RosComponent, self).start()
-		cmd = '''bash -c '%s' '''%self._rci.docker['cmd']
+		self._rci.docker['command']= '''bash -c '%s' '''%self._rci.docker['command']
 		print('START ROS CONTAINER')
-
-		print(self._rci.docker['image'], self._rci.docker['network'],self._rci.docker['ports'] )
-		container = self.docker_client.containers.run(self._rci.docker['image'], 
-			detach=True, 
-			command = cmd,
-			network =  self._rci.docker['network'],
-			ports = self._rci.docker['ports'])
+		print(self._rci.docker['image'], self._rci.docker['network'],self._rci.docker['ports'], self._rci.docker['volumes'] )
+		container = self.docker_client.containers.run(** self._rci.docker)
 		print('executed docker run got container:', container)
+		
 		return container 
 		#goes into container and launches/runs
 

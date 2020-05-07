@@ -439,3 +439,5 @@ To list services, their current state, and their corresponding ports, run the co
 View the networking Routing Tabke
 
 
+##### see whats going on inside a container 
+''' docker exec 512c36b5 ps -ef '''

@@ -11,14 +11,14 @@ RUN apt-get -y install ros-melodic-rosbridge-server
 
 RUN source /home/ros-sharp_ws/devel/setup.bash
 
-RUN cd /home/ && git clone https://github.com/siemens/ros-sharp.git -b master
-RUN mv /home/ros-sharp/ROS/file_server /home/ros-sharp_ws/src
+RUN cd /home/ && git clone -b ros_docker_dev https://github.com/luchspeter/3D_Vision_AR_RobotVis.git
+RUN mv /home/3D_VISION_AR_ROBOTVIS/ROS/file_server /home/ros-sharp_ws/src
+RUN rm -r -f /home/3D_VISION_AR_ROBOTVIS
+
 RUN source /opt/ros/melodic/setup.bash && \
 		source /home/ros-sharp_ws/devel/setup.bash && \
 		cd /home/ros-sharp_ws && \
 		catkin_make
-
-RUN rm -r -f /home/ros-sharp
 
 #add lauch to ur_package and rebuild ws
 RUN source /opt/ros/melodic/setup.bash && \
