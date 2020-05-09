@@ -25,14 +25,14 @@ namespace RosSharp
     {
         private const int RoundDigits = 6;
 
-        public static void DestroyImmediateIfExists<T>(this Transform transform) where T : Component
+        public static void DestroyImmediateIfExists<T>(this Transform transform) where T : UnityEngine.Component
         {
             T component = transform.GetComponent<T>();
             if (component != null)
                 Object.DestroyImmediate(component);
         }
 
-        public static T AddComponentIfNotExists<T>(this Transform transform) where T : Component
+        public static T AddComponentIfNotExists<T>(this Transform transform) where T : UnityEngine.Component
         {
             T component = transform.GetComponent<T>();
             if (component == null)

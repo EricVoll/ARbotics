@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ARCommander : MonoBehaviour
@@ -12,36 +13,78 @@ public class ARCommander : MonoBehaviour
         InitializeAvailableComponents();
     }
 
-    public UrdfSyncher urdfSyncher;
-
-    Dictionary<string, UrdfSyncher> currentSceneDicionary = new Dictionary<string, UrdfSyncher>();
-
+    /// <summary>
+    /// All Robots will be placed in this gameobject
+    /// </summary>
     public GameObject SceneContainerObject;
 
-    public void ReceiveMessage(string _msg)
-    {
-        var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<ARCommanderMessage>(_msg);
+    /// <summary>
+    /// a dictionary holding all id to their robot Synchers
+    /// </summary>
+    readonly Dictionary<int, UrdfSyncher> currentSceneDicionary = new Dictionary<int, UrdfSyncher>();
 
-        foreach (var device in msg.devices)
+    /// <summary>
+    /// The UI handler responsible for showing hte spawn buttons
+    /// </summary>
+    public UIHandler UIHandler;
+
+
+    public void ReceiveMessage(RunningInstance[] runningInstances)
+    {
+        foreach (var instance in runningInstances)
         {
-            if (!currentSceneDicionary.ContainsKey(device.id))
+            if (!currentSceneDicionary.ContainsKey(instance.inst.inst_id))
             {
                 //object does not exist. Create it.
-                UrdfSyncher syncher = new UrdfSyncher(SceneContainerObject);
-                currentSceneDicionary[device.id] = syncher;
+                UrdfSyncher syncher = new UrdfSyncher(SceneContainerObject, instance.comp.pretty_name);
+                currentSceneDicionary[instance.inst.inst_id] = syncher;
             }
 
-            currentSceneDicionary[device.id].SynchUrdf(device.data);
+            currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
         }
     }
+
+
+    ARCommandAvailableComponentResponse currentResponse;
 
     private void InitializeAvailableComponents()
     {
-        var availableComponents = this.GetComponent<RestCommunicator>().RequestAvailableRobots();
-        foreach (var item in availableComponents.components)
+        this.GetComponent<RestCommunicator>().RequestAvailableRobots(ProcessResponse);
+    }
+
+    private void ProcessResponse(ARCommandAvailableComponentResponse res)
+    {
+        foreach (var item in res.components)
         {
             Debug.Log(item.pretty_name);
         }
+
+        UIHandler.ShowRobots(res.components.Select(x => x.pretty_name).ToList(), SpawnRobot);
     }
 
+    private void SpawnRobot(string name)
+    {
+        this.GetComponent<RestCommunicator>().RequestNewComponentIntsance(name, RobotAdded);
+    }
+
+    private void RobotAdded(bool success)
+    {
+        //Request ru
+        RequestRunningIntsances();
+    }
+
+    //This should not be necessary in the long run.
+    private void RequestRunningIntsances()
+    {
+        this.GetComponent<RestCommunicator>().SendGetRequest<RunningInstance[]>(RestCommunicator.RequestUrl.Instances, RunningInstancesReceived);
+    }
+
+    private void RunningInstancesReceived(RunningInstance[] instances)
+    {
+        string[] ignoreNames = new[] { "ros-sharp-com", "UnityCollision" };
+
+        List<RunningInstance> inst = instances.Where(x => !ignoreNames.Any(y => x.comp.pretty_name.Contains(y))).ToList();
+
+        ReceiveMessage(inst.ToArray());
+    }
 }

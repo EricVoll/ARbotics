@@ -31,16 +31,19 @@ public class UrdfSyncher
     /// 
     /// </summary>
     /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
-    public UrdfSyncher(GameObject sceneContainerObject, int recreateObjectAfterSynchronizations = -1)
+    public UrdfSyncher(GameObject sceneContainerObject, string robotName, int recreateObjectAfterSynchronizations = -1)
     {
         SceneContainerGameObject = sceneContainerObject;
         synchronizationCounterMax = recreateObjectAfterSynchronizations;
+        RobotName = robotName;
     }
 
     /// <summary>
     /// The Root gameobject which will be used to spawn all robots. This will be the parent
     /// </summary>
     public GameObject SceneContainerGameObject;
+
+    public string RobotName;
 
     /// <summary>
     /// The root gameobject of this robot
@@ -54,7 +57,7 @@ public class UrdfSyncher
     private int synchronizationCounterWithoutFullRegeneration = 0;
     private int synchronizationCounterMax = -1;
 
-    private bool debugMode = true;
+    private bool debugMode = false;
 
     /// <summary>
     /// Compares the current devices in the scene with the urdf file and performs adjustments
@@ -70,7 +73,7 @@ public class UrdfSyncher
         {
             if (!hasUrdfAssetsImported)
             {
-                ImportInitialUrdfModel(robot);
+                ImportInitialUrdfModel(urdf, robot);
                 return;
             }
         }
@@ -93,7 +96,7 @@ public class UrdfSyncher
         //If there are no changes to be made - even better.
 
         RobotBuilder builder = new RobotBuilder();
-        builder.Synchronize(robot, RobotRootObject);
+        builder.Synchronize(robot, RobotRootObject, assetsRootDirectoryName);
 
         synchronizationCounterWithoutFullRegeneration++;
     }
@@ -102,18 +105,30 @@ public class UrdfSyncher
     /// Imports the URDF Model initially to download all textures, assets and store them correctly etc.
     /// </summary>
     /// <param name="robot"></param>
-    private void ImportInitialUrdfModel(Robot robot)
+    private void ImportInitialUrdfModel(string urdf, Robot robot)
     {
         hasUrdfAssetsImported = false;
 
         var protocol = RosConnector.Protocols.WebSocketNET;
         RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
 
-
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
 
-        handler.TransferUrdf(protocol, @"ws://localhost:9090", 10, assetPath, "robot_description");
-        (RobotRootObject, assetsRootDirectoryName) = handler.GenerateModelIfReady(true);
+        assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090",  20, assetPath, urdf);
+
+
+
+        if (RobotRootObject == null)
+        {
+            RobotRootObject = new GameObject(RobotName);
+        }
+
+        RobotBuilder builder = new RobotBuilder();
+        builder.Synchronize(robot, RobotRootObject, assetsRootDirectoryName);
+
+
+        foreach (Rigidbody rb in RobotRootObject.GetComponentsInChildren<Rigidbody>())
+            rb.isKinematic = true;
 
         if (SceneContainerGameObject != null)
         {

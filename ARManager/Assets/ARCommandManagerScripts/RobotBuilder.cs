@@ -31,13 +31,13 @@ public class RobotBuilder
 
     }
 
-    public void Synchronize(Robot robot, GameObject rootObject)
+    public void Synchronize(Robot robot, GameObject rootObject, string assetRoot)
     {
         GameObject robotGameObject = rootObject;
 
         robotGameObject.AddComponentIfNotExists<UrdfRobot>();
 
-        UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
+        UrdfAssetPathHandler.SetPackageRoot(assetRoot);
         UrdfMaterial.InitializeRobotMaterials(robot);
         UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
 

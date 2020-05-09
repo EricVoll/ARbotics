@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Networking;
 public class RestCommunicator : MonoBehaviour
 {
     public TextAsset GetAvailableComponentsTestResponse;
@@ -29,28 +30,24 @@ public class RestCommunicator : MonoBehaviour
     /// Retrieves all available robots and returns an object with the information returned from the server
     /// </summary>
     /// <returns></returns>
-    public ARCommandAvailableCompoenntResponse RequestAvailableRobots()
+    public void RequestAvailableRobots(Action<ARCommandAvailableComponentResponse> responseProcessor)
     {
         //Send post request
-        string responseJson = SendRestRequest(RequestUrl.AvailableComponents, RequestType.Get);
-
-        ARCommandAvailableCompoenntResponse response = JsonConvert.DeserializeObject<ARCommandAvailableCompoenntResponse>(responseJson);
-
-        return response;
+        SendGetRequest<ARCommandAvailableComponentResponse>(RequestUrl.AvailableComponents, responseProcessor);
     }
 
     /// <summary>
     /// Requests a new instance of the specified component
     /// </summary>
     /// <param name="instanceName"></param>
-    public void RequestNewComponentIntsance(string componentName)
+    public void RequestNewComponentIntsance(string componentName, Action<bool> callBack)
     {
         object requestObject = new
         {
             comp_name = componentName
         };
 
-        SendRestRequest(RequestUrl.Instances, RequestType.Post, requestObject);
+        SendPostRequest(RequestUrl.Instances, callBack, requestObject);
     }
 
     /// <summary>
@@ -59,47 +56,91 @@ public class RestCommunicator : MonoBehaviour
     /// <param name="url"></param>
     /// <param name="requestObject"></param>
     /// <returns></returns>
-    public string SendRestRequest(RequestUrl url, RequestType type, object requestObject = null)
+    public void SendGetRequest<T>(RequestUrl url, Action<T> callBack)
     {
         string requestUrl = RestUrl[url];
 
-
-        switch (type)
-        {
-            case RequestType.Get:
-                //Send get request
-                break;
-            case RequestType.Post:
-                if (requestObject != null)
-                {
-                    string json = JsonConvert.SerializeObject(requestObject);
-                    //Send request with json body
-                }
-                else
-                {
-                    //Send request without json body
-                }
-                break;
-            default:
-                break;
-        }
-
-
-        if (url == RequestUrl.AvailableComponents && type == RequestType.Get)
-        {
-            return GetAvailableComponentsTestResponse.text;
-        }
-
-        return "";
+        StartCoroutine(Get(requestUrl, callBack));
     }
 
+
+    /// <summary>
+    /// Sends 
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="requestObject"></param>
+    /// <returns></returns>
+    public void SendPostRequest(RequestUrl url, Action<bool> callBack = null, object requestObject = null)
+    {
+        string requestUrl = RestUrl[url];
+
+        if (requestObject != null)
+        {
+            string json = JsonConvert.SerializeObject(requestObject);
+            //Send request with json body
+            StartCoroutine(Post(requestUrl, json, callBack));
+        }
+        else
+        {
+            //Send request without json body
+            StartCoroutine(Post(requestUrl, "", callBack));
+        }
+    }
+
+    private IEnumerator Get<T>(string url, Action<T> callBack)
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError)
+            {
+                Debug.LogError(www.error);
+            }
+            else
+            {
+                if (www.isDone)
+                {
+                    string jsonResult = System.Text.Encoding.UTF8.GetString(www.downloadHandler.data);
+
+                    T res = JsonConvert.DeserializeObject<T>(jsonResult);
+
+                    callBack(res);
+                    Debug.Log(jsonResult);
+                }
+            }
+        }
+    }
+
+    private IEnumerator Post(string url, string payload, Action<bool> callBack = null)
+    {
+
+        var jsonBinary = System.Text.Encoding.UTF8.GetBytes(payload);
+
+        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
+
+        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinary);
+        uploadHandlerRaw.contentType = "application/json";
+
+        UnityWebRequest www =
+            new UnityWebRequest(url, "POST", downloadHandlerBuffer, uploadHandlerRaw);
+
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError)
+            Debug.LogError(string.Format("{0}: {1}", www.url, www.error));
+        else
+            Debug.Log(string.Format("Response: {0}", www.downloadHandler.text));
+
+        callBack?.Invoke(!www.isNetworkError);
+    }
 
 }
 
 
 #region Get Available Components response
 
-public class ARCommandAvailableCompoenntResponse
+public class ARCommandAvailableComponentResponse
 {
     public List<AvailableComponent> components;
 }
@@ -131,31 +172,60 @@ public class DockerStartupInformation
 
 
 
-public class ARCommanderMessage
+public class Instance
 {
-    //All available devices that are requestable by the Unity side.
-    public List<AvailableRobot> availableDevices;
-
-    //All devices that should be displayed
-    public List<DeviceUrdf> devices;
+    public int inst_id { get; set; }
+    public double start_time { get; set; }
+    public object stop_time { get; set; }
+    public bool active { get; set; }
+    public bool running { get; set; }
+    public bool killed { get; set; }
+    public bool stop { get; set; }
+    public string urdf_dyn { get; set; }
 }
 
-public class AvailableRobot
+public class Ports
 {
-    //FriendlyName for UI
-    public string name;
-    //Id to request the publisher to be started
-    public string id;
-    //URL where the Stationary Side will publish the urdf contents
-    public string publishingServerUrl;
+    //this wont work
+    public int port { get; set; }
 }
 
-public class DeviceUrdf
+public class DockerMeshVolume
 {
-    //URDF content of the device
-    public string data;
-    //The ID of the current instance
-    public string id;
+    public string bind { get; set; }
+    public string mode { get; set; }
+}
+
+public class Volumes
+{
+    public DockerMeshVolume docker_MeshVolume { get; set; }
+}
+
+public class Docker
+{
+    public string command { get; set; }
+    public string image { get; set; }
+    public string network { get; set; }
+    public Ports ports { get; set; }
+    public object environment { get; set; }
+    public bool detach { get; set; }
+    public Volumes volumes { get; set; }
+}
+
+public class Component
+{
+    public string pretty_name { get; set; }
+    public int max_instances { get; set; }
+    public int instances { get; set; }
+    public string comp_type { get; set; }
+    public string urdf_stat { get; set; }
+    public Docker docker { get; set; }
+}
+
+public class RunningInstance
+{
+    public Instance inst { get; set; }
+    public Component comp { get; set; }
 }
 
 #endregion

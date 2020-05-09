@@ -70,6 +70,41 @@ namespace RosSharp.RosBridgeClient
             ImportAssets();
         }
 
+        public string ImportAssetsFromUrdf(RosConnector.Protocols protocolType, string robotName, string serverUrl, int timeout, string assetPath, string urdf)
+        {
+            this.timeout = timeout;
+            this.assetPath = assetPath;
+            this.urdfParameter = "robot_description";
+
+            // initialize
+            ResetStatusEvents();
+
+            rosSocket = RosConnector.ConnectToRos(protocolType, serverUrl, OnConnected, OnClosed);
+
+            if (!StatusEvents["connected"].WaitOne(timeout * 1000))
+            {
+                Debug.LogWarning("Failed to connect to ROS before timeout");
+                return null;
+            }
+
+            UrdfTransferFromRos urdfTransfer = new UrdfTransferFromRos(rosSocket, assetPath, urdfParameter);
+            urdfTransfer.RobotName = robotName;
+            urdfTransfer.ImportResourceFiles(urdf);
+
+            if (StatusEvents["resourceFilesReceived"].WaitOne(timeout * 1000))
+            {
+                Debug.Log("Imported urdf resources to " + localDirectory);
+            }
+            else
+                Debug.LogWarning("Not all resource files have been received before timeout.");
+
+            localDirectory = urdfTransfer.LocalUrdfDirectory;
+
+            rosSocket.Close();
+
+            return localDirectory;
+        }
+
         private void ImportAssets()
         {
             // setup Urdf Transfer
@@ -95,10 +130,10 @@ namespace RosSharp.RosBridgeClient
             rosSocket.Close();
         }
 
-        public (GameObject, string) GenerateModelIfReady(bool skipUserInput = false, GameObject containerObject = null)
+        public (GameObject, string) GenerateModelIfReady(string urdf = "", bool skipUserInput = false, GameObject containerObject = null)
         {
-            if (!StatusEvents["resourceFilesReceived"].WaitOne(0) || StatusEvents["importComplete"].WaitOne(0))
-                return (null,null);
+            //if (!StatusEvents["resourceFilesReceived"].WaitOne(0) || StatusEvents["importComplete"].WaitOne(0))
+            //    return (null,null);
 
             AssetDatabase.Refresh();
 
@@ -121,7 +156,10 @@ namespace RosSharp.RosBridgeClient
 
             if (createModel)
             {
-                robotGenerated = Urdf.Editor.UrdfRobotExtensions.Create(robotFileName);
+                if (!String.IsNullOrEmpty(urdf))
+                    robotGenerated = Urdf.Editor.UrdfRobotExtensions.Create(Urdf.Robot.FromContent(urdf));
+                else
+                    robotGenerated = Urdf.Editor.UrdfRobotExtensions.Create(robotFileName);
             }
 
             StatusEvents["importComplete"].Set();
