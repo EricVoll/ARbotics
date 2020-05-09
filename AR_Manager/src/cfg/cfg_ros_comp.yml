@@ -1,19 +1,20 @@
 components:
 - comp_type: ros
   docker:
-    command: source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash
+    command: source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash && export ROS_MASTER_URI=http://ros1_base:11311
       && roslaunch file_server ros_sharp_communication.launch
     image: ros1_ros-sharp
     network: docker_rosnet
     ports:
       9090/tcp: 9090
-    environment:
+    environment: 
+      - "ROS_MASTER_URI=http://ros1_base:11311"
     detach: true 
     volumes:
       docker_MeshVolume: 
         bind: /home/Mesh
         mode: ro 
-      #- "ROS_MASTER_URI=http://ros1_base:11311"
+      #
   max_instances: 1
   pretty_name: ros-sharp-com
   urdf:
@@ -29,7 +30,8 @@ components:
     image: ros1_ur_rossharp
     network: docker_rosnet #docker_rosnet
     ports: null
-    environment:
+    environment: 
+      - "ROS_MASTER_URI=http://ros1_base:11311"
     volumes:
       docker_MeshVolume: 
         bind: /home/Mesh
@@ -342,13 +344,14 @@ components:
   docker:
     command: source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash
       && cp -r /home/catkin_ws/src/universal_robot/ur_description /home/Mesh/
-      && source /home/catkin_ws/devel/setup.bash
+      && source /home/catkin_ws/devel/setup.bash  && export ROS_MASTER_URI=http://ros1_base:11311
       && roslaunch ur_rossharp ur5_rossharp.launch
     image: ros1_ur_rossharp
     detach: true
     network: docker_rosnet
+    environment: 
+      - "ROS_MASTER_URI=http://ros1_base:11311"
     ports: null
-    environment:
     volumes:
       docker_MeshVolume: 
         bind: /home/Mesh
