@@ -1,5 +1,6 @@
 ﻿using RosSharp.RosBridgeClient;
 using RosSharp.Urdf;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -144,9 +145,16 @@ public class UrdfSyncher
 
         if (synchronizationCounterWithoutFullRegeneration == synchronizationCounterMax)
         {
-            Object.Destroy(RobotRootObject);
+            GameObject.Destroy(RobotRootObject);
             RobotRootObject = null;
             synchronizationCounterWithoutFullRegeneration = 0;
         }
+    }
+
+
+
+    internal void Destroy()
+    {
+        GameObject.Destroy(RobotRootObject);
     }
 }

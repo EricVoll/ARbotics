@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,6 @@ public class ARCommander : MonoBehaviour
         UrdfSyncher.InitializeUrdfSyncher();
 
         InitializeAvailableComponents();
-
-        RequestRunningIntsances();
     }
 
     /// <summary>
@@ -30,9 +29,16 @@ public class ARCommander : MonoBehaviour
     /// </summary>
     public UIHandler UIHandler;
 
+    public void ReceiveUnfilteredMessage(RunningInstance[] allRunningInstances)
+    {
+        ReceiveMessage(FilterList(allRunningInstances, (x) => x.comp.pretty_name));
+    }
 
     public void ReceiveMessage(RunningInstance[] runningInstances)
     {
+#if DEBUG
+        Debug.Log($"Recevied {runningInstances.Length} filtered instances");
+#endif
         foreach (var instance in runningInstances)
         {
             if (!currentSceneDicionary.ContainsKey(instance.inst.inst_id))
@@ -42,7 +48,25 @@ public class ARCommander : MonoBehaviour
                 currentSceneDicionary[instance.inst.inst_id] = syncher;
             }
 
-            currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
+            try
+            {
+                currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Robot Synchronization failed! " + ex.Message);
+            }
+        }
+
+        for (int i = currentSceneDicionary.Values.Count - 1; i >= 0; i--)
+        {
+            var currentInstance = currentSceneDicionary.Values.ElementAt(i);
+            var currentKey = currentSceneDicionary.Keys.ElementAt(i);
+            if (!runningInstances.Any(x => x.inst.inst_id == currentKey))
+            {
+                currentInstance.Destroy();
+                currentSceneDicionary.Remove(currentKey);
+            }
         }
     }
 
@@ -71,8 +95,10 @@ public class ARCommander : MonoBehaviour
 
     private void RobotAdded(bool success)
     {
-        //Request ru
-        RequestRunningIntsances();
+        if (success)
+            Debug.Log("Robot request succeeded!");
+        else
+            Debug.Log("Robot request failed!");
     }
 
     //This should not be necessary in the long run.
@@ -83,10 +109,17 @@ public class ARCommander : MonoBehaviour
 
     private void RunningInstancesReceived(RunningInstance[] instances)
     {
+        ReceiveUnfilteredMessage(instances);
+    }
+
+    private T[] FilterList<T>(List<T> inputList, Func<T, string> name_selector)
+    {
+        return FilterList<T>(inputList.ToArray(), name_selector);
+    }
+    private T[] FilterList<T>(T[] inputArray, Func<T, string> name_selector)
+    {
         string[] ignoreNames = new[] { "ros-sharp-com", "UnityCollision" };
 
-        List<RunningInstance> inst = instances.Where(x => !ignoreNames.Any(y => x.comp.pretty_name.Contains(y))).ToList();
-
-        ReceiveMessage(inst.ToArray());
+        return inputArray.Where(x => !ignoreNames.Any(y => name_selector(x).Contains(y))).ToArray();
     }
 }
