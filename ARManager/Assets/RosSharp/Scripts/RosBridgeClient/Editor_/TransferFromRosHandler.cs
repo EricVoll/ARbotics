@@ -88,6 +88,9 @@ namespace RosSharp.RosBridgeClient
             }
 
             UrdfTransferFromRos urdfTransfer = new UrdfTransferFromRos(rosSocket, assetPath, urdfParameter);
+            StatusEvents["robotNameReceived"] = urdfTransfer.Status["robotNameReceived"];
+            StatusEvents["robotDescriptionReceived"] = urdfTransfer.Status["robotDescriptionReceived"];
+            StatusEvents["resourceFilesReceived"] = urdfTransfer.Status["resourceFilesReceived"];
             urdfTransfer.RobotName = robotName;
             urdfTransfer.ImportResourceFiles(urdf);
 

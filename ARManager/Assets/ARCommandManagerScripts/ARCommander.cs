@@ -11,6 +11,8 @@ public class ARCommander : MonoBehaviour
         UrdfSyncher.InitializeUrdfSyncher();
 
         InitializeAvailableComponents();
+
+        RequestRunningIntsances();
     }
 
     /// <summary>

@@ -36,6 +36,8 @@ namespace RosSharp.Urdf.Editor
             if(!AssetDatabase.IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
                 AssetDatabase.CreateFolder(packageRoot, MaterialFolderName);
 
+            AssetDatabase.Refresh();
+
             if (correctingIncorrectPackageRoot)
                 MoveMaterialsToNewLocation(oldPackagePath);
         }
@@ -76,7 +78,10 @@ namespace RosSharp.Urdf.Editor
             if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
                 path = path.Substring(0, path.Length - 3) + "prefab";
 
-            return Path.Combine(packageRoot, path);
+            string intermed = Path.Combine(packageRoot, path);
+            intermed = intermed.Replace(@"\\", "/");
+            intermed = intermed.Replace(@"\", "/");
+            return intermed;
         }
         #endregion
 
