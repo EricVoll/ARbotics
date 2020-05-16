@@ -168,7 +168,6 @@ if __name__ == '__main__':
 		
 		plt.show(block=False)
 	
-	# x-axis
 		X = list(range(0,100))
 
 	while not rospy.is_shutdown():
