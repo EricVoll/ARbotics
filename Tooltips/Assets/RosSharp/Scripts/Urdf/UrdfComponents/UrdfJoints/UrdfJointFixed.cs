@@ -21,12 +21,15 @@ namespace RosSharp.Urdf
     {
         public override JointTypes JointType => JointTypes.Fixed;
 
-        public static UrdfJoint Create(GameObject linkObject)
+        public static UrdfJoint Synchronize(GameObject linkObject)
         {
-            UrdfJointFixed urdfJoint = linkObject.AddComponent<UrdfJointFixed>();
+            linkObject.AddComponentIfNotExists<UrdfJointFixed>(out UrdfJointFixed urdfJoint);
 
-            urdfJoint.UnityJoint = linkObject.AddComponent<FixedJoint>();
-            urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
+            if (linkObject.AddComponentIfNotExists<FixedJoint>(out FixedJoint fixedJoint))
+            {
+                urdfJoint.UnityJoint = fixedJoint;
+                urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
+            }
 
             return urdfJoint;
         }

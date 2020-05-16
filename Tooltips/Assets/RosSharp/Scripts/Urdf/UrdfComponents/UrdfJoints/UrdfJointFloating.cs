@@ -21,10 +21,14 @@ namespace RosSharp.Urdf
     {
         public override JointTypes JointType => JointTypes.Floating;
 
-        public static UrdfJoint Create(GameObject linkObject)
+        public static UrdfJoint Synchronize(GameObject linkObject)
         {
-            UrdfJointFloating urdfJoint = linkObject.AddComponent<UrdfJointFloating>();
-            urdfJoint.UnityJoint = linkObject.AddComponent<ConfigurableJoint>();
+            linkObject.AddComponentIfNotExists<UrdfJointFloating>(out UrdfJointFloating urdfJoint);
+
+            if (linkObject.AddComponentIfNotExists<ConfigurableJoint>(out ConfigurableJoint joint))
+            {
+                urdfJoint.UnityJoint = joint;
+            }
 
             return urdfJoint;
         }
@@ -33,7 +37,7 @@ namespace RosSharp.Urdf
 
         public override float GetPosition()
         {
-            Vector3 distanceFromAnchor = ((ConfigurableJoint)UnityJoint).transform.localPosition - 
+            Vector3 distanceFromAnchor = ((ConfigurableJoint)UnityJoint).transform.localPosition -
                                          ((ConfigurableJoint)UnityJoint).connectedAnchor;
             return distanceFromAnchor.magnitude;
         }

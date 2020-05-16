@@ -33,9 +33,9 @@ namespace RosSharp.Urdf
         private const int RoundDigits = 10;
         private const float MinInertia = 1e-8f;
 
-        public static void Create(GameObject linkObject, Link.Inertial inertial = null)
+        public static void Synchronize(GameObject linkObject, Link.Inertial inertial = null)
         {
-            UrdfInertial urdfInertial = linkObject.AddComponent<UrdfInertial>();
+            linkObject.AddComponentIfNotExists<UrdfInertial>(out UrdfInertial urdfInertial);
             Rigidbody _rigidbody = urdfInertial.GetComponent<Rigidbody>();
 
             if (inertial != null)

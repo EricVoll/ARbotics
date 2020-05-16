@@ -42,7 +42,7 @@ namespace RosSharp.Urdf
         protected const int RoundDigits = 6;
         protected const float Tolerance = 0.0000001f;
 
-        public static void Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
+        public static void Synchronize(GameObject linkObject, JointTypes jointType, Joint joint = null)
         {
             Rigidbody parentRigidbody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
             if (parentRigidbody == null) return;
@@ -63,25 +63,25 @@ namespace RosSharp.Urdf
             switch (jointType)
             {
                 case JointTypes.Fixed:
-                    urdfJoint = UrdfJointFixed.Create(linkObject);
+                    urdfJoint = UrdfJointFixed.Synchronize(linkObject);
                     break;
                 case JointTypes.Continuous:
-                    urdfJoint = UrdfJointContinuous.Create(linkObject);
+                    urdfJoint = UrdfJointContinuous.Synchronize(linkObject);
                     break;
                 case JointTypes.Revolute:
-                    urdfJoint = UrdfJointRevolute.Create(linkObject);
+                    urdfJoint = UrdfJointRevolute.Synchronize(linkObject);
                     break;
                 case JointTypes.Floating:
-                    urdfJoint = UrdfJointFloating.Create(linkObject);
+                    urdfJoint = UrdfJointFloating.Synchronize(linkObject);
                     break;
                 case JointTypes.Prismatic:
-                    urdfJoint = UrdfJointPrismatic.Create(linkObject);
+                    urdfJoint = UrdfJointPrismatic.Synchronize(linkObject);
                     break;
                 case JointTypes.Planar:
-                    urdfJoint = UrdfJointPlanar.Create(linkObject);
+                    urdfJoint = UrdfJointPlanar.Synchronize(linkObject);
                     break;
             }
-
+            //SynchTodo: This assignment probably does not break stuff, but is not necessary. 
             UnityEngine.Joint unityJoint = linkObject.GetComponent<UnityEngine.Joint>();
             unityJoint.connectedBody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
             unityJoint.autoConfigureConnectedAnchor = true;

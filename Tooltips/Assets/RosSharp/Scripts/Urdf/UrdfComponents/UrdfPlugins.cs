@@ -23,17 +23,23 @@ namespace RosSharp.Urdf
 {
     public class UrdfPlugins : MonoBehaviour
     {
-        public static void Create(Transform robot, List<Plugin> plugins = null)
+        public static void Synchronize(Transform robot, List<Plugin> plugins = null)
         {
-            GameObject pluginsObject = new GameObject("Plugins");
-            pluginsObject.transform.SetParentAndAlign(robot);
-            pluginsObject.AddComponent<UrdfPlugins>();
+            if(robot.FindChildOrCreate("Plugins", out GameObject pluginsObject))
+            {
+                pluginsObject.AddComponent<UrdfPlugins>();
+            }
 
-            if (plugins == null) return;
-
+            //Add or check all plugins
             foreach (var plugin in plugins)
                 UrdfPlugin.Create(pluginsObject.transform, plugin);
+
+            //Remove all plugins that are not in the plugin list
+            var existingPlugins = pluginsObject.GetComponentsInSelf<UrdfPlugin>();
+            existingPlugins.RemoveAll(x => plugins.Any(y => y.text == x.PluginText));
+            Utils.DestroyAll(existingPlugins);
         }
+
 
         public List<Plugin> ExportPluginsData()
         {
