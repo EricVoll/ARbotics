@@ -10,26 +10,20 @@
 cd <PATH>/3D_Vision_AR_RobotVis/Docker/
 docker-compose up
 ```
+
+Replace <0428> with container ID 
 ```
-
-
-roslaunch ur_gazebo ur5.launch limited:=true gui:=false & sleep 45 && roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch sim:=true limited:=true
-
-source /opt/ros/melodic/setup.bash &&  source /home/catkin_ws/devel/setup.bash && \
+docker exec 0428 bash -c "source /opt/ros/melodic/setup.bash &&  source /home/catkin_ws/devel/setup.bash && \
 export ROS_MASTER_URI=http://ros1_base:11311 && \
-python /home/catkin_ws/src/universal_robot/ur_rossharp/moveit_test.py 
-```
-```
-source /opt/ros/melodic/setup.bash &&  source /home/catkin_ws/devel/setup.bash && \
-export ROS_MASTER_URI=http://ros1_base:11311 && \
-python /home/catkin_ws/src/universal_robot/ur_rossharp/ur5_demo_script.py 
+python /home/catkin_ws/src/universal_robot/ur_rossharp/moveit_test.py"
 ```
 
 ```
-source /opt/ros/melodic/setup.bash &&  source /home/catkin_ws/devel/setup.bash && \
+docker exec 0428 bash -c "source /opt/ros/melodic/setup.bash &&  source /home/catkin_ws/devel/setup.bash && \
 export ROS_MASTER_URI=http://ros1_base:11311 && \
-rostopic echo joint_states 
+python /home/catkin_ws/src/universal_robot/ur_rossharp/ur5_demo_script.py"
 ```
+
 
 ## REST-API
 At first have a look at [client implementation](https://github.com/luchspeter/3D_Vision_AR_RobotVis/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
