@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RosSharp.RosBridgeClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,6 @@ public class ARCommander : MonoBehaviour
 {
     public void Awake()
     {
-        UrdfSyncher.InitializeUrdfSyncher();
-
         InitializeAvailableComponents();
     }
 
@@ -44,7 +43,7 @@ public class ARCommander : MonoBehaviour
             if (!currentSceneDicionary.ContainsKey(instance.inst.inst_id))
             {
                 //object does not exist. Create it.
-                UrdfSyncher syncher = new UrdfSyncher(SceneContainerObject, instance.comp.pretty_name);
+                UrdfSyncher syncher = new UrdfSyncher(SceneContainerObject, transform.GetComponent<RosConnector>(), instance.comp.pretty_name);
                 currentSceneDicionary[instance.inst.inst_id] = syncher;
             }
 

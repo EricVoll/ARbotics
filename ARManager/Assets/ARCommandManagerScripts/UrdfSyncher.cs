@@ -11,6 +11,7 @@ public class UrdfSyncher
 {
 
     #region Static Inits
+
     private static AttachableComponentFactory<IAttachableComponent> tooltipFactory;
 
     /// <summary>
@@ -32,12 +33,17 @@ public class UrdfSyncher
     /// 
     /// </summary>
     /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
-    public UrdfSyncher(GameObject sceneContainerObject, string robotName, int recreateObjectAfterSynchronizations = -1)
+    /// <param name="robotName">The name of the robot instance</param>
+    /// <param name="recreateObjectAfterSynchronizations">A counter that specifies after how many urdf synchronizations a complete rebuild should be performed</param>
+    public UrdfSyncher(GameObject sceneContainerObject, RosConnector rosConnector, string robotName, int recreateObjectAfterSynchronizations = -1)
     {
+        RosConnector = rosConnector;
         SceneContainerGameObject = sceneContainerObject;
         synchronizationCounterMax = recreateObjectAfterSynchronizations;
         RobotName = robotName;
     }
+
+    public RosConnector RosConnector;
 
     /// <summary>
     /// The Root gameobject which will be used to spawn all robots. This will be the parent
@@ -58,8 +64,6 @@ public class UrdfSyncher
     private int synchronizationCounterWithoutFullRegeneration = 0;
     private int synchronizationCounterMax = -1;
 
-    private bool debugMode = false;
-
     /// <summary>
     /// Compares the current devices in the scene with the urdf file and performs adjustments
     /// </summary>
@@ -70,27 +74,14 @@ public class UrdfSyncher
 
         Robot robot = Robot.FromContent(urdf);
 
-        if (!debugMode)
-        {
-            if (!hasUrdfAssetsImported)
-            {
-                ImportInitialUrdfModel(urdf, robot);
-                return;
-            }
-        }
-        else
-        {
 
-            if (RobotRootObject == null)
-            {
-                RobotRootObject = new GameObject("MyCoolRoot");
-                RobotRootObject.transform.SetParent(SceneContainerGameObject.transform);
-            }
-            assetsRootDirectoryName = @"C:\Users\ericv\Documents\ETH\ETH 2020\3D Vision\3D_Vision_AR_RobotVis\ARManager\Assets\Urdf\Models\turtlebot\Turtlebot2\robot_description.urdf";
-
-            robot.filename = assetsRootDirectoryName;
+        if (!hasUrdfAssetsImported)
+        {
+            ImportInitialUrdfModel(urdf, robot);
+            return;
         }
 
+        robot.filename = assetsRootDirectoryName;
 
         //we do not return here since we want to apply any possible changes that were passed in the last urdf update.
         //the imported downloads the urdf from the file_server so it might be an old version.
@@ -115,9 +106,7 @@ public class UrdfSyncher
 
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
 
-        assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090",  20, assetPath, urdf);
-
-
+        assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090", 20, assetPath, urdf);
 
         if (RobotRootObject == null)
         {
@@ -127,9 +116,24 @@ public class UrdfSyncher
         RobotBuilder builder = new RobotBuilder();
         builder.Synchronize(robot, RobotRootObject, assetsRootDirectoryName);
 
-
+        
         foreach (Rigidbody rb in RobotRootObject.GetComponentsInChildren<Rigidbody>())
             rb.isKinematic = true;
+
+        RosConnector.gameObject.AddComponentIfNotExists<JointStateSubscriber>(out var jointStateSubscriber);
+
+        jointStateSubscriber.Topic = @"/joint_states";
+        jointStateSubscriber.JointStateWriters = new List<JointStateWriter>();
+        jointStateSubscriber.JointNames = new List<string>();
+        foreach (UrdfJoint urdfJoint in RobotRootObject.GetComponentsInChildren<UrdfJoint>())
+        {
+            if (urdfJoint.JointType != UrdfJoint.JointTypes.Fixed)
+            {
+                urdfJoint.gameObject.AddComponentIfNotExists<JointStateWriter>(out var writer);
+                jointStateSubscriber.JointStateWriters.Add(writer);
+                jointStateSubscriber.JointNames.Add(urdfJoint.JointName);
+            }
+        }
 
         if (SceneContainerGameObject != null)
         {

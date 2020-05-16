@@ -153,6 +153,7 @@ namespace RosSharp.RosBridgeClient
             }
 
             GameObject robotGenerated = null;
+            if (String.IsNullOrEmpty(localDirectory)) return (null, null);
             string robotFileName = Path.Combine(
                        localDirectory,
                        Path.GetFileNameWithoutExtension(urdfParameter) + ".urdf");
