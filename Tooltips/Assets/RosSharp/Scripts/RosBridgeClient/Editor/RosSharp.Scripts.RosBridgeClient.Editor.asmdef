@@ -1,0 +1,18 @@
+{
+    "name": "RosSharp.Scripts.RosBridgeClient.Editor",
+    "references": [
+        "GUID:db00c7b293c745d468b2f500aa3e1ab2",
+        "GUID:486ef4de6d290e243aa744ae4e7f2d28"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
