@@ -133,7 +133,8 @@ def track_move_goal(data,goal):
 	print(goal)
 
 if __name__ == '__main__':
-	
+	visu = False
+
 	# Values to update
 	q_size=100
 	q = Queue.Queue(maxsize=q_size)
@@ -146,60 +147,54 @@ if __name__ == '__main__':
 	jointPub = JointPublisher()
 	rate = rospy.Rate(100)
 
-
-	#Plotting
-	blit = True
 	i = 0
-	fig_joint = plt.figure()
+	if visu:
+		#Plotting
+		blit = True
+		fig_joint = plt.figure()
 
-	ax_joint = fig_joint.add_subplot(111)
-	ax_joint.set_ylim(-pi,pi)
-	ax_joint.set_xlim(0,101)
-	ax_joint.set_ylabel("Radians")
+		ax_joint = fig_joint.add_subplot(111)
+		ax_joint.set_ylim(-pi,pi)
+		ax_joint.set_xlim(0,101)
+		ax_joint.set_ylabel("Radians")
 
-	line1_joint, = ax_joint.plot([],"r",label='Joint 0')
-	line2_goal, = ax_joint.plot([], "--",label='Goal 0')
-	ax_joint.legend()
-	fig_joint.canvas.draw()
+		line1_joint, = ax_joint.plot([],"r",label='Joint 0')
+		line2_goal, = ax_joint.plot([], "--",label='Goal 0')
+		ax_joint.legend()
+		fig_joint.canvas.draw()
 
-	if blit:
-		axbackground = fig_joint.canvas.copy_from_bbox(ax_joint.bbox)
-	
-	plt.show(block=False)
+		if blit:
+			axbackground = fig_joint.canvas.copy_from_bbox(ax_joint.bbox)
+		
+		plt.show(block=False)
 	
 	# x-axis
-	X = list(range(0,100))
+		X = list(range(0,100))
 
 	while not rospy.is_shutdown():
 		i = i + 1
-		print(i)
-		
-		j_pan = []
-		j_pan = list(q.queue)
+		if visu:
+			print(i)
+			
+			j_pan = []
+			j_pan = list(q.queue)
 
-		if len(j_pan) == 100:
-			line1_joint.set_data(X,j_pan)
-		line2_goal.set_data(X,goal*q_size)
+			if len(j_pan) == 100:
+				line1_joint.set_data(X,j_pan)
+			line2_goal.set_data(X,goal*q_size)
 
-		if blit:
-			fig_joint.canvas.restore_region(axbackground)
-			ax_joint.draw_artist(line1_joint)
-			ax_joint.draw_artist(line2_goal)
-			fig_joint.canvas.blit(ax_joint.bbox)
-		
+			if blit:
+				fig_joint.canvas.restore_region(axbackground)
+				ax_joint.draw_artist(line1_joint)
+				ax_joint.draw_artist(line2_goal)
+				fig_joint.canvas.blit(ax_joint.bbox)
+			
 
-		fig_joint.canvas.flush_events()
+			fig_joint.canvas.flush_events()
 
 		if i > 100:
-			print("send command", goal)
+			#print("send command", goal)
 			jointPub.box_avoidance()
 			i = 0
 
 		rate.sleep()
-
-# if __name__ == '__main__':
-# 	posePub = PosePublisher()
-# 	rate = rospy.Rate(1)
-# 	while not rospy.is_shutdown():
-# 		posePub.move_sin()
-# 		rate.sleep()
