@@ -3,8 +3,7 @@ FROM ros1_base:latest
 RUN sudo apt-get install -y apt-utils
 RUN mkdir -p /home/catkin_ws/src
 
-RUN cd /home/catkin_ws/src/ && git clone -b $ROS_DISTRO-devel https://github.com/ros-industrial/universal_robot.git 
-
+RUN cd /home/catkin_ws/src/ && git clone https://github.com/ANYbotics/anymal_b_simple_description.git
 
 RUN source /opt/ros/melodic/setup.bash && \
 		cd /home/catkin_ws/ && rosdep update && \
@@ -24,8 +23,4 @@ RUN apt-get install -y ros-melodic-ros-control ros-melodic-ros-controllers
 RUN echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc
 
 #rostopic pub -r 1  euclidean_goal_pose geometry_msgs/Pose '{position:  {x: 0.6, y: 0.6, z: 0.40}, orientation: {x: 0.0,y: 0.0,z: 0.0, w: 1.2}}'
-
-
-
-
 

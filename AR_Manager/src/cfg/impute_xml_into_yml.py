@@ -1,9 +1,9 @@
 import yaml
 
-with open('cfg_ros_comp_withour_urdf.yml','r') as f:
+with open('cfg/cfg_ros_comp.yml','r') as f:
 	cfg = yaml.load(f)
 
-robots =['UR3', 'UR5', 'UR10']
+robots =['Anymal']
 for rob in robots:
 	with open('cfg/%s.xml'%rob,'r') as f:
 		data =  f.read()
@@ -13,5 +13,5 @@ for rob in robots:
 			com['urdf']['stat'] = data 
 			com['urdf']['dyn'] = data
 
-with open('cfg_ros_comp.yml','w') as f:
+with open('cfg/cfg_ros_comp.yml','w') as f:
 	yaml.dump(cfg, f)
