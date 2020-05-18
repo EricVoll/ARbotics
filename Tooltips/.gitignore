@@ -63,4 +63,5 @@ Microsoft.MixedReality*
 MixedRealityToolkit
 MixedRealityToolkit*
 
-Urdf/
+Assets/Urdf/
+Assets/Urdf/Models/
