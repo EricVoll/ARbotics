@@ -1,7 +1,7 @@
 {
-    "name": "ARCommander",
+    "name": "ARCommanderLibrary",
     "references": [
-        "RosSharp"
+        "GUID:abe12fb493bd89944839b3b6ec589acf"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

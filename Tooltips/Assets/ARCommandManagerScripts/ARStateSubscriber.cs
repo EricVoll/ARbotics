@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using RosSharp.RosBridgeClient;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
 using UnityEngine;
 
 namespace RosSharp.RosBridgeClient
@@ -12,7 +9,7 @@ namespace RosSharp.RosBridgeClient
     public class ARStateSubscriber : Subscriber<RosSharp.RosBridgeClient.Messages.Standard.String>
     {
         string lastMsg = "";
-        public ARCommander ArCommander;
+        public ARCommander.ARCommander ArCommander;
 
         public bool Enabled = true;
         public bool ForceUpdateOnce = false;
