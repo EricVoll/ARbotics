@@ -1369,7 +1369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RosConnector: {fileID: 582271}
-  Topic: /some_nice_topic
+  Topic: /eucledian_goal_pose
   Publish: 0
 --- !u!65 &1828494672
 BoxCollider:
