@@ -106,14 +106,8 @@ public class UrdfSyncher
 
 
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
-
-#if !UNITY_EDITOR
+        
         assetsRootDirectoryName = Path.Combine(assetPath, RobotName);
-#else
-        var protocol = RosConnector.Protocols.WebSocketNET;
-        TransferFromRosHandler handler = new TransferFromRosHandler();
-        assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090", 20, assetPath, urdf);
-#endif
 
         if (RobotRootObject == null)
         {
