@@ -1,0 +1,17 @@
+{
+    "name": "ARCommanderLibrary",
+    "references": [
+        "GUID:abe12fb493bd89944839b3b6ec589acf",
+        "GUID:e7c4f85cac6601e41ad7627b63f7d120",
+        "GUID:e91931ceb1e2dd84392866871f894c81"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

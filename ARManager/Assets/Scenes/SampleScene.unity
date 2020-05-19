@@ -121,112 +121,16 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &582270
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 582272}
-  - component: {fileID: 582271}
-  - component: {fileID: 582273}
-  - component: {fileID: 582274}
-  - component: {fileID: 582275}
-  - component: {fileID: 582276}
-  m_Layer: 0
-  m_Name: RosConnector
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &582271
+--- !u!114 &582271 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4176953072863468925, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+    type: 3}
+  m_PrefabInstance: {fileID: 4176953072863952642}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582270}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff98778ae051cfd40a6e4effdf851ebd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Timeout: 10
-  Serializer: 0
-  Protocol: 0
-  RosBridgeServerUrl: ws://localhost:9090
---- !u!4 &582272
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582270}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19423532, y: -1.1013665, z: 0.75240517}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &582273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2422723fe479645a36c6263f6056b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SceneContainerObject: {fileID: 38743112}
-  UIHandler: {fileID: 969482247}
---- !u!114 &582274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7da838576944d754abd73d27c4ea97a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GetAvailableComponentsTestResponse: {fileID: 4900000, guid: f6188b8af42c2604baa697555d3d4680,
-    type: 3}
---- !u!114 &582275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 562281f0e71a5934bb0b87fb7ccdbb18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Topic: /ar_state
-  TimeStep: 0
-  ArCommander: {fileID: 582273}
-  Enabled: 1
-  ForceUpdateOnce: 0
---- !u!114 &582276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53fd7a5167231684684ea222222f0bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8363573
@@ -1474,7 +1378,7 @@ MeshCollider:
   m_GameObject: {fileID: 2071350844}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -1556,6 +1460,85 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1001 &4176953072863952642
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4176953072863468924, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_Name
+      value: RosConnector
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.19423532
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.1013665
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.75240517
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176953072863468931, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: SceneContainerObject
+      value: 
+      objectReference: {fileID: 38743112}
+    - target: {fileID: 4176953072863468931, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: UIHandler
+      value: 
+      objectReference: {fileID: 969482247}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 65fe086d375d1d34888df6e3bd5b1e9e, type: 3}
 --- !u!1001 &6628042064709132285
 PrefabInstance:
   m_ObjectHideFlags: 0

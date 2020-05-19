@@ -1,10 +1,10 @@
-﻿using RosSharp.RosBridgeClient;
+﻿
+using RosSharp.RosBridgeClient;
 using RosSharp.Urdf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 public class UrdfSyncher
@@ -35,12 +35,13 @@ public class UrdfSyncher
     /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
     /// <param name="robotName">The name of the robot instance</param>
     /// <param name="recreateObjectAfterSynchronizations">A counter that specifies after how many urdf synchronizations a complete rebuild should be performed</param>
-    public UrdfSyncher(GameObject sceneContainerObject, RosConnector rosConnector, string robotName, int recreateObjectAfterSynchronizations = -1)
+    public UrdfSyncher(GameObject sceneContainerObject, RosConnector rosConnector, string robotName, GameObject robotPrefab, int recreateObjectAfterSynchronizations = -1)
     {
         RosConnector = rosConnector;
         SceneContainerGameObject = sceneContainerObject;
         synchronizationCounterMax = recreateObjectAfterSynchronizations;
         RobotName = robotName;
+        RobotPrefab = robotPrefab;
     }
 
     public RosConnector RosConnector;
@@ -49,8 +50,10 @@ public class UrdfSyncher
     /// The Root gameobject which will be used to spawn all robots. This will be the parent
     /// </summary>
     public GameObject SceneContainerGameObject;
+    public GameObject RobotPrefab;
 
     public string RobotName;
+
 
     /// <summary>
     /// The root gameobject of this robot
@@ -101,22 +104,27 @@ public class UrdfSyncher
     {
         hasUrdfAssetsImported = false;
 
-        var protocol = RosConnector.Protocols.WebSocketNET;
-        RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
 
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
 
+#if !UNITY_EDITOR
+        assetsRootDirectoryName = Path.Combine(assetPath, RobotName);
+#else
+        var protocol = RosConnector.Protocols.WebSocketNET;
+        TransferFromRosHandler handler = new TransferFromRosHandler();
         assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090", 20, assetPath, urdf);
+#endif
 
         if (RobotRootObject == null)
         {
-            RobotRootObject = new GameObject(RobotName);
+            RobotRootObject = GameObject.Instantiate(RobotPrefab);
+            RobotRootObject.name = RobotName;
         }
 
         RobotBuilder builder = new RobotBuilder();
         builder.Synchronize(robot, RobotRootObject, assetsRootDirectoryName);
 
-        
+
         foreach (Rigidbody rb in RobotRootObject.GetComponentsInChildren<Rigidbody>())
             rb.isKinematic = true;
 

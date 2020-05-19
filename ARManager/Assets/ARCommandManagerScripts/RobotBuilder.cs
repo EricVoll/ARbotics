@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//using RobotVisualizer;
 using RosSharp.Urdf;
 using RosSharp.Urdf.Editor;
 using System;
@@ -28,7 +29,7 @@ public class RobotBuilder
 {
     public RobotBuilder()
     {
-
+        //AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
     }
 
     public void Synchronize(Robot robot, GameObject rootObject, string assetRoot)
