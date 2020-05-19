@@ -155,54 +155,6 @@ namespace RosSharp.Urdf.Editor
                 renderer.sharedMaterial = material;
         }
         #endregion
-
-        #region Export
-
-        public static Link.Visual.Material ExportMaterialData(Material material)
-        {
-            if (material == null) return null;
-
-            if (!Materials.ContainsKey(material.name))
-            {
-                if (material.mainTexture != null)
-                {
-                    Link.Visual.Material.Texture texture = ExportTextureData(material.mainTexture);
-                    Materials[material.name] = new Link.Visual.Material(material.name, null, texture);
-                }
-                else if (!material.color.Equals(Color.clear))
-                {
-                    Link.Visual.Material.Color color = new Link.Visual.Material.Color(ExportRgbaData(material));
-                    Materials[material.name] = new Link.Visual.Material(material.name, color);
-                }
-                else
-                    return null;
-            }
-
-            return new Link.Visual.Material(material.name);
-        }
-
-        private static double[] ExportRgbaData(Material material)
-        {
-            return new double[]
-            {
-                Math.Round(material.color.r, RoundDigits),
-                Math.Round(material.color.g, RoundDigits),
-                Math.Round(material.color.b, RoundDigits),
-                Math.Round(material.color.a, RoundDigits)
-            };
-        }
-
-        private static Link.Visual.Material.Texture ExportTextureData(Texture texture)
-        {
-            string oldTexturePath = UrdfAssetPathHandler.GetFullAssetPath(AssetDatabase.GetAssetPath(texture));
-            string newTexturePath = UrdfExportPathHandler.GetNewResourcePath(Path.GetFileName(oldTexturePath));
-            if (oldTexturePath != newTexturePath)
-                File.Copy(oldTexturePath, newTexturePath, true);
-
-            string packagePath = UrdfExportPathHandler.GetPackagePathForResource(newTexturePath);
-            return new Link.Visual.Material.Texture(packagePath);
-        }
-
-        #endregion
+        
     }
 }

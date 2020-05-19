@@ -92,21 +92,6 @@ namespace RosSharp.Urdf.Editor
             linkChildren.RemoveAll(x => wantedObjectNames.Contains(x.name));
             Utils.DestroyAll(linkChildren.Select(x => x.gameObject));
         }
-
-        public static Link ExportLinkData(this UrdfLink urdfLink)
-        {
-            if (urdfLink.transform.localScale != Vector3.one)
-                Debug.LogWarning("Only visuals should be scaled. Scale on link \"" + urdfLink.gameObject.name + "\" cannot be saved to the URDF file.", urdfLink.gameObject);
-
-            UrdfInertial urdfInertial = urdfLink.gameObject.GetComponent<UrdfInertial>();
-            Link link = new Link(urdfLink.gameObject.name)
-            {
-                visuals = urdfLink.GetComponentInChildren<UrdfVisuals>().ExportVisualsData(),
-                collisions = urdfLink.GetComponentInChildren<UrdfCollisions>().ExportCollisionsData(),
-                inertial = urdfInertial == null ? null : urdfInertial.ExportInertialData()
-            };
-
-            return link;
-        }
+        
     }
 }

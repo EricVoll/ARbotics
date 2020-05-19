@@ -84,62 +84,6 @@ namespace RosSharp.Urdf.Editor
         }
 
         #endregion
-
-        #region Export
-
-        public static void ExportRobotToUrdf(this UrdfRobot urdfRobot, string exportRootFolder, string exportDestination)
-        {
-            UrdfExportPathHandler.SetExportPath(exportRootFolder, exportDestination);
-
-            urdfRobot.FilePath = Path.Combine(UrdfExportPathHandler.GetExportDestination(), urdfRobot.name + ".urdf");
-    
-            Robot robot = urdfRobot.ExportRobotData();
-            if (robot == null) return;
-
-            robot.WriteToUrdf();
-
-            Debug.Log(robot.name + " was exported to " + UrdfExportPathHandler.GetExportDestination());
-
-            UrdfMaterial.Materials.Clear();
-            UrdfExportPathHandler.Clear();
-            AssetDatabase.Refresh();
-        }
-
-        private static Robot ExportRobotData(this UrdfRobot urdfRobot)
-        {
-            Robot robot = new Robot(urdfRobot.FilePath, urdfRobot.gameObject.name);
-
-            List<string> linkNames = new List<string>();
-
-            foreach (UrdfLink urdfLink in urdfRobot.GetComponentsInChildren<UrdfLink>())
-            {
-                //Link export
-                if (linkNames.Contains(urdfLink.name))
-                {
-                    EditorUtility.DisplayDialog("URDF Export Error",
-                        "URDF export failed. There are several links with the name " +
-                        urdfLink.name + ". Make sure all link names are unique before exporting this robot.",
-                        "Ok");
-                    return null;
-                }
-                robot.links.Add(urdfLink.ExportLinkData());
-                linkNames.Add(urdfLink.name);
-
-                //Joint export
-                UrdfJoint urdfJoint = urdfLink.gameObject.GetComponent<UrdfJoint>();
-                if (urdfJoint != null)
-                    robot.joints.Add(urdfJoint.ExportJointData());
-                else if (!urdfLink.IsBaseLink) 
-                    //Make sure that links with no rigidbodies are still connected to the robot by a default joint
-                    robot.joints.Add(UrdfJoint.ExportDefaultJoint(urdfLink.transform));
-            }
-
-            robot.materials = UrdfMaterial.Materials.Values.ToList();
-            robot.plugins = urdfRobot.GetComponentInChildren<UrdfPlugins>().ExportPluginsData();
-
-            return robot;
-        }
-
-        #endregion
+        
     }
 }

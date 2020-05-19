@@ -55,20 +55,6 @@ namespace RosSharp.Urdf.Editor
             UrdfCollisions collisions = urdfVisual.GetComponentInParent<UrdfLink>().GetComponentInChildren<UrdfCollisions>();
             UrdfCollisionExtensions.Create(collisions.transform, urdfVisual.GeometryType, urdfVisual.transform);
         }
-
-        public static Link.Visual ExportVisualData(this UrdfVisual urdfVisual)
-        {
-            UrdfGeometry.CheckForUrdfCompatibility(urdfVisual.transform, urdfVisual.GeometryType);
-
-            Link.Geometry geometry = UrdfGeometry.ExportGeometryData(urdfVisual.GeometryType, urdfVisual.transform);
-
-            Link.Visual.Material material = null;
-            if (!(geometry.mesh != null && geometry.mesh.filename.ToLower().EndsWith(".dae"))) //Collada files contain their own materials
-                material = UrdfMaterial.ExportMaterialData(urdfVisual.GetComponentInChildren<MeshRenderer>().sharedMaterial);
-
-            string visualName = urdfVisual.name == "unnamed" ? null : urdfVisual.name;
-
-            return new Link.Visual(geometry, visualName, UrdfOrigin.ExportOriginData(urdfVisual.transform), material);
-        }
+        
     }
 }
