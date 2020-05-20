@@ -18,7 +18,8 @@ limitations under the License.
 using System.IO;
 using System;
 using UnityEngine;
-using UnityEditor;
+using System.Xml.Linq;
+using System.Globalization;
 
 namespace RosSharp.Urdf.Editor
 {
@@ -27,80 +28,24 @@ namespace RosSharp.Urdf.Editor
         public static T FindUrdfAsset<T>(string urdfFileName) where T : UnityEngine.Object
         {
             string fileAssetPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
-            T assetObject = AssetDatabase.LoadAssetAtPath<T>(fileAssetPath);
+            fileAssetPath = fileAssetPath.Substring(7, fileAssetPath.Length - 7);
+
+            ColladaResourceProcessor processor = new ColladaResourceProcessor();
+            processor.EvaluateColladaTransformation(fileAssetPath);
+
+            fileAssetPath = System.IO.Path.ChangeExtension(fileAssetPath, null);
+            T assetObject = Resources.Load<T>(fileAssetPath);
+
+            if (assetObject is GameObject go)
+                processor.ApplyColladaTransformation(go);
 
             if (assetObject != null)
                 return assetObject;
 
-            //If asset was not found, let user choose whether to search for
-            //or ignore the missing asset.
-            string invalidPath = fileAssetPath ?? urdfFileName;
-            int option = EditorUtility.DisplayDialogComplex("Urdf Importer: Asset Not Found",
-                "Current root folder: " + UrdfAssetPathHandler.GetPackageRoot() +
-                "\n\nExpected asset path: " + invalidPath,
-                "Locate Asset",
-                "Ignore Missing Asset",
-                "Locate Root Folder");
-
-            switch (option)
-            {
-                case 0:
-                    fileAssetPath = LocateAssetFile(invalidPath);
-                    break;
-                case 1: break;
-                case 2:
-                    fileAssetPath = LocateRootAssetFolder<T>(urdfFileName);
-                    break;
-            }
-
-            assetObject = (T) AssetDatabase.LoadAssetAtPath(fileAssetPath, typeof(T));
-            if (assetObject != null)
-                return assetObject;
-
-            ChooseFailureOption(urdfFileName);
             return null;
         }
 
-        private static string LocateRootAssetFolder<T>(string urdfFileName) where T : UnityEngine.Object
-        {
-            string newAssetPath = EditorUtility.OpenFolderPanel(
-                "Locate package root folder",
-                Path.Combine(Path.GetDirectoryName(Application.dataPath), "Assets"),
-                "");
 
-            if (UrdfAssetPathHandler.IsValidAssetPath(newAssetPath))
-                UrdfAssetPathHandler.SetPackageRoot(newAssetPath, true);
-            else 
-                Debug.LogWarning("Selected package root " + newAssetPath + " is not within the Assets folder.");
-
-            return UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
-        }
-
-        private static string LocateAssetFile(string invalidPath)
-        {
-            string fileExtension = Path.GetExtension(invalidPath)?.Replace(".", "");
-
-            string newPath = EditorUtility.OpenFilePanel(
-                "Couldn't find asset at " + invalidPath + ". Select correct file.",
-                UrdfAssetPathHandler.GetPackageRoot(),
-                fileExtension);
-
-            return UrdfAssetPathHandler.GetRelativeAssetPath(newPath);
-        }
-
-        private static void ChooseFailureOption(string urdfFilePath)
-        {
-            if (!EditorUtility.DisplayDialog(
-                "Urdf Importer: Missing Asset",
-                "Missing asset " + Path.GetFileName(urdfFilePath) +
-                " was ignored or could not be found.\n\nContinue URDF Import?",
-                "Yes",
-                "No"))
-            {
-                throw new InterruptedUrdfImportException("User cancelled URDF import. Model may be incomplete.");
-            }
-        }
-        
         private class InterruptedUrdfImportException : Exception
         {
             public InterruptedUrdfImportException(string message) : base(message)
@@ -108,4 +53,95 @@ namespace RosSharp.Urdf.Editor
             }
         }
     }
+
+
+    public class ColladaResourceProcessor
+    {
+        private bool isCollada;
+        private string orientation;
+        private float globalScale;
+
+        public void EvaluateColladaTransformation(string relativeFilePath)
+        {
+            relativeFilePath = relativeFilePath.Replace('/', '\\');
+            
+            string absoluteFilePath = getAbsolutePath(relativeFilePath);
+
+            isCollada = absoluteFilePath.EndsWith(".dae");
+
+            if (!isCollada)
+                return;
+
+            globalScale = readGlobalScale(absoluteFilePath);
+
+            orientation = readColladaOrientation(absoluteFilePath);
+        }
+
+        public void ApplyColladaTransformation(GameObject gameObject)
+        {
+            if (!isCollada)
+                return;
+
+            gameObject.transform.SetPositionAndRotation(
+                getColladaPositionFix(gameObject.transform.position, orientation),
+                Quaternion.Euler(getColladaRotationFix(orientation)) * gameObject.transform.rotation);
+        }
+
+        private static string getAbsolutePath(string relativeAssetPath)
+        {
+            return Path.Combine(Path.GetDirectoryName(Application.dataPath), "Assets", "Resources", relativeAssetPath);
+        }
+
+        private Vector3 getColladaPositionFix(Vector3 position, string orientation)
+        {
+            switch (orientation)
+            {
+                case "X_UP": return position; // not tested
+                case "Y_UP": return position; // not tested
+                case "Z_UP": return new Vector3(-position.z, position.y, -position.x); // tested
+                default: return position; // not tested  
+            }
+        }
+
+        private static Vector3 getColladaRotationFix(string orientation)
+        {
+            switch (orientation)
+            {
+                case "X_UP": return new Vector3(-90, 90, 90); // not tested
+                case "Y_UP": return new Vector3(-90, 90, 0);  // tested
+                case "Z_UP": return new Vector3(0, -90, 0);    // tested
+                default: return new Vector3(-90, 90, 0);    // tested                      
+            }
+        }
+
+        private string readColladaOrientation(string absolutePath)
+        {
+            try
+            {
+                System.Xml.Linq.XNamespace xmlns = "http://www.collada.org/2005/11/COLLADASchema";
+                XDocument xdoc = XDocument.Load(absolutePath);
+                return xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "up_axis").Value;
+            }
+            catch
+            {
+                return "undefined";
+            }
+        }
+
+        private float readGlobalScale(string absolutePath)
+        {
+            try
+            {
+                System.Xml.Linq.XNamespace xmlns = "http://www.collada.org/2005/11/COLLADASchema";
+                XDocument xdoc = XDocument.Load(absolutePath);
+                string str = xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "unit").Attribute("meter").Value;
+                return float.Parse(str, CultureInfo.InvariantCulture.NumberFormat);
+            }
+            catch
+            {
+                return 1.0f;
+            }
+        }
+    }
+
 }

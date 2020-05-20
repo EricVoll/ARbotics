@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEditor;
+using System.Linq;
 
 namespace RosSharp.Urdf.Editor
 {
@@ -48,36 +48,21 @@ namespace RosSharp.Urdf.Editor
             if (urdfMaterial.name == "")
                 urdfMaterial.name = GenerateMaterialName(urdfMaterial);
 
-            var material = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
+            //var material = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
+            var all = Resources.LoadAll("", typeof(Material));
+            var material = all.First(x => x.name == urdfMaterial.name) as Material;
+
             if (material != null) //material already exists
+            {
+                MaterialsCreated[urdfMaterial.name] = material;
                 return material;
-
-            material = InitializeMaterial();
-
-            //Store the material for later re-use
-            MaterialsCreated[urdfMaterial.name] = material;
-
-            if (urdfMaterial.color != null)
-                material.color = CreateColor(urdfMaterial.color);
-            else if (urdfMaterial.texture != null)
-                material.mainTexture = LoadTexture(urdfMaterial.texture.filename);
-
-            AssetDatabase.CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
-            return material;
+            }
+            else
+            {
+                return new Material(Shader.Find("Specular"));
+            }
         }
-
-        private static void CreateDefaultMaterial()
-        {
-            var material = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
-            if (material != null)
-                return;
-
-            material = InitializeMaterial();
-            material.color = new Color(0.33f, 0.33f, 0.33f, 0.0f);
-
-            string newAssetPath = UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName);
-            AssetDatabase.CreateAsset(material, newAssetPath);
-        }
+        
 
         private static Material InitializeMaterial()
         {
@@ -120,14 +105,6 @@ namespace RosSharp.Urdf.Editor
             return filename == "" ? null : LocateAssetHandler.FindUrdfAsset<Texture>(filename);
         }
 
-
-        public static void InitializeRobotMaterials(Robot robot)
-        {
-            CreateDefaultMaterial();
-            foreach (var material in robot.materials)
-                CreateMaterial(material);
-        }
-
         public static void SetUrdfMaterial(GameObject gameObject, Link.Visual.Material urdfMaterial)
         {
             if (urdfMaterial != null)
@@ -142,7 +119,7 @@ namespace RosSharp.Urdf.Editor
                 Renderer renderer = gameObject.GetComponentInChildren<Renderer>();
                 if (renderer != null && renderer.sharedMaterial == null)
                 {
-                    var defaultMaterial = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+                    var defaultMaterial = new Material(Shader.Find("Specular"));
                     SetMaterial(gameObject, defaultMaterial);
                 }
             }

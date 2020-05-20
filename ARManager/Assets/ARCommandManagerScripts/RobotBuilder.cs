@@ -18,11 +18,6 @@ limitations under the License.
 //using RobotVisualizer;
 using RosSharp.Urdf;
 using RosSharp.Urdf.Editor;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class RobotBuilder
@@ -39,7 +34,6 @@ public class RobotBuilder
         robotGameObject.AddComponentIfNotExists<UrdfRobot>();
 
         UrdfAssetPathHandler.SetPackageRoot(assetRoot);
-        UrdfMaterial.InitializeRobotMaterials(robot);
         UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
 
         UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
