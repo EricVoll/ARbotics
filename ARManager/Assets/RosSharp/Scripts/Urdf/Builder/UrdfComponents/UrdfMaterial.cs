@@ -50,12 +50,12 @@ namespace RosSharp.Urdf.Editor
 
             //var material = AssetDatabase.LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
             var all = Resources.LoadAll("", typeof(Material));
-            var material = all.First(x => x.name == urdfMaterial.name) as Material;
+            var material = all.FirstOrDefault(x => x.name == urdfMaterial.name);
 
             if (material != null) //material already exists
             {
-                MaterialsCreated[urdfMaterial.name] = material;
-                return material;
+                MaterialsCreated[urdfMaterial.name] = material as Material;
+                return material as Material;
             }
             else
             {

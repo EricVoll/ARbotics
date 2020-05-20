@@ -60,3 +60,11 @@ crashlytics-build.properties
 
 Assets/Urdf/
 /Assets/Resources/Urdf/
+
+# MRTK
+/Assets/MixedRealityToolkit/
+/Assets/MixedRealityToolkit.Providers
+/Assets/MixedRealityToolkit.Generated
+/Assets/MixedRealityToolkit.SDK
+/Assets/MixedRealityToolkit.Services
+*MixedRealityToolkit*.meta
