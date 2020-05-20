@@ -65,5 +65,5 @@ Docker/dev_script/
 *.pyc
 **/.vscode
 */.vscode/c_cpp_properties.json
-
+*/docs/*
 

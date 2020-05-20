@@ -1,4 +1,6 @@
-from .server import Server
+from .server import Server, cfg_to_comps
+
 __all__ = (
-	'Server'
+	'Server', 
+	'cfg_to_comps'
 )

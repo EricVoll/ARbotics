@@ -35,15 +35,26 @@ class RosCompInfo:
 	docker: dict
 
 class Instance():
+	"""Instance is based on a Component Object
+	"""	
 	def __init__(self, comp, inst_id):
-		"""
-		"""
-		self._comp = comp #base component
+		"""Initalization of the Instance
+
+		Parameters
+		----------
+		comp : Component
+				base component
+		inst_id : int
+				unique instance ID
+		"""	
+
+		self._comp = comp
 		if self._comp.comp_type == 'unity':
 			urdf_dyn = 'empty'
 		elif self._comp.comp_type == 'ros':
 			urdf_dyn = self._comp.get_data()['comp']['urdf_stat']
 
+		#use dataclass to store data of instance
 		self._ii = InstInfo(
 			inst_id = inst_id,
 			start_time= time.time(),
@@ -54,6 +65,8 @@ class Instance():
 			stop = False,
 			urdf_dyn= urdf_dyn)
 
+		#calls start methode of base_component which returns the 
+		#container reference the instance is running in
 		self._container = self._comp.start()
 	
 	def __str__(self):
@@ -61,9 +74,13 @@ class Instance():
 				self._comp.name, self._ii.inst_id, datetime.datetime.fromtimestamp(self._ii.start_time) , datetime.timedelta(milliseconds=self.get_uptime()) )
 
 	def get_uptime(self):
-		"""
-		returns unique id which is set when instanciated
-		"""
+		"""Operation time of instance
+
+		Returns
+		-------
+		float
+				Operation time in sec
+		"""		
 		if self._ii.active:
 			return time.time() - self._ii.start_time
 		else:
@@ -75,54 +92,85 @@ class Instance():
 
 	@property
 	def name(self):
-		"""
-		returns unique id which is set when instanciated
-		"""
+		"""Base component name 
+
+		Returns
+		-------
+		string
+				name of base component
+		"""		
 		return self._comp.name
 
 	def remove(self):
 		self._comp.instance_closed()
 
 	def stop(self):
+		"""Tries to kill the instances docker-container and removes it.
+		"""		
 		try:
-			#print('My continaer is: ', self._container.id)			
-			#self._container.stop()
 			self._container.kill()
 			self._container.remove()
-
-			#print("Told container to stop")
 		except:
 			pass
-			#print("Object already destroyed")
-		
 
 	def update_urdf_dyn(self, data):
+		"""Updates the dynamic URDF. 
+		Can be used to add and remove tooltips
+
+		Parameters
+		----------
+		data : string
+				new urdf as string
+		"""
 		self._ii.urdf_dyn = data
 	
 	def get_data(self):
-		#.to_dict()
-		d = {'inst': self._ii.to_dict(), 'comp' : self._comp.get_data()['comp']  }
-		return d
+		"""Instance and base component data summary
+
+		Returns
+		-------
+		dict
+				contains instance data and base component data
+		"""		
+		return {'inst': self._ii.to_dict(), 'comp' : self._comp.get_data()['comp']  }
 
 	def update(self):
+		"""Checks if docker container of instance is still running
+
+		Returns
+		-------
+		bool
+				indicates if instance is still running
+		"""	
 		try: 
 			self._container.reload()
 			if self._container.status == 'exited':
 				self._ii.running = False
 			else:
 				self._ii.running = True
-			#print('My continaer is: ', self._container.id, self._container.status)
-		
 		except:
 			self._ii.running = False
 		return self._ii.running
 		
-
 class Component(ABC):
-	"""
-	a component defines how to actually interact with a container
-	"""
+	"""Abstract Component Class which defines the minimal methods and functions that need to be implemented
+	Implements basic component behavior common for all Components
+
+	Parameters
+	----------
+	ABC : metaclass
+			--
+	"""	
 	def __init__ (self, cfg, docker_client):
+		"""Initalization of component
+
+		Parameters
+		----------
+		cfg : dict
+				contains all releant informaion which is stored in AvailCompInfo dataclass
+		docker_client : DockerClient
+				Reference to host docker client to start and stop instance docker containers 
+		"""		
 		self._aci = AvailCompInfo(
 			comp_type= cfg['comp_type'], 
 			pretty_name = cfg['pretty_name'],
@@ -148,12 +196,8 @@ class Component(ABC):
 	def instances(self):
 		return self._aci.instances
 	
-
 	@property
 	def name(self):
-		"""
-		returns unique id which is set when instanciated
-		"""
 		return self._aci.pretty_name
 
 	@property
@@ -172,14 +216,11 @@ class Component(ABC):
 	def start(self):
 		self.add_instance()
 		print("STARTED: ", self._aci.pretty_name)
-		#goes into container and launches/runs
-	
+
 	@abstractmethod 
 	def stop(self):
 		print("STOP: ", self._aci.pretty_name)
 
-		#goes into container and stops
-	
 	@abstractmethod 
 	def update(self):
 		pass
@@ -190,14 +231,17 @@ class Component(ABC):
 		d = {'comp': self._aci.to_dict()}
 		return d
 
-
-
-
 class RosComponent(Component):
 		
 	def __init__ (self, cfg, docker_client):
-		"""
-		ToDo: Check if cfg valid
+		"""Init
+
+		Parameters
+		----------
+		cfg : dict
+				contains all relevant component info
+		docker_client : DockerClient
+				DockerClient reference to start instances
 		"""
 		super(RosComponent, self).__init__(cfg, docker_client)
 		self._rci = RosCompInfo(
@@ -205,7 +249,13 @@ class RosComponent(Component):
 			docker = cfg['docker'])
 
 	def start(self):
+		"""start docker container
 
+		Returns
+		-------
+		Container
+				Container reference
+		"""		
 		super(RosComponent, self).start()
 		self._rci.docker['command']= '''bash -c '%s' '''%self._rci.docker['command']
 		print('START ROS CONTAINER')
@@ -214,27 +264,31 @@ class RosComponent(Component):
 		print('executed docker run got container:', container)
 		
 		return container 
-		#goes into container and launches/runs
 
 	def stop(self):
-
+		"""stop container
+		"""
 		super(RosComponent, self).stop()
-		#goes into container and stops
-
+		
 	def update(self):
-
+		"""updates component
+		"""
 		super(RosComponent, self).update()
 
 	def get_data(self):
+		"""get data of component
+
+		Returns
+		-------
+		dict
+				component data based of AvailableCompInfo dataclass
+		"""		
 		d = {'comp': dict(self._aci.to_dict(), **self._rci.to_dict())}
 		return d
 
 class UnityComponent(Component):
 
 	def __init__ (self, cfg, docker_client):
-		"""
-		ToDo: Check if cfg valid
-		"""
 		super(UnityComponent, self).__init__(cfg, docker_client)
 
 	def start(self): 

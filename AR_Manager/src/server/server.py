@@ -1,7 +1,4 @@
 import sys
-sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/src')
-sys.path.append('/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/')
-
 import logging
 import yaml
 import copy
@@ -373,6 +370,3 @@ def cfg_to_comps(cfg_file, docker_client):
 		else:
 			logging.warning('Comp type ({}) not defined'.format(single_cfg['comp_type']))
 	return comps
-
-
-

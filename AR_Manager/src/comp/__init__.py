@@ -1,6 +1,9 @@
-from .component import RosComponent, UnityComponent, Instance
+from .component import RosComponent, UnityComponent, Instance, AvailCompInfo, InstInfo,RosCompInfo
 __all__ = (
 	'RosComponent',
 	'UnityComponent',
-	"Instance"
+	"Instance",
+	'AvailCompInfo',
+	'InstInfo',
+	'RosCompInfo'
 )
