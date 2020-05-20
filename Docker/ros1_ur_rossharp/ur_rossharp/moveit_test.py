@@ -138,6 +138,8 @@ class MoveGroupPythonIntefaceTutorial(object):
 		# box_name = "box"
 		# scene.add_box(box_name, box_pose, size=(1, 0.01, 0.5))
 
+
+
 		box_pose.header.frame_id = "world"
 		box_pose.pose.orientation.w = 1.0
 		box_pose.pose.position.x = 0
@@ -162,6 +164,8 @@ def move_it_ar_interface():
 	rospy.Subscriber("ar_joint_state", Float32MultiArray, joint_goal_manipulator, robot)
 
 	rate = rospy.Rate(100)
+
+
 	while not rospy.is_shutdown():
 		
 		rate.sleep()

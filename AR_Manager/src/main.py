@@ -27,7 +27,7 @@ if __name__ == '__main__':
 		s = Server()
 
 		def signal_handler(signal, frame):
-			# your code here
+			""" Exits gently on Ctrl C. """
 			s.server_close()
 
 			if len(s.get_instances()) == 0:
@@ -60,9 +60,10 @@ if __name__ == '__main__':
 			#print(s)
 		job = scheduler.add_job(spin_job, 'interval', minutes=1/120)
 		scheduler.start()
-
-		s.start('ros-sharp-com')
-		
+		try:
+			s.start('ros-sharp-com')
+		except ValueError:
+			print("Can`t find ros-shap-com to start automatically")
 		app.run(debug=False,host='0.0.0.0') 
 	except Exception as e:
 		print("ERROR", e)

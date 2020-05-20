@@ -24,9 +24,8 @@ components:
 - comp_type: ros
   docker:
     command: source /opt/ros/melodic/setup.bash &&  source /home/ros-sharp_ws/devel/setup.bash
-      && cp -r /home/catkin_ws/src/universal_robot/ur_description /home/Mesh/ && source
-      /home/catkin_ws/devel/setup.bash && export ROS_MASTER_URI=http://ros1_base:11311
-      && roslaunch ur_gazebo ur3.launch limited:=true gui:=false & sleep 45 && roslaunch ur3_moveit_config ur3_moveit_planning_execution.launch sim:=true limited:=true
+      && cp -r /home/catkin_ws/src/universal_robot/ur_description /home/Mesh/ && source /home/catkin_ws/devel/setup.bash
+      && export ROS_MASTER_URI=http://ros1_base:11311 && roslaunch ur_gazebo ur5.launch limited:=true gui:=false & sleep 30 && export ROS_MASTER_URI=http://ros1_base:11311 && source /home/catkin_ws/devel/setup.bash && roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch sim:=true limited:=true
     detach: true
     environment:
     - ROS_MASTER_URI=http://ros1_base:11311

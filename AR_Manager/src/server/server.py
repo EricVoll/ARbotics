@@ -11,38 +11,48 @@ from comp import RosComponent, UnityComponent, Instance
 from ros_nodes import ARServerStatePublisher
 
 
-"""
-This will be implemented based on flask and REST-API
-
-joint_states
-name: [elbow_joint, shoulder_lift_joint, shoulder_pan_joint, wrist_1_joint, wrist_2_joint,
-  wrist_3_joint]
-"""
 
 class Server():
 	"""
-	implements all functionality
+	Returns an Server object that handles ROS and Unity Components. 
+	Each components runs in an individual Docker Container. 
+	The Server can run and stop Docker Container.
 	"""
-	def __init__(	self, \
-								cfg_ros_comp = 'src/cfg/cfg_ros_comp.yml', \
+	def __init__(	self,
+								cfg_ros_comp = 'src/cfg/cfg_ros_comp.yml',
 								cfg_unity_comp = 'src/cfg/cfg_unity_comp.yml'):
-		"""
-		additional error handling needed for DockerClient
-		"""
+		"""Launchs the ArServerStatePublisher ROS Node and converts both cfg into Component objects.
+
+		Parameters
+		----------
+		cfg_ros_comp : str, optional
+				path to the cfg file containing all ROS-Components, by default 'src/cfg/cfg_ros_comp.yml'
+		cfg_unity_comp : str, optional
+				path to the cfg file containing all Unity-Components, by default 'src/cfg/cfg_unity_comp.yml'
+		"""					
 
 		self._docker_client = docker.DockerClient(base_url='unix:///var/run/docker.sock' )
 		self._aassp = ARServerStatePublisher()
+
+		# self._avail_comps is a list containing all available components.
 		self._avail_comps = cfg_to_comps( cfg_ros_comp, self._docker_client)
 		self._avail_comps += cfg_to_comps( cfg_unity_comp, self._docker_client)
 		
-		#containes all running components
-		#components are always copied and then they are instances
-		#instances might be ros or unity comp
+		# self._instances is a list containing all running components.
+		# the list is automatically updated if a component closes. 
+		# an instance is a copy of and available componet.
 		self._instances = [] 
 		self._instance_counter = 0 
 
 
 	def __str__(self):
+		"""String representation of the Server listing all available components and running
+
+		Returns
+		-------
+		string
+				all running components and instances.
+		"""	
 		string = "Server Summary:\n"
 		
 		string += "="*45+' Instances '+'='*45 +'\n'
@@ -58,29 +68,65 @@ class Server():
 		return string
 
 	def ros_publish(self):
+		"""Publishes server state via the ARServerStatePublisher ros node.
+		"""	
 		data = self.get_instances()
 		self._aassp.publish(data= { 'data': data } )
 
 	def server_close(self):
-
+		"""Sends stop signal to all running instances.
+		"""		
 		logging.info('Close Server')
 		self.stop_instances()
 		
 	def stop_instances(self):
-
+		"""Sends stop signal to all running instances.
+		"""
 		for inst in self._instances:
 			inst.stop()
 		
 	def stop_instance(self, inst_id):
+		"""Sends stop signal to an individual running instance.
 
+		Parameters
+		----------
+		inst_id : int
+				ID of the instance that should be stopped.
+
+		Returns
+		-------
+		dict
+				containing all running instances after stopping the specified one
+		Raises
+		------
+		ValueError
+				Invalid inst_id. No instance in self._instances with the given ID was found
+		"""				
 		for inst in self._instances:
 			if inst.id == inst_id:
 				inst.stop()
 				return self.get_instances()
-		logging.error('Instance {} not found to stop'.format(inst_id))
-		return -1
-
+		
+		raise ValueError("Invalid comp_name. No component in self._avail_comps with this com_name found")
+		
 	def start(self, comp_name):
+		"""Creats an instance from the specified available component
+
+		Parameters
+		----------
+		comp_name : string
+				Name of the component from which a instance should be started
+
+		Returns
+		-------
+		dict
+				contaning the started instances data
+
+		Raises
+		------
+		ValueError
+				Invalid comp_name. No component in self._avail_comps with this com_name found
+		"""		
 
 		for comp in self._avail_comps:
 			if comp.name == comp_name and comp.available:
@@ -89,72 +135,150 @@ class Server():
 				self._instance_counter += 1
 				return self._instances[-1].get_data()
 
-		logging.error('Component {} not found to start'.format(comp_name))
+		raise ValueError("Invalid comp_name. No component in self._avail_comps with this com_name found")
 
-		return -1
+	def remove_instance(self, inst_id):
+		"""Removes an instance from self._instances
 
-	def remove_instance(self, inst_id):  		
-		print("remove instance from list")
+		Parameters
+		----------
+		inst_id : int
+				Id of instance that should be removed
+
+		Returns
+		-------
+		dict
+				True if remove operation was successfull
+
+		Raises
+		------
+		ValueError
+				Invalid inst_id. No instance in self._instances with this ID found
+		"""		
 		for inst in self._instances:
 			if inst.id == inst_id:
 				inst.remove()
 				self._instances.remove(inst)
 				return {'suc': True}	
 		
-		return -1
-		logging.error('Cant find instance id')
-
+		raise ValueError("Invalid inst_id. No instance in self._instances with the given ID was found")
 
 	def spin(self):
-		"""
-		updates all component states
-		spin must be called cyclic
-		removes stoped instances
-		"""
+		"""This method should be called periodically.
+		Checks container state of each running instance. 
+		Removes the instance from list if docker-container stopped.
+		"""		
 		for inst in self._instances:
 			running = inst.update()
 			if not running: 
-				self.remove_instance(inst.id)
-		
+				try:
+					self.remove_instance(inst.id)
+				except ValueError:
+					pass
+
 	def get_instance(self, inst_id):
+		"""Access the data of a specific instance
+
+		Parameters
+		----------
+		inst_id : int
+				ID of target instance
+
+		Returns
+		-------
+		dict
+				contains all information of instance
+		
+		Raises
+		------
+		ValueError
+				Invalid inst_id. No instance in self._instances with the given ID was found
+		"""	
+
 		for inst in self._instances:
 			
 			if inst.id == inst_id:
 				return inst.get_data()
-		print("id not found")
-		return -1
+		raise ValueError("Invalid inst_id. No instance in self._instances with the given ID was found")
 
 	def get_instances(self):
+		"""Access data of all instances
+
+		Returns
+		-------
+		list
+				contains data of all instances
+		"""	
 		ls = []
 		for inst in self._instances:
-			ls.append( inst.get_data())
+			
+			try:
+				ls.append( inst.get_data())
+			except:
+				pass
 
-		if len(ls) == 0:	
-			return []
 		return ls
 
 	def update_instance_urdf(self, inst_id, data):
+		"""Updates the dynamic urdf of instance
+
+		Parameters
+		----------
+		inst_id : int
+				ID of target instance
+		data : string
+				new urdf content
+
+		Returns
+		-------
+		dict
+				data of modified instance
+
+		Raises
+		------
+		ValueError
+				Invalid inst_id. No instance in self._instances with the given ID was found
+		"""	
 		for inst in self._instances:
 			
 			if inst.id == inst_id:
 				inst.update_urdf_dyn(data)
 				return inst.get_data()
+
 		logging.warning("id not found")
-		return -1
+		raise ValueError("Invalid inst_id. No instance in self._instances with the given ID was found")
 		
 	def add_comps(self,cfg,store=False):
+		"""Adding a new component to the available components of the Server
+
+		Parameters
+		----------
+		cfg : dict
+				cfg containing the information about the new component. See src/cfg yaml for reference
+		store : bool, optional
+				Flag if the given cgf should be written to the cfg.yaml, by default False
+		"""		
 		to_remove =[]
 		for i in range(0,len(cfg)): 
-			if self.get_avail_comp(cfg[i]['pretty_name']) != -1:
+			try:
+				res = self.get_avail_comp(cfg[i]['pretty_name']) 
 				logging.warning('Component with name {} already exists'.format(cfg[i]['pretty_name']))
 				to_remove.append(cfg[i])
+			except:
+				pass
 		for i in to_remove:
 			cfg.remove(i)
 
 		self._avail_comps += cfg_to_comps( cfg, self._docker_client )
 
 	def get_avail_comps(self):
+		"""Get data of all available components
 
+		Returns
+		-------
+		dict
+				contains list all available components data
+		"""	
 		ls = []
 		for comp in self._avail_comps:
 			ls.append( comp.get_data()['comp'] )
@@ -164,29 +288,72 @@ class Server():
 		return {'components': ls}
 
 	def get_avail_comp(self, name):
+		"""Get data of given component
+
+		Parameters
+		----------
+		name : str
+				target component name
+
+		Returns
+		-------
+		dict
+				data of target component
+
+		Raises
+		------
+		ValueError
+				Invalid name. No component in self._avail_comps with the given name was found
+		"""	
 
 		for comp in self._avail_comps:
 
 			if comp.name == name:
 				
 				return comp.get_data()
-		return -1
+
+		raise ValueError("Invalid name. No component in self._avail_comps with the given name was found")
 
 	def remove_avail_comp(self, name):
+		"""removes target component from self._avail_comps 
+
+		Parameters
+		----------
+		name : string
+				target component name
+
+		Returns
+		-------
+		dict
+				data of removed component
+		
+		Raises
+		------
+		ValueError
+				Invalid name. No component in self._avail_comps with the given name was found
+		"""	
 
 		for comp in self._avail_comps:
 			if comp.name == name:
 				self._avail_comps.remove(comp)
 				return comp.get_data()
-		return -1
+		raise ValueError("Invalid name. No component in self._avail_comps with the given name was found")
 
 def cfg_to_comps(cfg_file, docker_client):
+	"""Helper function to create a list of ROS and Unity components from a given cfg file
 
-	"""
-	reads in yml-file: 
-	creates component objects based on this file
+	Parameters
+	----------
+	cfg_file : string
+			path to cfg file specifying the components that should be created
+	docker_client : DockerClient
+			DockerClient of host system that has all containers build and ready to start them.
+			A DockerClient reference will be passed to each component so it can start and stop its container
 
-	ToDo: Check if cfg file is valid
+	Returns
+	-------
+	list
+			Contains RosComponents and UnityComponents.
 	"""
 
 	if isinstance(cfg_file, str):

@@ -18,7 +18,11 @@ class ResInstances(Resource):
 		parser = reqparse.RequestParser()
 		parser.add_argument('comp_name', type=str, required=True, location='json')
 		args = parser.parse_args()
-		res = self.s.start(args['comp_name'])
+		try:
+			res = self.s.start(args['comp_name'])
+		except ValueError:
+			res = -1
+
 		print(self.s)
 		return res
 
@@ -36,20 +40,32 @@ class ResInstance(Resource):
 
 	def get(self,inst_id):
 		print(self.s)
-		return self.s.get_instance(inst_id)
-	
+		try:
+			return self.s.get_instance(inst_id)
+		except ValueError:
+			return -1
+			 
 	def post(self,inst_id):
 
 		parser = reqparse.RequestParser()
 		parser.add_argument('comp_name', type=list, required=True, location='json')
 		args = parser.parse_args()
-		res = self.s.start(args['comp_name'])
+
+		try:
+			res = self.s.start(args['comp_name'])
+		except ValueError:
+			res = -1
+
 		print(self.s)
 		return res
 
 	def delete(self,inst_id):
 		print(inst_id, type(inst_id))
-		res = self.s.stop_instance(inst_id)
+		try:
+			res = self.s.stop_instance(inst_id)
+		except ValueError:
+			res = -1
+			
 		print(self.s)
 		return res
 
@@ -99,9 +115,16 @@ class ResAvailComp(Resource):
 
 	def get(self,name):
 		print(self.s)
-		return  self.s.get_avail_comp(name)
+		try: 
+			res = self.s.get_avail_comp(name)
+		except ValueError:
+			res = -1
+		return res
 
 	def delete(self,name):
-		res = self.s.remove_avail_comp(name)
+		try:
+			res = self.s.remove_avail_comp(name)
+		except ValueError:
+			res = -1
 		print(self.s)
 		return res
