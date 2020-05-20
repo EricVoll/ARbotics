@@ -109,7 +109,7 @@ namespace RosSharp.Urdf.Editor
             {
                 case "X_UP": return new Vector3(-90, 90, 90); // not tested
                 case "Y_UP": return new Vector3(-90, 90, 0);  // tested
-                case "Z_UP": return new Vector3(0, -90, 0);    // tested
+                case "Z_UP": return new Vector3(0, 90, 0);    // tested
                 default: return new Vector3(-90, 90, 0);    // tested                      
             }
         }
