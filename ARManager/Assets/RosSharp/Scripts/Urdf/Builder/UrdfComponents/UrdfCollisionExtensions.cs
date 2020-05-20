@@ -44,8 +44,7 @@ namespace RosSharp.Urdf.Editor
             }
             else
                 UrdfGeometryCollision.Create(collisionObject.transform, type);
-
-            UnityEditor.EditorGUIUtility.PingObject(collisionObject);
+            
         }
 
         public static void Create(Transform parent, Link.Collision collision)

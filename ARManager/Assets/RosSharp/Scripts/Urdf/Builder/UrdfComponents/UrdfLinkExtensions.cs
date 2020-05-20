@@ -45,7 +45,6 @@ namespace RosSharp.Urdf.Editor
             else
             {
                 UrdfInertial.Synchronize(linkObject);
-                UnityEditor.EditorGUIUtility.PingObject(linkObject);
             }
 
             //Remove Attached Values that are too much
