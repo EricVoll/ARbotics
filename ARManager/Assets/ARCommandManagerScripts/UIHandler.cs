@@ -21,9 +21,6 @@ public class UIHandler : MonoBehaviour
             go.GetComponent<RobotEntryScript>().Init(robotName, spawnCallBack);
             go.transform.SetParent(robUIContainer.transform);
         }
-
-        typeof(Test).GetField("test").GetRawConstantValue();
-        typeof(Test).GetField("test2").GetRawConstantValue();
     }
 
     int logCounter = 0;
@@ -39,10 +36,5 @@ public class UIHandler : MonoBehaviour
         log.GetComponent<Text>().text = logCounter++ + text;
         log.transform.SetParent(logContainer.transform);
     }
-
-    public class Test
-    {
-        public string test = "myTest";
-        public const string test2 = "myTest2";
-    }
+    
 }

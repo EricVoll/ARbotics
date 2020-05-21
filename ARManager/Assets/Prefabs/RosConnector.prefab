@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba2422723fe479645a36c6263f6056b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneContainerObject: {fileID: 0}
+  SceneContainerObject: {fileID: 4176953072863468924}
   RobotContainerPrefab: {fileID: 7377849859906299328, guid: 1a217e85723ac6a4bb6dfc48a880ea93,
     type: 3}
   UIHandler: {fileID: 0}

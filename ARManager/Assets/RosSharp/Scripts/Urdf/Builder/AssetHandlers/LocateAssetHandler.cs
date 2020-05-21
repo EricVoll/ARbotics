@@ -82,18 +82,16 @@ namespace RosSharp.Urdf.Editor
 
         public void EvaluateColladaTransformation(string relativeFilePath)
         {
-            relativeFilePath = relativeFilePath.Replace('/', '\\');
-            
-            string absoluteFilePath = getAbsolutePath(relativeFilePath);
-
-            isCollada = absoluteFilePath.EndsWith(".dae");
+            isCollada = relativeFilePath.EndsWith(".dae");
 
             if (!isCollada)
                 return;
 
-            globalScale = readGlobalScale(absoluteFilePath);
+            relativeFilePath = System.IO.Path.ChangeExtension(relativeFilePath, null);
 
-            orientation = readColladaOrientation(absoluteFilePath);
+            //globalScale = readGlobalScale(relativeFilePath);
+
+            orientation = readColladaOrientation(relativeFilePath);
         }
 
         public void ApplyColladaTransformation(GameObject gameObject)
@@ -105,11 +103,7 @@ namespace RosSharp.Urdf.Editor
                 getColladaPositionFix(gameObject.transform.position, orientation),
                 Quaternion.Euler(getColladaRotationFix(orientation)) * gameObject.transform.rotation);
         }
-
-        private static string getAbsolutePath(string relativeAssetPath)
-        {
-            return Path.Combine(Path.GetDirectoryName(Application.dataPath), "Assets", "Resources", relativeAssetPath);
-        }
+        
 
         private Vector3 getColladaPositionFix(Vector3 position, string orientation)
         {
@@ -133,26 +127,34 @@ namespace RosSharp.Urdf.Editor
             }
         }
 
-        private string readColladaOrientation(string absolutePath)
+        private string readColladaOrientation(string relativeResourcePath)
         {
             try
             {
                 System.Xml.Linq.XNamespace xmlns = "http://www.collada.org/2005/11/COLLADASchema";
-                XDocument xdoc = XDocument.Load(absolutePath);
-                return xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "up_axis").Value;
+                relativeResourcePath = relativeResourcePath.Replace('/', '\\');
+                var fileContent = Resources.Load<TextAsset>(relativeResourcePath);
+                Output.Log(relativeResourcePath);
+                Output.Log((fileContent != null).ToString());
+                XDocument xdoc = XDocument.Parse(fileContent.text);
+                var v = xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "up_axis").Value;
+                Output.Log(v);
+                return v;
             }
             catch
             {
+                Output.Log("failed");
                 return "undefined";
             }
         }
 
-        private float readGlobalScale(string absolutePath)
+        private float readGlobalScale(string relativeResourcePath)
         {
             try
             {
                 System.Xml.Linq.XNamespace xmlns = "http://www.collada.org/2005/11/COLLADASchema";
-                XDocument xdoc = XDocument.Load(absolutePath);
+                TextAsset fileContent = Resources.Load(relativeResourcePath) as TextAsset;
+                XDocument xdoc = XDocument.Parse(fileContent.text);
                 string str = xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "unit").Attribute("meter").Value;
                 return float.Parse(str, CultureInfo.InvariantCulture.NumberFormat);
             }
