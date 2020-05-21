@@ -27,13 +27,14 @@ public class RobotBuilder
         //AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
     }
 
-    public void Synchronize(Robot robot, GameObject rootObject, string assetRoot)
+    public void Synchronize(Robot robot, GameObject rootObject)
     {
+        LocateAssetHandler.SetRobotName(robot.name);
+
         GameObject robotGameObject = rootObject;
 
         robotGameObject.AddComponentIfNotExists<UrdfRobot>();
-
-        UrdfAssetPathHandler.SetPackageRoot(assetRoot);
+        
         UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
 
         UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);

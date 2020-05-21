@@ -11,6 +11,8 @@ namespace ARCommander {
     public class ARCommander : MonoBehaviour {
         public void Awake() {
             InitializeAvailableComponents();
+
+            RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
         }
 
         /// <summary>
@@ -53,6 +55,7 @@ namespace ARCommander {
                 }
                 catch (Exception ex) {
                     Debug.LogError("Robot Synchronization failed! " + ex.Message);
+                    Debug.LogError(ex.StackTrace);
                 }
             }
 

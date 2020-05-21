@@ -58,21 +58,7 @@ namespace RosSharp.Urdf.Editor
 
         public static string GetRelativeAssetPathFromUrdfPath(string urdfPath)
         {
-            if (!urdfPath.StartsWith(@"package://"))
-            {
-                Debug.LogWarning(urdfPath + " is not a valid URDF package file path. Path should start with \"package://\".");
-                return null;
-            }
-
-            var path = urdfPath.Substring(10).SetSeparatorChar();
-
-            if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
-                path = path.Substring(0, path.Length - 3) + "prefab";
-
-            string intermed = Path.Combine(packageRoot, path);
-            intermed = intermed.Replace(@"\\", "/");
-            intermed = intermed.Replace(@"\", "/");
-            return intermed;
+            return "";
         }
         #endregion
 

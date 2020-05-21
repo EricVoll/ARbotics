@@ -25,10 +25,29 @@ namespace RosSharp.Urdf.Editor
 {
     public static class LocateAssetHandler
     {
+        public static void SetRobotName(string name)
+        {
+            pathPrefix = $"Urdf/Models/{name}/";
+        }
+        private static string pathPrefix;
+        private static string GetPath(string urdfPath)
+        {
+            if (!urdfPath.StartsWith(@"package://"))
+            {
+                Debug.LogWarning(urdfPath + " is not a valid URDF package file path. Path should start with \"package://\".");
+                return null;
+            }
+
+            var path = urdfPath.Substring(10).SetSeparatorChar();
+
+            if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
+                path = path.Substring(0, path.Length - 3) + "prefab";
+
+            return Path.Combine(pathPrefix, path);
+        }
         public static T FindUrdfAsset<T>(string urdfFileName) where T : UnityEngine.Object
         {
-            string fileAssetPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
-            fileAssetPath = fileAssetPath.Substring(7, fileAssetPath.Length - 7);
+            string fileAssetPath = GetPath(urdfFileName);
 
             ColladaResourceProcessor processor = new ColladaResourceProcessor();
             processor.EvaluateColladaTransformation(fileAssetPath);

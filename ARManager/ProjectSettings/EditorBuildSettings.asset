@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/RobotInteraction.unity
+    guid: 84004ebf488f5014ca15870d17eee82f
   m_configObjects: {}
