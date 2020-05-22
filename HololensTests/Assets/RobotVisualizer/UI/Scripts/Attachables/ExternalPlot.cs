@@ -470,7 +470,7 @@ namespace Microsoft.MixedReality.Toolkit.RobotVisualizer
                     Vector3 localScale = Vector3.Scale(cachedLabelText.transform.lossyScale / contentScale, cachedLabelText.textBounds.size);
 
                     localContentSize.x = localScale.x + backgroundPadding.x;
-                    localContentSize.y = localScale.y + backgroundPadding.y;
+                    localContentSize.y = localScale.y + backgroundPadding.y;https://raider.io/characters/eu/howling-fjord/Карси?utm_source=addon
 
                     if (contentCanvas != null)
                     {
