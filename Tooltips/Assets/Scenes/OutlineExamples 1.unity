@@ -1961,13 +1961,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a378d7962c54ff944ab4355c266e86ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Topic: /img
-  TimeStep: 0
-  meshRenderer: {fileID: 0}
-  planeMaterial: {fileID: 2100000, guid: 38b893e97936c5d41992a67b84e9355e, type: 2}
-  texture2D: {fileID: 0}
-  imageData: []
-  isMessageReceived: 0
 --- !u!114 &246669554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14801,7 +14794,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 19ca17efb3b3094469b13aec34d20963,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19ca17efb3b3094469b13aec34d20963, type: 3}

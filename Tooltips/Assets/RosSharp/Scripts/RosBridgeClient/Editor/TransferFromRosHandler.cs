@@ -21,7 +21,7 @@ using System;
 using UnityEngine;
 using System.IO;
 using RosSharp.RosBridgeClient.UrdfTransfer;
-using UnityEditor;
+// using UnityEditor;
 
 namespace RosSharp.RosBridgeClient
 {
@@ -138,19 +138,19 @@ namespace RosSharp.RosBridgeClient
             //if (!StatusEvents["resourceFilesReceived"].WaitOne(0) || StatusEvents["importComplete"].WaitOne(0))
             //    return (null,null);
 
-            AssetDatabase.Refresh();
+            // AssetDatabase.Refresh();
 
             bool createModel = skipUserInput;
 
 
 
-            if (!skipUserInput && EditorUtility.DisplayDialog(
-                "Urdf Assets imported.",
-                "Do you want to generate a " + robotName + " GameObject now?",
-                "Yes", "No"))
-            {
-                createModel = true;
-            }
+            // if (!skipUserInput && EditorUtility.DisplayDialog(
+            //    "Urdf Assets imported.",
+            //    "Do you want to generate a " + robotName + " GameObject now?",
+            //    "Yes", "No"))
+            // {
+            //    createModel = true;
+            // }
 
             GameObject robotGenerated = null;
             if (String.IsNullOrEmpty(localDirectory)) return (null, null);

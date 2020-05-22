@@ -105,11 +105,11 @@ public class UrdfSyncher
         hasUrdfAssetsImported = false;
 
         var protocol = RosConnector.Protocols.WebSocketNET;
-        RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
+       // RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
 
         string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
 
-        assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090", 20, assetPath, urdf);
+       // assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090", 20, assetPath, urdf);
 
         if (RobotRootObject == null)
         {
