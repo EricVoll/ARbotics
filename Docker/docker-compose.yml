@@ -71,8 +71,6 @@ services:
     volumes:
        - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 11311:11311
-# - 9090:9090
       - 5000:5000
     restart: always
     command:

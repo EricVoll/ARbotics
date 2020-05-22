@@ -16,7 +16,6 @@ class ARServerStatePublisher():
 
 		rospy.init_node('ar_state_publisher', anonymous=False)
 		self.pub = rospy.Publisher('ar_state', String, queue_size=10)
-	
 		rospy.on_shutdown(shutdown_hook)
 
 	def publish(self, data):

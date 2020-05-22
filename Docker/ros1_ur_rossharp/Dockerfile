@@ -22,16 +22,20 @@ RUN source /opt/ros/melodic/setup.bash && \
 
 #add lauch to ur_package and rebuild ws
 RUN source /opt/ros/melodic/setup.bash && \
-source /home/catkin_ws/devel/setup.bash && \
+source /home/catkin_ws/devel/setup.bash && \d
 source /home/ros-sharp_ws/devel/setup.bash && \
 cd /home/catkin_ws && catkin_make
 
 RUN mkdir -p /home/catkin_ws/src/universal_robot/ur_rossharp
 COPY ./ur_rossharp/* /home/catkin_ws/src/universal_robot/ur_rossharp/
+COPY ./worlds/* /usr/share/gazebo-9/worlds/
 
 RUN source /opt/ros/melodic/setup.bash && \
 source /home/catkin_ws/devel/setup.bash && \
 source /home/ros-sharp_ws/devel/setup.bash && \
 cd /home/catkin_ws && catkin_make
+
+RUN sudo apt-get install -y python-pip 
+RUN pip install scipy
 
 RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc

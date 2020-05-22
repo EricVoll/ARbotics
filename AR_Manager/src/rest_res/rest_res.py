@@ -3,7 +3,6 @@ from flask_restful import Resource, reqparse
 
 class ResInstances(Resource):
 	def __init__(self, server):
-
 		self.s = server
 
 	def get(self):
@@ -13,7 +12,6 @@ class ResInstances(Resource):
 		return data
 
 	def post(self):
-
 
 		parser = reqparse.RequestParser()
 		parser.add_argument('comp_name', type=str, required=True, location='json')
@@ -27,7 +25,6 @@ class ResInstances(Resource):
 		return res
 
 	def delete(self):
-		#delete all runing comps
 		self.s.stop_instances()
 
 		print(self.s)
@@ -96,7 +93,6 @@ class ResAvailComps(Resource):
 		return res
 
 	def post(self):
-		#add mutiple avail res
 
 		parser = reqparse.RequestParser()
 		parser.add_argument('components', type=list, required=True, location='json')
