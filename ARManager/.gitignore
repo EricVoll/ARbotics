@@ -58,8 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-Assets/Urdf/
-/Assets/Resources/Urdf/
 
 # MRTK
 /Assets/MixedRealityToolkit/
