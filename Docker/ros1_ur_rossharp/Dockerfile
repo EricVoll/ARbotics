@@ -22,7 +22,7 @@ RUN source /opt/ros/melodic/setup.bash && \
 
 #add lauch to ur_package and rebuild ws
 RUN source /opt/ros/melodic/setup.bash && \
-source /home/catkin_ws/devel/setup.bash && \d
+source /home/catkin_ws/devel/setup.bash && \
 source /home/ros-sharp_ws/devel/setup.bash && \
 cd /home/catkin_ws && catkin_make
 
