@@ -4,34 +4,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-public class RestCommunicator : MonoBehaviour
-{
+public class RestCommunicator : MonoBehaviour {
     public TextAsset GetAvailableComponentsTestResponse;
 
+    public string RestServerUrl = "http://127.17.0.1:5000/";
 
-    const string RestServerUrl = "http://127.17.0.1:5000/";
-    public enum RequestUrl
-    {
+    public enum RequestUrl {
         AvailableComponents,
         Instances
     };
-    public enum RequestType
-    {
+    public enum RequestType {
         Get,
         Post
     };
-    Dictionary<RequestUrl, string> RestUrl = new Dictionary<RequestUrl, string>()
-    {
-        { RequestUrl.AvailableComponents,  RestServerUrl + "AvailComps" },
-        { RequestUrl.Instances, RestServerUrl + "Instances" },
-    };
+
+    Dictionary<RequestUrl, string> RestUrl;
+
+    public void Awake() {
+        RestUrl = new Dictionary<RequestUrl, string>() {
+            { RequestUrl.AvailableComponents,  RestServerUrl + "AvailComps" },
+            { RequestUrl.Instances, RestServerUrl + "Instances" },
+        };
+    }
 
     /// <summary>
     /// Retrieves all available robots and returns an object with the information returned from the server
     /// </summary>
     /// <returns></returns>
-    public void RequestAvailableRobots(Action<ARCommandAvailableComponentResponse> responseProcessor)
-    {
+    public void RequestAvailableRobots(Action<ARCommandAvailableComponentResponse> responseProcessor) {
         //Send post request
         SendGetRequest<ARCommandAvailableComponentResponse>(RequestUrl.AvailableComponents, responseProcessor);
     }
@@ -40,10 +40,8 @@ public class RestCommunicator : MonoBehaviour
     /// Requests a new instance of the specified component
     /// </summary>
     /// <param name="instanceName"></param>
-    public void RequestNewComponentIntsance(string componentName, Action<bool> callBack)
-    {
-        object requestObject = new
-        {
+    public void RequestNewComponentIntsance(string componentName, Action<bool> callBack) {
+        object requestObject = new {
             comp_name = componentName
         };
 
@@ -56,8 +54,7 @@ public class RestCommunicator : MonoBehaviour
     /// <param name="url"></param>
     /// <param name="requestObject"></param>
     /// <returns></returns>
-    public void SendGetRequest<T>(RequestUrl url, Action<T> callBack)
-    {
+    public void SendGetRequest<T>(RequestUrl url, Action<T> callBack) {
         string requestUrl = RestUrl[url];
 
         StartCoroutine(Get(requestUrl, callBack));
@@ -70,37 +67,27 @@ public class RestCommunicator : MonoBehaviour
     /// <param name="url"></param>
     /// <param name="requestObject"></param>
     /// <returns></returns>
-    public void SendPostRequest(RequestUrl url, Action<bool> callBack = null, object requestObject = null)
-    {
+    public void SendPostRequest(RequestUrl url, Action<bool> callBack = null, object requestObject = null) {
         string requestUrl = RestUrl[url];
 
-        if (requestObject != null)
-        {
+        if (requestObject != null) {
             string json = JsonConvert.SerializeObject(requestObject);
             //Send request with json body
             StartCoroutine(Post(requestUrl, json, callBack));
-        }
-        else
-        {
+        } else {
             //Send request without json body
             StartCoroutine(Post(requestUrl, "", callBack));
         }
     }
 
-    private IEnumerator Get<T>(string url, Action<T> callBack)
-    {
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
-        {
+    private IEnumerator Get<T>(string url, Action<T> callBack) {
+        using (UnityWebRequest www = UnityWebRequest.Get(url)) {
             yield return www.SendWebRequest();
 
-            if (www.isNetworkError)
-            {
+            if (www.isNetworkError) {
                 Debug.LogError(www.error);
-            }
-            else
-            {
-                if (www.isDone)
-                {
+            } else {
+                if (www.isDone) {
                     string jsonResult = System.Text.Encoding.UTF8.GetString(www.downloadHandler.data);
 
                     T res = JsonConvert.DeserializeObject<T>(jsonResult);
@@ -112,8 +99,7 @@ public class RestCommunicator : MonoBehaviour
         }
     }
 
-    private IEnumerator Post(string url, string payload, Action<bool> callBack = null)
-    {
+    private IEnumerator Post(string url, string payload, Action<bool> callBack = null) {
 
         var jsonBinary = System.Text.Encoding.UTF8.GetBytes(payload);
 
@@ -140,13 +126,11 @@ public class RestCommunicator : MonoBehaviour
 
 #region Get Available Components response
 
-public class ARCommandAvailableComponentResponse
-{
+public class ARCommandAvailableComponentResponse {
     public List<AvailableComponent> components;
 }
 
-public class AvailableComponent
-{
+public class AvailableComponent {
     public string pretty_name { get; set; }
     public int max_instances { get; set; }
     public int instances { get; set; }
@@ -155,8 +139,7 @@ public class AvailableComponent
     public DockerStartupInformation docker { get; set; }
 }
 
-public class DockerStartupInformation
-{
+public class DockerStartupInformation {
     public string cmd { get; set; }
     public string image { get; set; }
     public string network { get; set; }
@@ -172,8 +155,7 @@ public class DockerStartupInformation
 
 
 
-public class Instance
-{
+public class Instance {
     public int inst_id { get; set; }
     public double start_time { get; set; }
     public object stop_time { get; set; }
@@ -184,25 +166,21 @@ public class Instance
     public string urdf_dyn { get; set; }
 }
 
-public class Ports
-{
+public class Ports {
     //this wont work
     public int port { get; set; }
 }
 
-public class DockerMeshVolume
-{
+public class DockerMeshVolume {
     public string bind { get; set; }
     public string mode { get; set; }
 }
 
-public class Volumes
-{
+public class Volumes {
     public DockerMeshVolume docker_MeshVolume { get; set; }
 }
 
-public class Docker
-{
+public class Docker {
     public string command { get; set; }
     public string image { get; set; }
     public string network { get; set; }
@@ -212,8 +190,7 @@ public class Docker
     public Volumes volumes { get; set; }
 }
 
-public class Component
-{
+public class Component {
     public string pretty_name { get; set; }
     public int max_instances { get; set; }
     public int instances { get; set; }
@@ -222,8 +199,7 @@ public class Component
     public Docker docker { get; set; }
 }
 
-public class RunningInstance
-{
+public class RunningInstance {
     public Instance inst { get; set; }
     public Component comp { get; set; }
 }

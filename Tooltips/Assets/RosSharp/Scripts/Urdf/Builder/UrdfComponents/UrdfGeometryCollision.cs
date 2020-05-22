@@ -65,7 +65,7 @@ namespace RosSharp.Urdf.Editor
             if (prefabObject == null)
                 return null;
 
-            GameObject meshObject = (GameObject)PrefabUtility.InstantiatePrefab(prefabObject);
+            GameObject meshObject = GameObject.Instantiate(prefabObject);
             ConvertMeshToColliders(meshObject);
 
             return meshObject;
@@ -89,14 +89,8 @@ namespace RosSharp.Urdf.Editor
             if (visualToCopy.childCount == 0) return;
 
             GameObject objectToCopy = visualToCopy.GetChild(0).gameObject;
-            GameObject prefabObject = (GameObject)PrefabUtility.GetCorrespondingObjectFromSource(objectToCopy);
-
-            GameObject collisionObject;
-            if (prefabObject != null)
-                collisionObject = (GameObject)PrefabUtility.InstantiatePrefab(prefabObject);
-            else
-                collisionObject = Object.Instantiate(objectToCopy);
-
+            GameObject collisionObject = GameObject.Instantiate(objectToCopy);
+            
             collisionObject.name = objectToCopy.name;
             ConvertMeshToColliders(collisionObject, true);
 

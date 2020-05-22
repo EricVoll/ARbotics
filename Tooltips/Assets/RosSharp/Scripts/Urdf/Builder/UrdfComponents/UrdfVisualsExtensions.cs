@@ -44,13 +44,7 @@ namespace RosSharp.Urdf.Editor
             vis.RemoveAll(x => visuals.Any(y => y.name == x.name));
             Utils.DestroyAll(vis);
         }
-
-        public static List<Link.Visual> ExportVisualsData(this UrdfVisuals urdfVisuals)
-        {
-            UrdfVisual[] urdfVisualsList = urdfVisuals.GetComponentsInChildren<UrdfVisual>();
-
-            return urdfVisualsList.Select(urdfCollision => urdfCollision.ExportVisualData()).ToList();
-        }
+        
     }
 }
 

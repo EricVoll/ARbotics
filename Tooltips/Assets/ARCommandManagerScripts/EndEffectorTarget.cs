@@ -10,6 +10,8 @@ public class EndEffectorTarget : MonoBehaviour
     public string Topic;
     public bool Publish;
 
+    private float lastPublish;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +22,10 @@ public class EndEffectorTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Publish)
+        float currentTime = Time.realtimeSinceStartup;
+        if (Publish && currentTime - lastPublish > 1) {
+            lastPublish = currentTime;
             publisher.Publish(transform.position, transform.rotation);
+        }
     }
 }

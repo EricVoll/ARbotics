@@ -44,8 +44,7 @@ namespace RosSharp.Urdf.Editor
             }
             else
                 UrdfGeometryCollision.Create(collisionObject.transform, type);
-
-            UnityEditor.EditorGUIUtility.PingObject(collisionObject);
+            
         }
 
         public static void Create(Transform parent, Link.Collision collision)
@@ -59,16 +58,6 @@ namespace RosSharp.Urdf.Editor
                 UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
                 UrdfOrigin.ImportOriginData(collisionObject.transform, collision.origin);
             }
-        }
-
-        public static Link.Collision ExportCollisionData(this UrdfCollision urdfCollision)
-        {
-            UrdfGeometry.CheckForUrdfCompatibility(urdfCollision.transform, urdfCollision.geometryType);
-
-            Link.Geometry geometry = UrdfGeometry.ExportGeometryData(urdfCollision.geometryType, urdfCollision.transform, true);
-            string collisionName = urdfCollision.name == "unnamed" ? null : urdfCollision.name;
-
-            return new Link.Collision(geometry, collisionName, UrdfOrigin.ExportOriginData(urdfCollision.transform));
         }
     }
 }

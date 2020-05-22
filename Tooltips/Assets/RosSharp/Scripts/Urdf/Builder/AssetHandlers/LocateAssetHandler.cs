@@ -18,89 +18,53 @@ limitations under the License.
 using System.IO;
 using System;
 using UnityEngine;
-using UnityEditor;
+using System.Xml.Linq;
+using System.Globalization;
 
 namespace RosSharp.Urdf.Editor
 {
     public static class LocateAssetHandler
     {
-        public static T FindUrdfAsset<T>(string urdfFileName) where T : UnityEngine.Object
+        public static void SetRobotName(string name)
         {
-            string fileAssetPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
-            T assetObject = AssetDatabase.LoadAssetAtPath<T>(fileAssetPath);
-
-            if (assetObject != null)
-                return assetObject;
-
-            //If asset was not found, let user choose whether to search for
-            //or ignore the missing asset.
-            string invalidPath = fileAssetPath ?? urdfFileName;
-            int option = EditorUtility.DisplayDialogComplex("Urdf Importer: Asset Not Found",
-                "Current root folder: " + UrdfAssetPathHandler.GetPackageRoot() +
-                "\n\nExpected asset path: " + invalidPath,
-                "Locate Asset",
-                "Ignore Missing Asset",
-                "Locate Root Folder");
-
-            switch (option)
+            pathPrefix = $"Urdf/Models/{name}/";
+        }
+        private static string pathPrefix;
+        private static string GetPath(string urdfPath)
+        {
+            if (!urdfPath.StartsWith(@"package://"))
             {
-                case 0:
-                    fileAssetPath = LocateAssetFile(invalidPath);
-                    break;
-                case 1: break;
-                case 2:
-                    fileAssetPath = LocateRootAssetFolder<T>(urdfFileName);
-                    break;
+                Debug.LogWarning(urdfPath + " is not a valid URDF package file path. Path should start with \"package://\".");
+                return null;
             }
 
-            assetObject = (T) AssetDatabase.LoadAssetAtPath(fileAssetPath, typeof(T));
+            var path = urdfPath.Substring(10).SetSeparatorChar();
+
+            if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
+                path = path.Substring(0, path.Length - 3) + "prefab";
+
+            return Path.Combine(pathPrefix, path);
+        }
+        public static T FindUrdfAsset<T>(string urdfFileName) where T : UnityEngine.Object
+        {
+            string fileAssetPath = GetPath(urdfFileName);
+
+            ColladaResourceProcessor processor = new ColladaResourceProcessor();
+            processor.EvaluateColladaTransformation(fileAssetPath);
+
+            fileAssetPath = System.IO.Path.ChangeExtension(fileAssetPath, null);
+            T assetObject = Resources.Load<T>(fileAssetPath);
+
+            if (assetObject is GameObject go)
+                processor.ApplyColladaTransformation(go);
+
             if (assetObject != null)
                 return assetObject;
 
-            ChooseFailureOption(urdfFileName);
             return null;
         }
 
-        private static string LocateRootAssetFolder<T>(string urdfFileName) where T : UnityEngine.Object
-        {
-            string newAssetPath = EditorUtility.OpenFolderPanel(
-                "Locate package root folder",
-                Path.Combine(Path.GetDirectoryName(Application.dataPath), "Assets"),
-                "");
 
-            if (UrdfAssetPathHandler.IsValidAssetPath(newAssetPath))
-                UrdfAssetPathHandler.SetPackageRoot(newAssetPath, true);
-            else 
-                Debug.LogWarning("Selected package root " + newAssetPath + " is not within the Assets folder.");
-
-            return UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
-        }
-
-        private static string LocateAssetFile(string invalidPath)
-        {
-            string fileExtension = Path.GetExtension(invalidPath)?.Replace(".", "");
-
-            string newPath = EditorUtility.OpenFilePanel(
-                "Couldn't find asset at " + invalidPath + ". Select correct file.",
-                UrdfAssetPathHandler.GetPackageRoot(),
-                fileExtension);
-
-            return UrdfAssetPathHandler.GetRelativeAssetPath(newPath);
-        }
-
-        private static void ChooseFailureOption(string urdfFilePath)
-        {
-            if (!EditorUtility.DisplayDialog(
-                "Urdf Importer: Missing Asset",
-                "Missing asset " + Path.GetFileName(urdfFilePath) +
-                " was ignored or could not be found.\n\nContinue URDF Import?",
-                "Yes",
-                "No"))
-            {
-                throw new InterruptedUrdfImportException("User cancelled URDF import. Model may be incomplete.");
-            }
-        }
-        
         private class InterruptedUrdfImportException : Exception
         {
             public InterruptedUrdfImportException(string message) : base(message)
@@ -108,4 +72,97 @@ namespace RosSharp.Urdf.Editor
             }
         }
     }
+
+
+    public class ColladaResourceProcessor
+    {
+        private bool isCollada;
+        private string orientation;
+        private float globalScale;
+
+        public void EvaluateColladaTransformation(string relativeFilePath)
+        {
+            isCollada = relativeFilePath.EndsWith(".dae");
+
+            if (!isCollada)
+                return;
+
+            relativeFilePath = System.IO.Path.ChangeExtension(relativeFilePath, null);
+
+            //globalScale = readGlobalScale(relativeFilePath);
+
+            orientation = readColladaOrientation(relativeFilePath);
+        }
+
+        public void ApplyColladaTransformation(GameObject gameObject)
+        {
+            if (!isCollada)
+                return;
+
+            gameObject.transform.SetPositionAndRotation(
+                getColladaPositionFix(gameObject.transform.position, orientation),
+                Quaternion.Euler(getColladaRotationFix(orientation)) * gameObject.transform.rotation);
+        }
+        
+
+        private Vector3 getColladaPositionFix(Vector3 position, string orientation)
+        {
+            switch (orientation)
+            {
+                case "X_UP": return position; // not tested
+                case "Y_UP": return position; // not tested
+                case "Z_UP": return new Vector3(-position.z, position.y, -position.x); // tested
+                default: return position; // not tested  
+            }
+        }
+
+        private static Vector3 getColladaRotationFix(string orientation)
+        {
+            switch (orientation)
+            {
+                case "X_UP": return new Vector3(-90, 90, 90); // not tested
+                case "Y_UP": return new Vector3(-90, 90, 0);  // tested
+                case "Z_UP": return new Vector3(0, 90, 0);    // tested
+                default: return new Vector3(-90, 90, 0);    // tested                      
+            }
+        }
+
+        private string readColladaOrientation(string relativeResourcePath)
+        {
+            try
+            {
+                System.Xml.Linq.XNamespace xmlns = "http://www.collada.org/2005/11/COLLADASchema";
+                relativeResourcePath = relativeResourcePath.Replace('/', '\\');
+                var fileContent = Resources.Load<TextAsset>(relativeResourcePath);
+                Output.Log(relativeResourcePath);
+                Output.Log((fileContent != null).ToString());
+                XDocument xdoc = XDocument.Parse(fileContent.text);
+                var v = xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "up_axis").Value;
+                Output.Log(v);
+                return v;
+            }
+            catch
+            {
+                Output.Log("failed");
+                return "undefined";
+            }
+        }
+
+        private float readGlobalScale(string relativeResourcePath)
+        {
+            try
+            {
+                System.Xml.Linq.XNamespace xmlns = "http://www.collada.org/2005/11/COLLADASchema";
+                TextAsset fileContent = Resources.Load(relativeResourcePath) as TextAsset;
+                XDocument xdoc = XDocument.Parse(fileContent.text);
+                string str = xdoc.Element(xmlns + "COLLADA").Element(xmlns + "asset").Element(xmlns + "unit").Attribute("meter").Value;
+                return float.Parse(str, CultureInfo.InvariantCulture.NumberFormat);
+            }
+            catch
+            {
+                return 1.0f;
+            }
+        }
+    }
+
 }

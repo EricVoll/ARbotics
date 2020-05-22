@@ -15,30 +15,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+//using RobotVisualizer;
 using RosSharp.Urdf;
 using RosSharp.Urdf.Editor;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class RobotBuilder
 {
     public RobotBuilder()
     {
-
+        //AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
     }
 
-    public void Synchronize(Robot robot, GameObject rootObject, string assetRoot)
+    public void Synchronize(Robot robot, GameObject rootObject)
     {
+        LocateAssetHandler.SetRobotName(robot.name);
+
         GameObject robotGameObject = rootObject;
 
         robotGameObject.AddComponentIfNotExists<UrdfRobot>();
-
-        UrdfAssetPathHandler.SetPackageRoot(assetRoot);
-        UrdfMaterial.InitializeRobotMaterials(robot);
+        
         UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
 
         UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);

@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4176953072863468924
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4176953072863468930}
+  - component: {fileID: 4176953072863468925}
+  - component: {fileID: 4176953072863468931}
+  - component: {fileID: 4176953072863468928}
+  - component: {fileID: 4176953072863468929}
+  - component: {fileID: 2493824007884682352}
+  m_Layer: 0
+  m_Name: RosConnector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4176953072863468930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176953072863468924}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.19423532, y: -1.1013665, z: 0.75240517}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4176953072863468925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176953072863468924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff98778ae051cfd40a6e4effdf851ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Timeout: 10
+  Serializer: 0
+  Protocol: 0
+  RosBridgeServerUrl: ws://localhost:9090
+--- !u!114 &4176953072863468931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176953072863468924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2422723fe479645a36c6263f6056b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SceneContainerObject: {fileID: 4176953072863468924}
+  RobotContainerPrefab: {fileID: 7377849859906299328, guid: 1a217e85723ac6a4bb6dfc48a880ea93,
+    type: 3}
+  UIHandler: {fileID: 0}
+--- !u!114 &4176953072863468928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176953072863468924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da838576944d754abd73d27c4ea97a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GetAvailableComponentsTestResponse: {fileID: 4900000, guid: f6188b8af42c2604baa697555d3d4680,
+    type: 3}
+--- !u!114 &4176953072863468929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176953072863468924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562281f0e71a5934bb0b87fb7ccdbb18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Topic: /ar_state
+  TimeStep: 0
+  ArCommander: {fileID: 4176953072863468931}
+  Enabled: 1
+  ForceUpdateOnce: 0
+--- !u!114 &2493824007884682352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176953072863468924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9588ca3189800f742be08620ad1e184f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

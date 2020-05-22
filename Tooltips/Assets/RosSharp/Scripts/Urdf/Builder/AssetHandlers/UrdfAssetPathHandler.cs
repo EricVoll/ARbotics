@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace RosSharp.Urdf.Editor
@@ -32,14 +31,6 @@ namespace RosSharp.Urdf.Editor
             string oldPackagePath = packageRoot;
 
             packageRoot = GetRelativeAssetPath(newPath);
-
-            if(!AssetDatabase.IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
-                AssetDatabase.CreateFolder(packageRoot, MaterialFolderName);
-
-            AssetDatabase.Refresh();
-
-            if (correctingIncorrectPackageRoot)
-                MoveMaterialsToNewLocation(oldPackagePath);
         }
         #endregion
 
@@ -67,21 +58,7 @@ namespace RosSharp.Urdf.Editor
 
         public static string GetRelativeAssetPathFromUrdfPath(string urdfPath)
         {
-            if (!urdfPath.StartsWith(@"package://"))
-            {
-                Debug.LogWarning(urdfPath + " is not a valid URDF package file path. Path should start with \"package://\".");
-                return null;
-            }
-
-            var path = urdfPath.Substring(10).SetSeparatorChar();
-
-            if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
-                path = path.Substring(0, path.Length - 3) + "prefab";
-
-            string intermed = Path.Combine(packageRoot, path);
-            intermed = intermed.Replace(@"\\", "/");
-            intermed = intermed.Replace(@"\", "/");
-            return intermed;
+            return "";
         }
         #endregion
 
@@ -91,16 +68,7 @@ namespace RosSharp.Urdf.Editor
         }
 
         #region Materials
-
-        private static void MoveMaterialsToNewLocation(string oldPackageRoot)
-        {
-            if (AssetDatabase.IsValidFolder(Path.Combine(oldPackageRoot, MaterialFolderName)))
-                AssetDatabase.MoveAsset(
-                    Path.Combine(oldPackageRoot, MaterialFolderName),
-                    Path.Combine(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName));
-            else
-                AssetDatabase.CreateFolder(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName);
-        }
+        
 
         public static string GetMaterialAssetPath(string materialName)
         {

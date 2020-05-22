@@ -40,6 +40,7 @@ public class AttachablesManager : Singleton<AttachablesManager>
         this.attachablesRoot = new GameObject("Attachables");
         this.attachablesRoot.transform.SetParent(transform);
 
+        if (this.attachablePane != null) 
         this.paneControl  = this.attachablePane.GetComponent<AttachablePaneController>();
         // StartCoroutine(ManagerUpdateLoop());
     }
@@ -56,7 +57,7 @@ public class AttachablesManager : Singleton<AttachablesManager>
 
     public void Subscribe(string topic, GameObject parent){
         Debug.Log($"Subscribing {parent.name} to topic {topic}");
-        this.paneControl.Add(topic);
+        this.paneControl?.Add(topic);
 
         // modify the parent's interactability (collision with the pointer) 
         parent.GetComponent<Renderer>().material = activeMaterial;

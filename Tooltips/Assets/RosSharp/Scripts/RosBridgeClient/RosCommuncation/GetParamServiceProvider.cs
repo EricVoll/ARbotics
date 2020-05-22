@@ -20,6 +20,11 @@ namespace RosSharp.RosBridgeClient
 {
     public class GetParamServiceProvider : ServiceProvider<rosapi.GetParamRequest, rosapi.GetParamResponse>
     {
+        public GetParamServiceProvider()
+        {
+            
+        }
+
         public Dictionary<string, string> Parameters = new Dictionary<string, string>
         {
             { "UnityVersion", UnityEngine.Application.version}

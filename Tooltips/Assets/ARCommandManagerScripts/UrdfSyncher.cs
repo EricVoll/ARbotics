@@ -1,10 +1,10 @@
-﻿using RosSharp.RosBridgeClient;
+﻿
+using RosSharp.RosBridgeClient;
 using RosSharp.Urdf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 public class UrdfSyncher
@@ -80,18 +80,16 @@ public class UrdfSyncher
 
         if (!hasUrdfAssetsImported)
         {
-            ImportInitialUrdfModel(urdf, robot);
+            ImportInitialUrdfModel(robot);
             return;
         }
-
-        robot.filename = assetsRootDirectoryName;
 
         //we do not return here since we want to apply any possible changes that were passed in the last urdf update.
         //the imported downloads the urdf from the file_server so it might be an old version.
         //If there are no changes to be made - even better.
 
         RobotBuilder builder = new RobotBuilder();
-        builder.Synchronize(robot, RobotRootObject, assetsRootDirectoryName);
+        builder.Synchronize(robot, RobotRootObject);
 
         synchronizationCounterWithoutFullRegeneration++;
     }
@@ -100,27 +98,20 @@ public class UrdfSyncher
     /// Imports the URDF Model initially to download all textures, assets and store them correctly etc.
     /// </summary>
     /// <param name="robot"></param>
-    private void ImportInitialUrdfModel(string urdf, Robot robot)
+    private void ImportInitialUrdfModel(Robot robot)
     {
         hasUrdfAssetsImported = false;
-
-        var protocol = RosConnector.Protocols.WebSocketNET;
-       // RosSharp.RosBridgeClient.TransferFromRosHandler handler = new RosSharp.RosBridgeClient.TransferFromRosHandler();
-
-        string assetPath = Path.Combine(Path.GetFullPath("."), "Assets", "Urdf", "Models", robot.name);
-
-       // assetsRootDirectoryName = handler.ImportAssetsFromUrdf(protocol, this.RobotName, @"ws://localhost:9090", 20, assetPath, urdf);
-
+        
         if (RobotRootObject == null)
         {
             RobotRootObject = GameObject.Instantiate(RobotPrefab);
             RobotRootObject.name = RobotName;
         }
 
-            RobotBuilder builder = new RobotBuilder();
-        builder.Synchronize(robot, RobotRootObject, assetsRootDirectoryName);
+        RobotBuilder builder = new RobotBuilder();
+        builder.Synchronize(robot, RobotRootObject);
 
-        
+
         foreach (Rigidbody rb in RobotRootObject.GetComponentsInChildren<Rigidbody>())
             rb.isKinematic = true;
 

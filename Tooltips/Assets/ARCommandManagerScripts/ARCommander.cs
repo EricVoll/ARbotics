@@ -11,6 +11,8 @@ namespace ARCommander {
     public class ARCommander : MonoBehaviour {
         public void Awake() {
             InitializeAvailableComponents();
+
+            RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
         }
 
         /// <summary>
@@ -53,9 +55,11 @@ namespace ARCommander {
                 }
                 catch (Exception ex) {
                     Debug.LogError("Robot Synchronization failed! " + ex.Message);
+                    Debug.LogError(ex.StackTrace);
                 }
             }
 
+            return;
             for (int i = currentSceneDicionary.Values.Count - 1; i >= 0; i--) {
                 var currentInstance = currentSceneDicionary.Values.ElementAt(i);
                 var currentKey = currentSceneDicionary.Keys.ElementAt(i);
@@ -78,7 +82,7 @@ namespace ARCommander {
                 Debug.Log(item.pretty_name);
             }
 
-            UIHandler.ShowRobots(res.components.Select(x => x.pretty_name).ToList(), SpawnRobot);
+            UIHandler?.ShowRobots(res.components.Select(x => x.pretty_name).ToList(), SpawnRobot);
         }
 
         private void SpawnRobot(string name) {
