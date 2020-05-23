@@ -10,11 +10,12 @@ using UnityEngine;
 namespace ARCommander {
     public class ARCommander : MonoBehaviour {
         public void Awake() {
-            InitializeAvailableComponents();
 
             RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
         }
-
+        public void Start() {
+            InitializeAvailableComponents();
+        }
         /// <summary>
         /// All Robots will be placed in this gameobject
         /// </summary>
