@@ -60,7 +60,14 @@ public class AttachablesManager : Singleton<AttachablesManager>
         this.paneControl?.Add(topic);
 
         // modify the parent's interactability (collision with the pointer) 
-        parent.GetComponent<Renderer>().material = activeMaterial;
+        parent.AddComponentIfNotExists<Renderer>(out var renderer);
+        var r = parent.transform.Find("Visuals").GetComponentsInChildren<Renderer>();
+
+        foreach (var render in r)
+        {
+            render.material = activeMaterial;
+        }
+        
         NearInteractionTouchable touchable = parent.AddComponent<NearInteractionTouchable>();
         BoxCollider collider = parent.AddComponent<BoxCollider>();
         touchable.SetTouchableCollider(collider);

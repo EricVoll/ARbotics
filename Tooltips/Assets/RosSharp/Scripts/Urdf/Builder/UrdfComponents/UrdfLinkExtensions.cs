@@ -29,13 +29,6 @@ namespace RosSharp.Urdf.Editor
         {
             parent.FindChildOrCreateWithComponent<UrdfLink>(link != null ? link.name : Utils.GenerateNonReferenceID(link), out GameObject linkObject, out UrdfLink urdfLink);
 
-            if (link != null)
-            {
-                foreach (var attachedComponent in link.attachableComponents)
-                {
-                    AttachedDataSynchronizer.Instance.HandleAttachedComponent(linkObject, attachedComponent, link);
-                }
-            }
 
             UrdfVisualsExtensions.Synchronize(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Synchronize(linkObject.transform, link?.collisions);
@@ -45,6 +38,14 @@ namespace RosSharp.Urdf.Editor
             else
             {
                 UrdfInertial.Synchronize(linkObject);
+            }
+            
+            if (link != null)
+            {
+                foreach (var attachedComponent in link.attachableComponents)
+                {
+                    //AttachedDataSynchronizer.Instance.HandleAttachedComponent(linkObject, attachedComponent, link);
+                }
             }
 
             //Remove Attached Values that are too much

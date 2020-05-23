@@ -8033,6 +8033,11 @@ PrefabInstance:
       propertyPath: UIHandler
       value: 
       objectReference: {fileID: 1942062936}
+    - target: {fileID: 4176953072863468931, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
+        type: 3}
+      propertyPath: publishDebugLogsViaRos
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65fe086d375d1d34888df6e3bd5b1e9e, type: 3}
 --- !u!1 &1110240073 stripped
