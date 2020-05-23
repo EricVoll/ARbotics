@@ -145,7 +145,11 @@ public class AttachablesManager : Singleton<AttachablesManager>
     public void Show(string topic){
         if(this.attachables.ContainsKey(topic)){
             AttachableReference aref = this.attachables[topic];
-            aref.parent.GetComponent<Renderer>().material = activeMaterial;
+
+            foreach (var renderer in aref.parent.GetComponentsInChildren<Renderer>())
+            {
+                renderer.material = activeMaterial;
+            }
             aref.attachable.SetActive(true);
             aref.active = true;
             aref.attachable.GetComponent<Renderer>().enabled = true;
@@ -159,7 +163,12 @@ public class AttachablesManager : Singleton<AttachablesManager>
     public void Hide(string topic){
         if(this.attachables.ContainsKey(topic)){
             AttachableReference aref = this.attachables[topic];
-            aref.parent.GetComponent<Renderer>().material = inactiveMaterial;
+
+            foreach (var renderer in aref.parent.GetComponentsInChildren<Renderer>())
+            {
+                renderer.material = inactiveMaterial;
+            }
+            
             aref.attachable.SetActive(false);
             aref.active = false;
             aref.attachable.GetComponent<Renderer>().enabled = false;

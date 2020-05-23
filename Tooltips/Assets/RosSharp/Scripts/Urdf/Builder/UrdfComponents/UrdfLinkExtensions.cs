@@ -44,7 +44,7 @@ namespace RosSharp.Urdf.Editor
             {
                 foreach (var attachedComponent in link.attachableComponents)
                 {
-                    //AttachedDataSynchronizer.Instance.HandleAttachedComponent(linkObject, attachedComponent, link);
+                    AttachedDataSynchronizer.Instance.HandleAttachedComponent(linkObject, attachedComponent, link);
                 }
             }
 
