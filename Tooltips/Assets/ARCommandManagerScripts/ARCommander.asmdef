@@ -1,7 +1,8 @@
 {
     "name": "ARCommanderLibrary",
     "references": [
-        "GUID:abe12fb493bd89944839b3b6ec589acf"
+        "GUID:abe12fb493bd89944839b3b6ec589acf",
+        "GUID:e7c4f85cac6601e41ad7627b63f7d120"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
