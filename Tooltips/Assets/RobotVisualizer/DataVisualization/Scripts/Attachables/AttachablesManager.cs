@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -86,8 +86,12 @@ public class AttachablesManager : Singleton<AttachablesManager>
         physicalEvents.routingTarget = interactable;
 
         // create the 3d component
-        GameObject attachable = Instantiate(externalPlotPrefab);
+        GameObject attachable = Instantiate<GameObject>(this.externalPlotPrefab);
 
+        ToolTipController toolTipController = attachable.GetComponent<ToolTipController>();
+        toolTipController.Topic = topic;
+        var texture = attachable.AddComponent<TextureProvider>();
+        texture.InitRosSource(topic, toolTipController.ImageRenderer);
         ExternalPlot eplot = attachable.GetComponent<ExternalPlot>();
         eplot.ToolTipText = topic;
         eplot.FontSize = 20;
