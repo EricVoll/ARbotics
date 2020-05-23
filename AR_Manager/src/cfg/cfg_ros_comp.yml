@@ -695,7 +695,7 @@ components:
         bind: /home/Mesh
         mode: rw
   max_instances: 1
-  pretty_name: Anymal
+  pretty_name: ANYmal
   urdf:
     dyn: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- ===================================================================================\
       \ -->\n<!--   Copyright 2019 ANYbotics, https://www.anybotics.com          \

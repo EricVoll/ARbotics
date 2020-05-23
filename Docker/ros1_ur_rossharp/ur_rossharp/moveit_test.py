@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # Use python 2.7 important 
-
 import rospy
 from std_msgs.msg import String
 import sys
@@ -24,14 +23,16 @@ from math import pi
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
 ## END_SUB_TUTORIAL
-
+import time
 import rospy
 import tf
 import geometry_msgs
 import tf2_ros
 from tf2_msgs.msg import TFMessage
 
-
+planning = False
+max_planning_rate = 0.5
+t_plan_started = time.time()
 
 def all_close(goal, actual, tolerance):
 	"""
@@ -70,6 +71,7 @@ class MoveGroupPythonIntefaceTutorial(object):
 		scene = moveit_commander.PlanningSceneInterface()
 		group_name = "manipulator"
 		group = moveit_commander.MoveGroupCommander(group_name)
+		group.set_planning_time(max_planning_rate)
 
 		display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
 																									moveit_msgs.msg.DisplayTrajectory,
@@ -107,7 +109,7 @@ class MoveGroupPythonIntefaceTutorial(object):
 		
 		group.set_pose_target(pose_goal)
 
-		plan = group.go(wait=True)
+		plan = group.go(wait=False) #execute plan 
 
 		group.clear_pose_targets()
 		current_pose = self.group.get_current_pose().pose
@@ -199,19 +201,21 @@ def homo_to_t(homo):
 	p.position.z = homo[2,3]
 	return p
 
-def move_manipulator(data, robot):
-	h_in = t_to_homo(data)
-	h_out = np.dot( h_unity_to_world,h_in)
-	robot.go_to_pose_goal(homo_to_t(h_out))
+def move_manipulator(data, add):
+	if time.time() - add[1][0] > max_planning_rate:
+		print("Planned", time.time())
+		add[1][0] =  time.time()
+		h_in = t_to_homo(data)
+		h_out = np.dot( h_unity_to_world,h_in)
+		add[0].go_to_pose_goal(homo_to_t(h_out))
 
-def joint_goal_manipulator(data, robot):
-	robot.go_to_joint_state(data)
+def joint_goal_manipulator(data, add):
+	add[0].go_to_joint_state(data)
 
 def move_it_ar_interface():
-
 	robot = MoveGroupPythonIntefaceTutorial()
-	rospy.Subscriber("euclidean_goal_pose", geometry_msgs.msg.Pose , move_manipulator, robot)
-	rospy.Subscriber("ar_joint_state", Float32MultiArray, joint_goal_manipulator, robot)
+	rospy.Subscriber("euclidean_goal_pose", geometry_msgs.msg.Pose , move_manipulator, (robot,[t_plan_started]) )
+	rospy.Subscriber("ar_joint_state", Float32MultiArray, joint_goal_manipulator, (robot,[t_plan_started]) )
 	tf_pub = rospy.Publisher('tf_static', TFMessage , queue_size=1)
 	tfm = TFMessage([t])
 	rate = rospy.Rate(1)

@@ -1,0 +1,99 @@
+from pynput.keyboard import Key, Listener
+
+import requests
+import json
+# rest requests
+
+s_pose = """<joint name="wrist_3_joint" type="revolute">
+    <parent link="wrist_2_link"/>
+    <child link="wrist_3_link"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.09465"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="28.0" lower="-3.14159265359" upper="3.14159265359" velocity="3.2"/>
+    <dynamics damping="0.0" friction="0.0"/>
+  </joint>"""
+add_string_to_xml = """<tooltip name="base_joint_speed" topic="/img/base_joint_speed">
+	  <parent link="wrist_1_link"/>
+  </tooltip>"""
+
+def insert_str(string, index, str_to_insert):
+    return string[:index] + str_to_insert + string[index:]
+
+def RestKeyboardListener(ip_adr='http://vservice-host-001.chera.ch', port_rest='5000'):
+	# keyboard listener
+
+	def get(ip, log = False):
+		print("ip", ip)
+		print('GET: '+ip)
+		resp = requests.get(ip)
+		if resp.status_code != 200:
+			# This means something went wrong.
+			print('GET /tasks/ {}'.format(resp.status_code))
+		else:
+			response = resp.json()
+			if log:
+				print (json.dumps(response, sort_keys=True, indent=2))
+		return response
+
+	def post(ip,json_data, log = False):
+		"""
+		Inputs: 
+		ip = IP-Adress of Server
+		json_data: Dict 
+		log: Flag if received data is printed
+		"""
+		print('POST: '+ip)
+		resp = requests.post(ip, json=json_data)
+		if resp.status_code != 200:
+			print("ERROR")
+			print('POST /tasks/ {}'.format(resp.status_code))
+		response = resp.json()
+		print(response)
+		if log:
+			print (json.dumps(response, sort_keys=True, indent=2))
+		
+		return response
+
+	def on_press(key):
+		pass
+		# 	#pass
+		# print('{0} pres123sed'.format(
+		# 		key))
+
+	def on_release(key):
+
+		if str(key) == "'s'":
+			instances = get(ip_adr+':'+port_rest+'/Instances', log= False)
+
+			for index, ins in enumerate(instances):
+				if ins['comp']['pretty_name'] == 'UR5':
+					i=index
+					urdf_dyn = ins['comp']['urdf_stat']
+					pose = urdf_dyn.find(s_pose)
+					out = insert_str(urdf_dyn, pose, add_string_to_xml)
+
+			#modified URDF with tooltip
+			data = {'data': out}
+
+			post(ip_adr+':'+port_rest+'/Instances/%d/inst/urdf_dyn'%i,data)
+
+		elif key == "'d'":
+
+			instances = get(ip_adr+':'+port_rest+'/Instances')
+			for index, ins in enumerate(instances):
+				if ins['comp']['pretty_name'] == 'UR5':
+					i=index
+					urdf_stat = ins['comp']['urdf_stat']
+			#reset urdf_dyn to stat
+			data = {'data': out}
+			post(ip_adr+':'+port_rest+'/Instances/%d/inst/urdf_dyn'%i,data)
+
+		elif key == Key.esc:
+				return False
+		return True
+
+	return Listener(
+			on_press=on_press,
+			on_release=on_release)
+
+

@@ -5,11 +5,7 @@ RUN source /opt/ros/melodic/setup.bash && \
     cd /home/ros-sharp_ws && catkin_make
 
 RUN apt-get -y install ros-melodic-rosbridge-server 
-
 RUN source /home/ros-sharp_ws/devel/setup.bash
-
-
-
 
 RUN cd /home/ && git clone -b ros_docker_dev https://github.com/luchspeter/3D_Vision_AR_RobotVis.git
 RUN mv /home/3D_Vision_AR_RobotVis/ROS/file_server /home/ros-sharp_ws/src
@@ -26,5 +22,4 @@ RUN apt-get install -y python-pip
 RUN pip install autobahn tornado bson pymongo pillow
 RUN echo "HELLO"
 RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc
-
 RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc 

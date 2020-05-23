@@ -243,15 +243,18 @@ if __name__ == '__main__':
 
 	#	publish joint goals
 	posePub = PosePublisher()
-	
+	i = 0
+	amp = 0.4
 
-	rate = rospy.Rate(2)
+	rate = rospy.Rate(100)
 	
 	#timer = app.Timer('auto', connect=update, start=True)
 
 	while not rospy.is_shutdown():
-
-		posePub.publish(t=[0.5,0.0, 0] ,q=[0,0,0,1] )
+		xyz = [math.sin(i)*amp,math.sin(i)*amp,math.sin(i)*amp]
+		i += 0.1
+		posePub.publish(t=xyz ,q=[0,0,0,1] )
 		rate.sleep()
+		print(xyz)
 
 
