@@ -188,8 +188,8 @@ print("This workS")
 
 i = 0
 amp = 0.4
-keylis = RestKeyboardListener(ip_adr=ip, port_rest=str(port_rest),ros=ros )
-keylis.listener.start()
+keylis = RestKeyboardListener(ip_adr=ip, port_rest=str(port_rest) )
+keylis.start()
 import os
 def menu():
 
@@ -213,19 +213,16 @@ while ros.is_connected:
 	y3 = jp_list[:,2].tolist()
 	y4 = jp_list[:,3].tolist()
 	x =  range(0,len(y1))
-
-	# move robot
 	random_col = np.random.randint(0,255)
-	i += pi/4
+	i += 0.1
 	xyz = [math.sin(i)*amp,math.sin(i)*amp,math.sin(i)*amp]
 	msg =  create_Pose( xyz, [0,0,0] ) 
-	if keylis.t_status == False:
-		talker.publish(roslibpy.Message( msg ) )
+	talker.publish(roslibpy.Message( msg ) )
+	#print( msg )
 
-		
 	#talker_gazebo_reset.publish( roslibpy.Message( msg )   )
 	if len(y1) == 100:
-		#print("TIME1:", time.time()-t_start)
+		print("TIME1:", time.time()-t_start)
 		t_inter = time.time()
 		jointPlot.update(x, [y1,y2])
 		jointPlot2.update(x, [y3,y4])
@@ -237,9 +234,7 @@ while ros.is_connected:
 		
 		talker_img.publish(  roslibpy.Message( msg ) )
 		talker_img2.publish(  roslibpy.Message( msg2 ) )
-
-		
-		#print("TIME2:", time.time()-t_inter)
+		print("TIME2:", time.time()-t_inter)
 	#np_img_data = np.ones( (200,200,3), dtype= np.uint8)*random_col 
 	#print(type(img))
 	#talker_img.publish()
