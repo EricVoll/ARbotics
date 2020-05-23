@@ -72,6 +72,8 @@ public class AttachablesManager : Singleton<AttachablesManager>
         }
 
         NearInteractionTouchable touchable = parent.AddComponent<NearInteractionTouchable>();
+        parent.AddComponent<BoxCollider>();
+        //BoxCollider collider = parent.transform.Find("Collisions").gameObject.AddComponent<BoxCollider>();
         BoxCollider collider = parent.AddComponent<BoxCollider>();
         touchable.SetTouchableCollider(collider);
 
@@ -84,7 +86,7 @@ public class AttachablesManager : Singleton<AttachablesManager>
         physicalEvents.routingTarget = interactable;
 
         // create the 3d component
-        GameObject attachable = Instantiate<GameObject>(externalPlotPrefab);
+        GameObject attachable = Instantiate(externalPlotPrefab);
 
         ExternalPlot eplot = attachable.GetComponent<ExternalPlot>();
         eplot.ToolTipText = topic;
@@ -94,7 +96,6 @@ public class AttachablesManager : Singleton<AttachablesManager>
         toolTipController.Topic = topic;
         var texture = attachable.AddComponent<TextureProvider>();
         texture.InitRosSource(topic, toolTipController.ImageRenderer);
-
 
         ExternalPlotConnector con = attachable.GetComponent<ExternalPlotConnector>();
         con.Target = parent;
