@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using RosSharp.RosBridgeClient;
 using System;
 using System.Collections;
@@ -10,9 +10,19 @@ using UnityEngine;
 namespace ARCommander {
     public class ARCommander : MonoBehaviour {
         public void Awake() {
+            RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
+        }
+
+        public void Start()
+        {
             InitializeAvailableComponents();
 
-            RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
+            Application.logMessageReceived += Application_logMessageReceived;
+        }
+
+        private void Application_logMessageReceived(string condition, string stackTrace, LogType type)
+        {
+            this.transform.GetComponent<DebugPublisher>()?.SendDebugMsg(condition, stackTrace, type);
         }
 
         /// <summary>
@@ -34,6 +44,11 @@ namespace ARCommander {
         /// The UI handler responsible for showing hte spawn buttons
         /// </summary>
         public UIHandler UIHandler;
+
+        /// <summary>
+        /// If true, there is a hook into the debuglogs and they rae published via ROS
+        /// </summary>
+        public bool publishDebugLogsViaRos = true;
 
         public void ReceiveUnfilteredMessage(RunningInstance[] allRunningInstances) {
             ReceiveMessage(FilterList(allRunningInstances, (x) => x.comp.pretty_name));
