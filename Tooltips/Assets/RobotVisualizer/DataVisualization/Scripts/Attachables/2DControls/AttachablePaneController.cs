@@ -6,22 +6,13 @@ using UnityEngine.UI;
 public class AttachablePaneController : MonoBehaviour
 {
     [SerializeField] GameObject attachableControlPrefab;
-    private Dictionary<string, GameObject> controls;
+    private Dictionary<string, GameObject> controls= new Dictionary<string, GameObject>();
     // Start is called before the first frame update
     [SerializeField] GameObject attachablePanel;
      [SerializeField] GameObject canvas;
-    void Awake()
-    {
-        this.controls = new Dictionary<string, GameObject>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void Add(string topic){
+
         // create the 2d component
          GameObject attachableControl = Instantiate<GameObject>(this.attachableControlPrefab);
         ButtonController bc = attachableControl.GetComponent<ButtonController>();

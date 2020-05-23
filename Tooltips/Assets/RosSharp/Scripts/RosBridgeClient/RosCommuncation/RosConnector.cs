@@ -34,11 +34,10 @@ namespace RosSharp.RosBridgeClient
         public string RosBridgeServerUrl = "ws://192.168.0.1:9090";
 
         private ManualResetEvent isConnected = new ManualResetEvent(false);
-
-        public void Awake()
-        {
+        private void Awake() {
             if (Instance == null)
                 Instance = this;
+
 #if WINDOWS_UWP
             ConnectAndWait();
 #else

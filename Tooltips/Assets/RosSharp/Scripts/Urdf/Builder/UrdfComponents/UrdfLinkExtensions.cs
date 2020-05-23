@@ -37,7 +37,7 @@ namespace RosSharp.Urdf.Editor
                 urdfLink.ImportLinkData(link, joint);
             else
             {
-                UrdfInertial.Synchronize(linkObject);
+                //UrdfInertial.Synchronize(linkObject);
             }
             
             if (link != null)

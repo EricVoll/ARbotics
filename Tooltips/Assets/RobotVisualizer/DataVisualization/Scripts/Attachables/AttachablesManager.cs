@@ -10,17 +10,14 @@ using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 using RobotVisualizer;
 
 
-public class AttachablesManager : Singleton<AttachablesManager>
-{
+public class AttachablesManager : Singleton<AttachablesManager> {
 
     [SerializeField] GameObject externalPlotPrefab;
 
     [SerializeField] private GameObject attachablePane;
-    public GameObject AttachablePane
-    {
+    public GameObject AttachablePane {
         get { return attachablePane; }
-        set
-        {
+        set {
             this.attachablePane = value;
         }
     }
@@ -36,44 +33,43 @@ public class AttachablesManager : Singleton<AttachablesManager>
 
 
     // Start is called before the first frame update
-    void Awake()
-    {
+    void Awake() {
         this.attachables = new Dictionary<string, AttachableReference>();
         this.attachablesRoot = new GameObject("Attachables");
         this.attachablesRoot.transform.SetParent(transform);
 
-        if (this.attachablePane != null)
-            this.paneControl = this.attachablePane.GetComponent<AttachablePaneController>();
+        this.paneControl = this.attachablePane.GetComponent<AttachablePaneController>();
+        // StartCoroutine(ManagerUpdateLoop());
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
 
     }
 
-    public void Subscribe(string topic, GameObject parent)
-    {
+    public void Subscribe(string topic, GameObject parent) {
         Debug.Log($"Subscribing {parent.name} to topic {topic}");
-        this.paneControl?.Add(topic);
+        //this.paneControl.Add(topic);
+
+
+        var visuals = parent.transform.Find("Visuals");
+        if(visuals != null) {
+            var c = visuals.GetComponentsInChildren<Renderer>();
+            parent = c[0].gameObject;
+        };
+
+        //foreach (var render in r) {
+        //    render.material = activeMaterial;
+        //}
+
 
         // modify the parent's interactability (collision with the pointer) 
-        parent.AddComponentIfNotExists<Renderer>(out var renderer);
-        var r = parent.transform.Find("Visuals").GetComponentsInChildren<Renderer>();
-
-        foreach (var render in r)
-        {
-            render.material = activeMaterial;
-        }
-
+        parent.GetComponent<Renderer>().material = activeMaterial;
         NearInteractionTouchable touchable = parent.AddComponent<NearInteractionTouchable>();
-        parent.AddComponent<BoxCollider>();
-        //BoxCollider collider = parent.transform.Find("Collisions").gameObject.AddComponent<BoxCollider>();
         BoxCollider collider = parent.AddComponent<BoxCollider>();
         touchable.SetTouchableCollider(collider);
 
@@ -86,20 +82,18 @@ public class AttachablesManager : Singleton<AttachablesManager>
         physicalEvents.routingTarget = interactable;
 
         // create the 3d component
-        GameObject attachable = Instantiate(externalPlotPrefab);
+        GameObject attachable = Instantiate<GameObject>(this.externalPlotPrefab);
 
         ExternalPlot eplot = attachable.GetComponent<ExternalPlot>();
         eplot.ToolTipText = topic;
         eplot.FontSize = 20;
 
-        ToolTipController toolTipController = attachable.GetComponent<ToolTipController>();
-        toolTipController.Topic = topic;
-        var texture = attachable.AddComponent<TextureProvider>();
-        texture.InitRosSource(topic, toolTipController.ImageRenderer);
+        ButtonController buttonController = attachable.GetComponent<ButtonController>();
+        buttonController.Topic = topic;
 
         ExternalPlotConnector con = attachable.GetComponent<ExternalPlotConnector>();
         con.Target = parent;
-        attachable.transform.SetParent(attachablesRoot.transform);
+        attachable.transform.SetParent(this.attachablesRoot.transform);
 
         Vector3 offset = new Vector3(0.0f, 0.1f, 0.0f);
         attachable.transform.position = parent.transform.position + offset;
@@ -114,8 +108,7 @@ public class AttachablesManager : Singleton<AttachablesManager>
         this.attachables.Add(topic, aref);
     }
 
-    private Interactable attachInteractible(string topic, GameObject parent)
-    {
+    private Interactable attachInteractible(string topic, GameObject parent) {
         Interactable i = parent.AddComponent<Interactable>();
 
         ThemeDefinition theme = ThemeDefinition.GetDefaultThemeDefinition<InteractableColorTheme>().Value;
@@ -136,108 +129,74 @@ public class AttachablesManager : Singleton<AttachablesManager>
 
     }
 
-    public void Toggle(string topic)
-    {
-        if (this.attachables.ContainsKey(topic))
-        {
+    public void Toggle(string topic) {
+        if (this.attachables.ContainsKey(topic)) {
             Debug.Log($"Toggling tooltip of topic {topic}");
             AttachableReference aref = this.attachables[topic];
-            if (aref.active)
-            {
+            if (aref.active) {
                 this.Hide(topic);
-            }
-            else
-            {
+            } else {
                 this.Show(topic);
             }
-        }
-        else
-        {
+        } else {
             Debug.LogWarning($"Topic {topic} not found");
         }
     }
 
-    public void Show(string topic)
-    {
-        if (this.attachables.ContainsKey(topic))
-        {
+    public void Show(string topic) {
+        if (this.attachables.ContainsKey(topic)) {
             AttachableReference aref = this.attachables[topic];
-
-            foreach (var renderer in aref.parent.GetComponentsInChildren<Renderer>())
-            {
-                renderer.material = activeMaterial;
-            }
+            aref.parent.GetComponent<Renderer>().material = activeMaterial;
             aref.attachable.SetActive(true);
             aref.active = true;
             aref.attachable.GetComponent<Renderer>().enabled = true;
             this.attachables[topic] = aref;
-        }
-        else
-        {
+        } else {
             Debug.LogWarning($"Topic {topic} not found");
         }
     }
 
 
-    public void Hide(string topic)
-    {
-        if (this.attachables.ContainsKey(topic))
-        {
+    public void Hide(string topic) {
+        if (this.attachables.ContainsKey(topic)) {
             AttachableReference aref = this.attachables[topic];
-
-            foreach (var renderer in aref.parent.GetComponentsInChildren<Renderer>())
-            {
-                renderer.material = inactiveMaterial;
-            }
-
+            aref.parent.GetComponent<Renderer>().material = inactiveMaterial;
             aref.attachable.SetActive(false);
             aref.active = false;
             aref.attachable.GetComponent<Renderer>().enabled = false;
             this.attachables[topic] = aref;
-        }
-        else
-        {
+        } else {
             Debug.LogWarning($"Topic {topic} not found");
         }
 
     }
 
 
-    public void Follow(string topic)
-    {
-        if (this.attachables.ContainsKey(topic))
-        {
+    public void Follow(string topic) {
+        if (this.attachables.ContainsKey(topic)) {
             AttachableReference aref = this.attachables[topic];
-            if (aref.following)
-            {
+            if (aref.following) {
                 aref.attachable.GetComponent<RadialView>().enabled = false;
-            }
-            else
-            {
+            } else {
                 aref.attachable.GetComponent<RadialView>().enabled = true;
             }
 
             aref.following = !aref.following;
             this.attachables[topic] = aref;
-        }
-        else
-        {
+        } else {
             Debug.LogWarning($"Topic {topic} not found");
         }
     }
 
 
-    public void Unsubscribe(string topic)
-    {
+    public void Unsubscribe(string topic) {
         AttachableReference aref = this.attachables[topic];
         this.attachables.Remove(topic);
         // TODO: destroy game object
     }
 
-    IEnumerator ManagerUpdateLoop()
-    {
-        while (true)
-        {
+    IEnumerator ManagerUpdateLoop() {
+        while (true) {
             yield return new WaitForSeconds(this.frequency);
             // may be needed later
             // Debug.Log("Topic Processing Loop");
@@ -246,8 +205,7 @@ public class AttachablesManager : Singleton<AttachablesManager>
 }
 
 
-public struct AttachableReference
-{
+public struct AttachableReference {
 
     public bool active;
     public bool following;

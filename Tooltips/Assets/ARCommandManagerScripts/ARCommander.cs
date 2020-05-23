@@ -73,15 +73,15 @@ namespace ARCommander
                     currentSceneDicionary[instance.inst.inst_id] = syncher;
                 }
 
-                try
-                {
+                //try
+                //{
                     currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError("Robot Synchronization failed! " + ex.Message);
-                    Debug.LogError(ex.StackTrace);
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    Debug.LogError("Robot Synchronization failed! " + ex.Message);
+                //    Debug.LogError(ex.StackTrace);
+                //}
             }
 
             return;
