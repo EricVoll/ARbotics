@@ -7,6 +7,7 @@ public class EndEffectorTargetPublisher : Publisher<RosSharp.RosBridgeClient.Mes
 {
     public void Publish(Vector3 position, Quaternion orientation)
     {
+        //var q = new Vector3(0,-90,0) * orientation
         var m = new RosSharp.RosBridgeClient.Messages.Geometry.Pose()
         {
             position = new RosSharp.RosBridgeClient.Messages.Geometry.Point()

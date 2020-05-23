@@ -25,7 +25,8 @@ public class EndEffectorTarget : MonoBehaviour
         float currentTime = Time.realtimeSinceStartup;
         if (Publish && currentTime - lastPublish > 1) {
             lastPublish = currentTime;
-            publisher.Publish(transform.position, transform.rotation);
+            var unityToGazebo = Quaternion.Euler(new Vector3(0,0,0));
+            publisher.Publish(transform.position, transform.rotation * unityToGazebo);
         }
     }
 }

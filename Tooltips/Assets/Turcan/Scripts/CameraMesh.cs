@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class CameraMesh : MonoBehaviour
 {
+	public DrawScript DrawScript;
 	public Camera Camera;
 	private float dValueX0;
 	private float dValueX3;
@@ -27,7 +28,7 @@ public class CameraMesh : MonoBehaviour
 	private Vector3 dir;
 	private RaycastHit hit;
 
-	void LateUpdate()
+	void Update()
     {
 		TurcanRaySweep();
 	}
@@ -96,21 +97,24 @@ public class CameraMesh : MonoBehaviour
 
 						if (Physics.Raycast(Camera.transform.position, dir, out hit))
 							{
-								GLDebug.DrawLine(Camera.transform.position, dir, Color.red, 0, true);
-					//		GLDebug.DrawRay(Camera.transform.position, hit.point, Color.green, 0, true);
-					//		GLDebug.DrawRay(hit.point, dir, Color.red, 0, true);
-							
-							}
+								//GLDebug.DrawLine(Camera.transform.position, dir, Color.red, 0, true);
+								DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "red");
+						//		GLDebug.DrawRay(Camera.transform.position, hit.point, Color.green, 0, true);
+						//		GLDebug.DrawRay(hit.point, dir, Color.red, 0, true);
+
+					}
 						else
 						{
 							if (i == 0)
 							{
-								GLDebug.DrawLine(Camera.transform.position, dir, Color.black, 0, true);
-							}
+								//GLDebug.DrawLine(Camera.transform.position, dir, Color.black, 0, true);
+								DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "blue");
+						}
 							else
 							{
-								GLDebug.DrawLine(Camera.transform.position, dir, Color.green, 0, true);
-							}
+								//GLDebug.DrawLine(Camera.transform.position, dir, Color.green, 0, true);
+								DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "green");
+						}
 						}
 					}
 			}

@@ -10,13 +10,13 @@ using Microsoft.MixedReality.Toolkit.Diagnostics;
 public class SensorManager : MonoBehaviour
 {
     public static SensorManager instance;
-    public VisualProfilerControl visualProfilerControl;
+    public VisualProfilerControl visualProfilerControlPrefab;
 
     public void Awake()
     {
         instance = this;
-        visualProfilerControl.ToggleProfiler();
-        visualProfilerControl.SetProfilerVisibility(false);
+        visualProfilerControlPrefab.ToggleProfiler();
+        visualProfilerControlPrefab.SetProfilerVisibility(false);
     }
 
     /// <summary>

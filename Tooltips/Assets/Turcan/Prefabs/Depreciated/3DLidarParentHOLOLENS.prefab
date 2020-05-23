@@ -2180,7 +2180,7 @@ MonoBehaviour:
   upperFOVVal: 10.5
   lowerFOVVal: 16
   offsetVal: 7.24
-  upperNormalVal: -3.25
+  upperNormalVal: -5.05
   lowerNormalVal: 16.87
   numberOfLasers: {fileID: 283755096303864280}
   rotationSpeedHz: {fileID: 283755095620953095}

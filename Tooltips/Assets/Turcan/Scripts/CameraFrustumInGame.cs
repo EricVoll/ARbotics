@@ -4,12 +4,19 @@ using UnityEditor;
 
 public class CameraFrustumInGame : MonoBehaviour
 {
+    	public DrawScript DrawScript;
     public Camera Camera;
+    bool onetime = false;
     public static bool triggerOfDispSimple = false;
     bool[] firstcheck = new bool[4];
     RaycastHit[] hitinf = new RaycastHit[4];
     void Update()
     {
+        if (!onetime)
+        {
+            DrawFrustum(Camera);
+            onetime = true;
+        }
         DrawFrustum(Camera);
     }
 
@@ -39,9 +46,11 @@ public class CameraFrustumInGame : MonoBehaviour
                 //Debug.DrawLine(nearCorners[i], nearCorners[(i + 1) % 4], Color.red, Time.deltaTime, true); //near corners on the created projection matrix
                 //Debug.DrawLine(farCorners[i], farCorners[(i + 1) % 4], Color.blue, Time.deltaTime, true); //far corners on the created projection matrix
                 //Debug.DrawLine(nearCorners[i], farCorners[i], Color.green, Time.deltaTime, true); //sides of the created projection matrix
+                DrawScript.DrawLineTRC(nearCorners[i], nearCorners[(i + 1) % 4], 0.02f, "blue");
+                DrawScript.DrawLineTRC(farCorners[i], farCorners[(i + 1) % 4], 0.02f, "blue");
 
-                GLDebug.DrawLine(nearCorners[i], nearCorners[(i + 1) % 4], Color.blue, 0, true);
-                GLDebug.DrawLine(farCorners[i], farCorners[(i + 1) % 4], Color.blue, 0, true);
+                //GLDebug.DrawLine(nearCorners[i], nearCorners[(i + 1) % 4], Color.blue, 0, true);
+                //GLDebug.DrawLine(farCorners[i], farCorners[(i + 1) % 4], Color.blue, 0, true);
                 //////////////////////// EASY SOLUTION /////////////////////////////////////
 
                 for (int j = 0; j < 4; j++)
@@ -51,85 +60,135 @@ public class CameraFrustumInGame : MonoBehaviour
 
                 if (firstcheck[0] && firstcheck[1])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "blue");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
                 }
                 if (firstcheck[1] && firstcheck[2])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "blue");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
                 }
                 if (firstcheck[2] && firstcheck[3])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "blue");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
                 }
                 if (firstcheck[3] && firstcheck[0])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "red");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
                 }
                 if (firstcheck[0] && firstcheck[1] && firstcheck[2])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "blue");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
                 }
                 if (firstcheck[1] && firstcheck[2] && firstcheck[3])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "blue");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.blue, 0, true);
                 }
                 if (firstcheck[2] && firstcheck[3] && firstcheck[0])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "red");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
                 }
                 if (firstcheck[3] && firstcheck[0] && firstcheck[1])
                 {
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "blue");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "red");
+
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.blue, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
 
                 }
                 if (firstcheck[3] && firstcheck[0] && firstcheck[1] && firstcheck[2])
                 {
+                    DrawScript.DrawLineTRC(farCorners[0], farCorners[(1) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[1], farCorners[(2) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[2], farCorners[(3) % 4], 0.02f, "red");
+                    DrawScript.DrawLineTRC(farCorners[3], farCorners[(4) % 4], 0.02f, "red");
 
-                    GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
-                    GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[0], farCorners[(1) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[1], farCorners[(2) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[2], farCorners[(3) % 4], Color.red, 0, true);
+                    //GLDebug.DrawLine(farCorners[3], farCorners[(4) % 4], Color.red, 0, true);
                 }
                 if (!firstcheck[3] && !firstcheck[0] && !firstcheck[1] && !firstcheck[2])
                 {
-                    GLDebug.DrawLine(nearCorners[i], nearCorners[(i + 1) % 4], Color.blue, 0, true);
-                    GLDebug.DrawLine(farCorners[i], farCorners[(i + 1) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(nearCorners[i], nearCorners[(i + 1) % 4], 0.02f, "blue");
+                    //GLDebug.DrawLine(nearCorners[i], nearCorners[(i + 1) % 4], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(farCorners[i], farCorners[(1) % 4], 0.02f, "blue");
+                    //GLDebug.DrawLine(farCorners[i], farCorners[(i + 1) % 4], Color.blue, 0, true);
                 }
                 /////////////////////////  EASY SOLUTION END ////////////////////////
 
                 if (firstcheck[i])
                 {
-                    GLDebug.DrawLine(nearCorners[i], hitinf[i].point, Color.blue, 0, true);
-                    GLDebug.DrawLine(hitinf[i].point, farCorners[i], Color.red, 0, true);
+                    DrawScript.DrawLineTRC(nearCorners[i], hitinf[i].point, 0.02f, "blue");
+                    DrawScript.DrawLineTRC(hitinf[i].point, farCorners[i], 0.02f, "red");
+
+                    //GLDebug.DrawLine(nearCorners[i], hitinf[i].point, Color.blue, 0, true);
+                    //GLDebug.DrawLine(hitinf[i].point, farCorners[i], Color.red, 0, true);
 
                 }
                 else
                 {
-                    GLDebug.DrawLine(nearCorners[i], farCorners[i], Color.blue, 0, true);
+                    DrawScript.DrawLineTRC(nearCorners[i], farCorners[i], 0.02f, "blue");
+                    //GLDebug.DrawLine(nearCorners[i], farCorners[i], Color.blue, 0, true);
                 }
 
             }
