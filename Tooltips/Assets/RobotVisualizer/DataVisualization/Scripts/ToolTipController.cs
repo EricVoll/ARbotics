@@ -4,15 +4,43 @@ using UnityEngine;
 
 public class ToolTipController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public Renderer ImageRenderer;
+
+    private string topic;
+    public string Topic
     {
-        
+        get
+        {
+            return this.topic;
+        }
+        set
+        {
+            this.topic = value;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+
+    }
+
+    public void TaskShow()
+    {
+        //Output this to console when Button1 or Button3 is clicked
+        Debug.Log("You have clicked the show button!");
+        AttachablesManager.Instance.Show(this.topic);
+    }
+    public void TaskHide()
+    {
+        //Output this to console when Button1 or Button3 is clicked
+        Debug.Log("You have clicked the hide button!");
+        AttachablesManager.Instance.Hide(this.topic);
+    }
+
+    public void TaskFollow()
+    {
+        Debug.Log("You have clicked the follow button!");
+        AttachablesManager.Instance.Follow(this.topic);
     }
 }

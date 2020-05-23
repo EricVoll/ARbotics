@@ -90,8 +90,11 @@ public class AttachablesManager : Singleton<AttachablesManager>
         eplot.ToolTipText = topic;
         eplot.FontSize = 20;
 
-        ButtonController buttonController = attachable.GetComponent<ButtonController>();
-        buttonController.Topic = topic;
+        ToolTipController toolTipController = attachable.GetComponent<ToolTipController>();
+        toolTipController.Topic = topic;
+        var texture = attachable.AddComponent<TextureProvider>();
+        texture.InitRosSource(topic, toolTipController.ImageRenderer);
+
 
         ExternalPlotConnector con = attachable.GetComponent<ExternalPlotConnector>();
         con.Target = parent;
