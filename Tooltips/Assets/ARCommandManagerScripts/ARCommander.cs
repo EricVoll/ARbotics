@@ -16,7 +16,6 @@ namespace ARCommander {
         public void Start()
         {
             InitializeAvailableComponents();
-
             Application.logMessageReceived += Application_logMessageReceived;
         }
 
@@ -24,9 +23,7 @@ namespace ARCommander {
         {
             this.transform.GetComponent<DebugPublisher>()?.SendDebugMsg(condition, stackTrace, type);
         }
-        public void Start() {
-            InitializeAvailableComponents();
-        }
+ 
         /// <summary>
         /// All Robots will be placed in this gameobject
         /// </summary>
