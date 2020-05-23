@@ -15,6 +15,10 @@ s_pose = """<joint name="wrist_3_joint" type="revolute">
 add_string_to_xml = """<tooltip name="base_joint_speed" topic="/img/base_joint_speed">
 	  <parent link="wrist_1_link"/>
   </tooltip>"""
+add_string_to_xml_2 = """<tooltip name="base_joint_speed2" topic="/img/base_joint_speed2">
+	  <parent link="shoulder_link"/>
+  </tooltip>"""
+
 
 def insert_str(string, index, str_to_insert):
     return string[:index] + str_to_insert + string[index:]
@@ -61,7 +65,6 @@ def RestKeyboardListener(ip_adr='http://vservice-host-001.chera.ch', port_rest='
 		# 		key))
 
 	def on_release(key):
-
 		if str(key) == "'s'":
 			instances = get(ip_adr+':'+port_rest+'/Instances', log= False)
 
@@ -77,15 +80,29 @@ def RestKeyboardListener(ip_adr='http://vservice-host-001.chera.ch', port_rest='
 
 			post(ip_adr+':'+port_rest+'/Instances/%d/inst/urdf_dyn'%i,data)
 
-		elif key == "'d'":
+		if str(key) == "'f'":
+			instances = get(ip_adr+':'+port_rest+'/Instances', log= False)
 
+			for index, ins in enumerate(instances):
+				if ins['comp']['pretty_name'] == 'UR5':
+					i=index
+					urdf_dyn = ins['comp']['urdf_stat']
+					pose = urdf_dyn.find(s_pose)
+					out = insert_str(urdf_dyn, pose, add_string_to_xml_2)
+			#modified URDF with tooltip
+			data = {'data': out}
+			post(ip_adr+':'+port_rest+'/Instances/%d/inst/urdf_dyn'%i,data)
+
+
+
+		if str(key) == "'d'":
 			instances = get(ip_adr+':'+port_rest+'/Instances')
 			for index, ins in enumerate(instances):
 				if ins['comp']['pretty_name'] == 'UR5':
 					i=index
 					urdf_stat = ins['comp']['urdf_stat']
 			#reset urdf_dyn to stat
-			data = {'data': out}
+			data = {'data': urdf_stat}
 			post(ip_adr+':'+port_rest+'/Instances/%d/inst/urdf_dyn'%i,data)
 
 		elif key == Key.esc:
