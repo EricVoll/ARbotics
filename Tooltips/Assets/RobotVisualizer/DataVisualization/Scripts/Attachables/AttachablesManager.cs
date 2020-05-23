@@ -193,6 +193,10 @@ public class AttachablesManager : Singleton<AttachablesManager> {
         AttachableReference aref = this.attachables[topic];
         this.attachables.Remove(topic);
         // TODO: destroy game object
+        Destroy(aref.attachable);
+        Destroy(aref.parent.GetComponent<PressableButton>());
+        Destroy(aref.parent.GetComponent<BoxCollider>());
+        Destroy(aref.parent.GetComponent<NearInteractionTouchable>());
     }
 
     IEnumerator ManagerUpdateLoop() {

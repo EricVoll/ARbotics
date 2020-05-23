@@ -25,6 +25,7 @@ public class RobotBuilder
     public RobotBuilder()
     {
         AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
+        AttachedDataSynchronizer.Instance.DestroyCallBack = AttachablesManager.Instance.Unsubscribe;
     }
 
     public void Synchronize(Robot robot, GameObject rootObject)

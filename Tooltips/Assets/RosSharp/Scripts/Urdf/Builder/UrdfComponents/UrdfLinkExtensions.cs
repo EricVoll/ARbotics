@@ -37,7 +37,7 @@ namespace RosSharp.Urdf.Editor
                 urdfLink.ImportLinkData(link, joint);
             else
             {
-                //UrdfInertial.Synchronize(linkObject);
+                UrdfInertial.Synchronize(linkObject);
             }
             
             if (link != null)
@@ -51,8 +51,12 @@ namespace RosSharp.Urdf.Editor
             //Remove Attached Values that are too much
             var attachedValueChildren = linkObject.GetComponentsInDirectChildrenFromGameobject<AttachedValue>();
             attachedValueChildren.RemoveAll(x => link.attachableComponents.Any(y => y.component.name == x.name));
-            Utils.DestroyAll(attachedValueChildren.Select(x => x.gameObject));
+            
+            foreach (var attachedComponent in attachedValueChildren) {
+                AttachedDataSynchronizer.Instance.RemoveAttachedComponent(attachedComponent.AttachedComponent);
+            }
 
+            Utils.DestroyAll(attachedValueChildren.Select(x => x.gameObject));
             return urdfLink;
         }
 
