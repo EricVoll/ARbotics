@@ -99,7 +99,7 @@ class RestKeyboardListener():
 					if ins['comp']['pretty_name'] == 'UR5':
 						i=index
 						urdf_dyn = ins['comp']['urdf_stat']
-						pose = urdf_dyn.find(s_pose)f
+						pose = urdf_dyn.find(s_pose)
 						out = insert_str(urdf_dyn, pose, add_string_to_xml_2)
 				#modified URDF with tooltip
 				data = {'data': out}
