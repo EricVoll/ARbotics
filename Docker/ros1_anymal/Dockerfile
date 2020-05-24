@@ -22,3 +22,4 @@ RUN apt update
 RUN apt install -y ros-melodic-desktop-full
 RUN apt-get install -y ros-melodic-ros-control ros-melodic-ros-controllers
 RUN echo 'source /home/catkin_ws/devel/setup.bash' >> ~/.bashrc
+COPY ./standalone_ar.launch /home/catkin_ws/src/anymal_b_simple_description/launch/

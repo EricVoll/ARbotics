@@ -20,6 +20,24 @@ print(tp_type, tp_name)
 listener = roslibpy.Topic(ros, tp_name, tp_type )
 listener.subscribe(lambda message: print('\n \n Message:' +str(message) ) )
 
+#rosservice call /controller_manager/switch_controller "start_controllers: ['']
+# stop_controllers: ['arm_controller']
+# strictness: 0
+# start_asap: false
+# timeout: 0.0" 
+#rosservice call /gazebo/pause_physics
+
+# set model joint configuration with URDF parameter
+# rosservice call /gazebo/set_model_configuration '{model_name: "robot", urdf_param_name: "robot_description", joint_names:['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint','wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint'], joint_positions:[1.2, 0.3, -1.5, -0.5, -1.5, 0.0]}'
+#sleep 5
+
+# unpause physics
+# rosservice call /gazebo/unpause_physics
+# after unpause the robot will be set to the previous pose(before paused)
+
+# restart ros controllers should after unpaused physics, or will be blocked
+# rosservice call /controller_manager/switch_controller ["arm_gazebo_controller"]  [] 2
+
 def create_Pose(t,xyz):
 	q = R.from_euler('xyz' , xyz).as_quat()
 	return { 'position': {'x':t[0], 'y':t[1], 'z':t[2]} , 'orientation':{'x':q[0] ,'y':q[1],'z':q[2],'w':q[3] } }

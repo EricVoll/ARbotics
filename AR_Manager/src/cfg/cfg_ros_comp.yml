@@ -683,7 +683,7 @@ components:
   docker:
     command: source /opt/ros/melodic/setup.bash && && cp -r /home/catkin_ws/src/anymal_b_simple_description
       /home/Mesh/ && source /home/catkin_ws/devel/setup.bash && export ROS_MASTER_URI=http://ros1_base:11311
-      && roslaunch anymal_b_simple_description standalone.launch
+      && roslaunch anymal_b_simple_description standalone_ar.launch
     detach: true
     environment:
     - ROS_MASTER_URI=http://ros1_base:11311
