@@ -24,6 +24,7 @@ public class RobotBuilder
 {
     public RobotBuilder()
     {
+        AttachedDataSynchronizer.Instance.ShouldCreate = AttachablesManager.Instance.ShouldCreate;
         AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
         AttachedDataSynchronizer.Instance.DestroyCallBack = AttachablesManager.Instance.Unsubscribe;
     }

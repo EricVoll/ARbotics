@@ -14,8 +14,8 @@ public class AttachablesManagerDemo : MonoBehaviour
         GameObject robot = GameObject.Find("Robot").gameObject;
         GameObject upperArm = GameObject.Find("EndNozzle").gameObject;
         AttachablesManager am = AttachablesManager.Instance;
-        //am.Subscribe("test/robot", robot);
-        //am.Subscribe("test/arm", upperArm);
+        am.Subscribe("test/robot", robot);
+        am.Subscribe("test/arm", upperArm);
     }
 
     // Update is called once per frame

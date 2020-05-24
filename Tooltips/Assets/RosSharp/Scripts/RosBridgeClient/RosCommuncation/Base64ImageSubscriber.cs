@@ -21,7 +21,7 @@ namespace RosSharp.RosBridgeClient
             texture2D = new Texture2D(1, 1);
 
             if (meshRenderer != null)
-                meshRenderer.material = new Material(Shader.Find("Standard"));
+                meshRenderer.material = new Material(Shader.Find("Mixed Reality Toolkit/Standard"));
         }
 
         private void Update()

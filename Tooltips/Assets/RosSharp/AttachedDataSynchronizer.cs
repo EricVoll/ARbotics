@@ -19,6 +19,7 @@ public class AttachedDataSynchronizer
         }
     }
 
+    public Func<string, bool> ShouldCreate { get; set; }
     public Action<string, GameObject> CreateCallBack;
     public Action<string> DestroyCallBack;
 
@@ -37,7 +38,13 @@ public class AttachedDataSynchronizer
     }
     internal void RemoveAttachedComponent(AttachableComponent<IAttachableComponent> attachedComponent) {
        if (attachedComponent.component is AttachedDataValue av) {
-            //DestroyCallBack?.Invoke(av.topic);
+           // DestroyCallBack?.Invoke(av.topic);
        }
+    }
+    internal bool ShouldCreateComponent(AttachableComponent<IAttachableComponent> c) {
+        if (ShouldCreate == null) return true;
+        if (c.component is AttachedDataValue av)
+            return ShouldCreate.Invoke(av.topic);
+        return true;
     }
 }
