@@ -42,7 +42,7 @@ public class DrawScript : MonoBehaviour
         //lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
         //lineRenderer.startColor = color;
         //lineRenderer.endColor = color;
-        lr.startWidth = 0.03f;
+        lr.startWidth = 0.02f;
         //lineRenderer.material.color = color;
         //materials = lineRenderer.material;
         if(ColorSpace=="red")

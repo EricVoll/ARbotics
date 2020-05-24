@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/OutlineExamples 1.unity
     guid: eb7c31ded7e0b8b4d841034cf64f82af
   - enabled: 0
@@ -57,6 +57,9 @@ EditorBuildSettings:
     path: Assets/Turcan/3DVisionProjectScene/Turcan3DVisHOLOLENS_withTable.unity
     guid: e540d0e5fc336ee42bce37b3203e2930
   - enabled: 0
-    path: Assets/Turcan/3DVisionProjectScene/Hololens.unity
-    guid: 393c8f2ad2fa3e84c8371e31396565a9
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Turcan/3DVisionProjectScene/Turcan3DVisDemo.unity
+    guid: e1473d75a1053bd4fa3ca887be4e4563
   m_configObjects: {}

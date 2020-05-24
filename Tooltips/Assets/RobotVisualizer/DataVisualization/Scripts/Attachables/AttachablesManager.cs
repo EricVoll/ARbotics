@@ -81,6 +81,10 @@ public class AttachablesManager : Singleton<AttachablesManager> {
         PhysicalPressEventRouter physicalEvents = parent.AddComponent<PhysicalPressEventRouter>();
         physicalEvents.routingTarget = interactable;
 
+        //PointerHandler ph = parent.AddComponent<PointerHandler>();
+        //new PointerUnityEvent()
+        //ph.OnPointerClicked(() => this.Toggle(topic));
+
         // create the 3d component
         GameObject attachable = Instantiate<GameObject>(this.externalPlotPrefab);
 

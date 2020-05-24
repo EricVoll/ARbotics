@@ -19,16 +19,7 @@ public class ButtonController : MonoBehaviour
     public Button buttonShow, buttonHide;
 
     public GameObject label;
-
-    private string topic;
-    public string Topic {
-        get {
-            return this.topic;
-        }
-        set {
-            this.topic = value;
-        }
-    }
+    public string Topic;
 
     void Start()
     {
@@ -45,18 +36,18 @@ public class ButtonController : MonoBehaviour
     {
         //Output this to console when Button1 or Button3 is clicked
         Debug.Log("You have clicked the show button!");
-        AttachablesManager.Instance.Show(this.topic);
+        AttachablesManager.Instance.Show(this.Topic);
     }
     public void TaskHide()
     {
         //Output this to console when Button1 or Button3 is clicked
         Debug.Log("You have clicked the hide button!");
-        AttachablesManager.Instance.Hide(this.topic);
+        AttachablesManager.Instance.Hide(this.Topic);
     }
 
     public void TaskFollow()
     {
         Debug.Log("You have clicked the follow button!");
-        AttachablesManager.Instance.Follow(this.topic);
+        AttachablesManager.Instance.Follow(this.Topic);
     }
 }
