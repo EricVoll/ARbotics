@@ -12,12 +12,13 @@ s_pose = """<joint name="wrist_3_joint" type="revolute">
     <limit effort="28.0" lower="-3.14159265359" upper="3.14159265359" velocity="3.2"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>"""
-add_string_to_xml = """<tooltip name="base_joint_speed" topic="/img/base_joint_speed">
+add_string_to_xml = """<tooltip name="joint_position" topic="/img/joint_position">
 	  <parent link="wrist_1_link"/>
   </tooltip>"""
-add_string_to_xml_2 = """<tooltip name="base_joint_speed2" topic="/img/base_joint_speed2">
+add_string_to_xml_2 = """<tooltip name="tooltip_position" topic="/img/tool_position">
 	  <parent link="base_link"/>
   </tooltip>"""
+
 
 
 def insert_str(string, index, str_to_insert):
@@ -98,7 +99,7 @@ class RestKeyboardListener():
 					if ins['comp']['pretty_name'] == 'UR5':
 						i=index
 						urdf_dyn = ins['comp']['urdf_stat']
-						pose = urdf_dyn.find(s_pose)
+						pose = urdf_dyn.find(s_pose)f
 						out = insert_str(urdf_dyn, pose, add_string_to_xml_2)
 				#modified URDF with tooltip
 				data = {'data': out}

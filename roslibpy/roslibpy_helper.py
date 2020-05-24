@@ -17,8 +17,8 @@ tp_name ='/joint_states'
 tp_type = ros.get_topic_type(tp_name)
 print(tp_type, tp_name)
 
-# listener = roslibpy.Topic(ros, tp_name, tp_type )
-# listener.subscribe(lambda message: print('\n \n Message:' +str(message) ) )
+listener = roslibpy.Topic(ros, tp_name, tp_type )
+listener.subscribe(lambda message: print('\n \n Message:' +str(message) ) )
 
 def create_Pose(t,xyz):
 	q = R.from_euler('xyz' , xyz).as_quat()
@@ -54,18 +54,18 @@ def callback(data):
 
 while ros.is_connected:
 	#print(msg)
-	for i,n in enumerate(msg['name']):
-		ref = n.split(':')[0]
-		nam = n #.split(':')[-1]
-		msg2 = {'link_name':nam, 'pose':msg['pose'][i] ,'twist':msg['twist'][i] ,'reference_frame':'world'}
-		#print(msg2, '\n \n \n')
-		request = roslibpy.ServiceRequest()
-		#print('send')
-		talker_gazebo_link_reset.publish( roslibpy.Message( msg2 ))
-		serv.call( request,callback )
-		#print('try')
-		#talker_gazebo_link_reset.publish(roslibpy.Message( msg2 ) )
-		#talker_gazebo_reset.publish(roslibpy.Message( create_ModelState(0) ) )
+	# for i,n in enumerate(msg['name']):
+	# 	ref = n.split(':')[0]
+	# 	nam = n #.split(':')[-1]
+	# 	msg2 = {'link_name':nam, 'pose':msg['pose'][i] ,'twist':msg['twist'][i] ,'reference_frame':'world'}
+	# 	#print(msg2, '\n \n \n')
+	# 	request = roslibpy.ServiceRequest()
+	# 	#print('send')
+	# 	talker_gazebo_link_reset.publish( roslibpy.Message( msg2 ))
+	# 	serv.call( request,callback )
+	# 	#print('try')
+	# 	#talker_gazebo_link_reset.publish(roslibpy.Message( msg2 ) )
+	# 	#talker_gazebo_reset.publish(roslibpy.Message( create_ModelState(0) ) )
 	
 	
 	#print("sending")

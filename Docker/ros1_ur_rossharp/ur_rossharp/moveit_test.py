@@ -157,7 +157,6 @@ class MoveGroupPythonIntefaceTutorial(object):
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-
 h_unity_to_world = np.zeros((4,4))
 h_unity_to_world[0,:]=[0,0,1,0]
 h_unity_to_world[1,:]=[-1,0,0,0]
