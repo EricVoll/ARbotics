@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/Docker/dev_script/bridge_ws/src/ros1_bridge/include/**",
+        "/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/Docker/dev_script/catkin_ws/src/beginner_tutorials/include/**",
+        "/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/Docker/dev_script/ws_test/src/examples/rclcpp/minimal_composition/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ]
+}

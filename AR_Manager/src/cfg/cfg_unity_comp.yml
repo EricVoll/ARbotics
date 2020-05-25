@@ -1,0 +1,4 @@
+components: 
+  - pretty_name: 'UnityCollision'
+    comp_type : 'unity'
+    max_instances: 10

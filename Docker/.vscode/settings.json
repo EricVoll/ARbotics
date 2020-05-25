@@ -1,0 +1,7 @@
+{
+	"ros.distro": "eloquent",
+	"python.autoComplete.extraPaths": [
+		"/opt/ros/eloquent/lib/python3.6/site-packages"
+	],
+	"python.pythonPath": "/home/jonas/anaconda3/envs/ros2.7/bin/python"
+}

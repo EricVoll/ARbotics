@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>12</zoom_level>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1368</x>
+      <y>360</y>
+      <w>252</w>
+      <h>156</h>
+    </coordinates>
+    <panel_attributes>AR-Manager Server
+--
+Instances []
+Components []
+
+
+
+
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1140</x>
+      <y>936</y>
+      <w>312</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>ROS-Component
+--
+-Roboter Name
+-max number instances
+-launch file to be executed
+-docker container where to start
+-Provided Services and Topics
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1464</x>
+      <y>936</y>
+      <w>276</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Unity-Component
+--
+- provide to ROS-World
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1188</x>
+      <y>192</y>
+      <w>324</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>ROS-Component.yml
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1536</x>
+      <y>192</y>
+      <w>324</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>ROS-Component.yml
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>2280</x>
+      <y>360</y>
+      <w>204</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>REST-Client
+(Webside/Unity/ROS)
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1608</x>
+      <y>384</y>
+      <w>696</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>REST Interface
+lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>504</y>
+      <w>36</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>2760</x>
+      <y>600</y>
+      <w>264</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>ROS-Sharp
+--
+takes care of 
+data parsing UNITY-ROS
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1392</x>
+      <y>0</y>
+      <w>384</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Is not starting docker containers
+Only takes care of checking if container is
+available and therfore instances are up
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1320</x>
+      <y>564</y>
+      <w>264</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>Component
+&lt;&lt;interface&gt;&gt;
+--
+start()
+stop()
+update()
+--
+NAME 
+MAX_INSTANCES
+
+running
+active
+#instances
+instance_id
+start_time
+stop_time
+ 
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1272</x>
+      <y>852</y>
+      <w>120</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;&gt;</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1512</x>
+      <y>852</y>
+      <w>108</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1068</x>
+      <y>132</y>
+      <w>972</w>
+      <h>1104</h>
+    </coordinates>
+    <panel_attributes>AR_Server
+--
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>2700</x>
+      <y>120</y>
+      <w>396</w>
+      <h>1116</h>
+    </coordinates>
+    <panel_attributes>ONE DOCKER CONTAINER ROS SHARP
+--
+
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>444</x>
+      <y>528</y>
+      <w>528</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>ONE DOCKER CONTAINER UNIVERSAL ROBOT
+--
+- runs GAZEBO, MoveIt!
+- runs ROSLaunchUR5 
+
+
+TOPICS Published and Listens to Topics Related to UR5
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1752</x>
+      <y>444</y>
+      <w>264</w>
+      <h>216</h>
+    </coordinates>
+    <panel_attributes>Resource
+--
+/components
+/components/{name}
+
+/instances
+/instances/{id}
+
+get 
+post
+delete
+
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>960</x>
+      <y>408</y>
+      <w>432</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Docker API-REST Interface
+lt=&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;340.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>396</y>
+      <w>372</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Docker</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>2724</x>
+      <y>144</y>
+      <w>396</w>
+      <h>1116</h>
+    </coordinates>
+    <panel_attributes>ONE DOCKER CONTAINER ROS SHARP
+--
+
+halign=left</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>768</x>
+      <y>1596</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>RobotHost
+Server
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1104</x>
+      <y>1596</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Unity
+Client
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>816</x>
+      <y>1704</y>
+      <w>24</w>
+      <h>648</h>
+    </coordinates>
+    <panel_attributes>
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1152</x>
+      <y>1728</y>
+      <w>24</w>
+      <h>624</h>
+    </coordinates>
+    <panel_attributes>
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>816</x>
+      <y>1656</y>
+      <w>36</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1152</x>
+      <y>1656</y>
+      <w>36</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>1776</y>
+      <w>348</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Components.json
+ROS Answer</panel_attributes>
+    <additional_attributes>270.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>744</x>
+      <y>1332</y>
+      <w>372</w>
+      <h>204</h>
+    </coordinates>
+    <panel_attributes>Instances []
+--
+MINIMAL VERSION USEFUL RESPONSE
+
+robot_param (unique id for robot)
+urdf_content (string als xml)
+uptime
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1152</x>
+      <y>1332</y>
+      <w>408</w>
+      <h>204</h>
+    </coordinates>
+    <panel_attributes>AvailableComponents []
+--
+MINIMAL VERSION USEFUL RESPONSE
+
+pretty_name UR3
+available BOOL (better for user)
+
+--
+docker
+stuff to figure out
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>1716</y>
+      <w>348</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+GET Components</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>1824</y>
+      <w>348</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+POST InstanceUR3</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>1896</y>
+      <w>348</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Components.json
+ROS Answer</panel_attributes>
+    <additional_attributes>270.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>564</x>
+      <y>1596</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Docker
+Server
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>612</x>
+      <y>1704</y>
+      <w>24</w>
+      <h>648</h>
+    </coordinates>
+    <panel_attributes>
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>1848</y>
+      <w>216</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+start container 
+with launch </panel_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>672</x>
+      <y>1296</y>
+      <w>912</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>Components</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>612</x>
+      <y>1656</y>
+      <w>36</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>348</x>
+      <y>2064</y>
+      <w>828</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>670.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>2232</y>
+      <w>348</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+DELETE InstanceUR3</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>828</x>
+      <y>2292</y>
+      <w>348</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Components.json
+ROS Answer</panel_attributes>
+    <additional_attributes>270.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>2244</y>
+      <w>216</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+start container 
+with launch </panel_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>336</x>
+      <y>2052</y>
+      <w>24</w>
+      <h>156</h>
+    </coordinates>
+    <panel_attributes>
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>348</x>
+      <y>2028</y>
+      <w>288</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+start container 
+with launch </panel_attributes>
+    <additional_attributes>10.0;20.0;220.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1368</x>
+      <y>1596</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>RobotHost
+Server
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1704</x>
+      <y>1596</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Webside
+Client
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1416</x>
+      <y>1704</y>
+      <w>24</w>
+      <h>648</h>
+    </coordinates>
+    <panel_attributes>
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>1752</x>
+      <y>1728</y>
+      <w>24</w>
+      <h>624</h>
+    </coordinates>
+    <panel_attributes>
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1416</x>
+      <y>1656</y>
+      <w>36</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1752</x>
+      <y>1656</y>
+      <w>36</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>1776</y>
+      <w>348</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Components.json
+</panel_attributes>
+    <additional_attributes>270.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>1716</y>
+      <w>348</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+GET Components</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>1824</y>
+      <w>348</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+POST InstanceUR3</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>1896</y>
+      <w>348</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Components.json
+</panel_attributes>
+    <additional_attributes>270.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>2232</y>
+      <w>348</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+DELETE InstanceUR3</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1428</x>
+      <y>2292</y>
+      <w>348</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+Components.json
+</panel_attributes>
+    <additional_attributes>270.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+</diagram>
