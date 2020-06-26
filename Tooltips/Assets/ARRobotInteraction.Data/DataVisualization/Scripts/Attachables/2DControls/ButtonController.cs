@@ -28,10 +28,6 @@ public class ButtonController : MonoBehaviour
         //Calls the TaskOnClick/TaskWithParameters/ButtonClicked method when you click the Button
         if(buttonShow != null) buttonShow.onClick.AddListener(TaskShow);
         if(buttonHide != null) buttonHide.onClick.AddListener(TaskHide);
-        // if(label != null){
-        //     TextMeshPro tmp = label.GetComponent<TextMeshPro>();
-        //     tmp.text = this.topic;
-        // }
     }
 
     public void TaskShow()

@@ -40,34 +40,17 @@ public class AttachablesManager : Singleton<AttachablesManager> {
 
         if(attachablePane != null)
         this.paneControl = this.attachablePane.GetComponent<AttachablePaneController>();
-        // StartCoroutine(ManagerUpdateLoop());
-    }
-
-    // Update is called once per frame
-    void Update() {
-
-    }
-
-    private void OnDestroy() {
-
     }
 
     public void Subscribe(string topic, GameObject parent) {
         if (!this.attachables.ContainsKey(topic)) {
             Debug.Log($"Subscribing {parent.name} to topic {topic}");
-            //this.paneControl.Add(topic);
-
 
             var visuals = parent.transform.Find("Visuals");
             if (visuals != null) {
                 var c = visuals.GetComponentsInChildren<Renderer>();
                 parent = c[0].gameObject;
             };
-
-            //foreach (var render in r) {
-            //    render.material = activeMaterial;
-            //}
-
 
             // modify the parent's interactability (collision with the pointer) 
             parent.GetComponent<Renderer>().material = activeMaterial;
@@ -82,10 +65,6 @@ public class AttachablesManager : Singleton<AttachablesManager> {
             // route physical presses to the interactable
             PhysicalPressEventRouter physicalEvents = parent.AddComponent<PhysicalPressEventRouter>();
             physicalEvents.routingTarget = interactable;
-
-            //PointerHandler ph = parent.AddComponent<PointerHandler>();
-            //new PointerUnityEvent()
-            //ph.OnPointerClicked(() => this.Toggle(topic));
 
             // create the 3d component
             GameObject attachable = Instantiate<GameObject>(this.externalPlotPrefab);
@@ -222,13 +201,6 @@ public class AttachablesManager : Singleton<AttachablesManager> {
         Destroy(aref.parent.GetComponent<NearInteractionTouchable>());
     }
 
-    IEnumerator ManagerUpdateLoop() {
-        while (true) {
-            yield return new WaitForSeconds(this.frequency);
-            // may be needed later
-            // Debug.Log("Topic Processing Loop");
-        }
-    }
 }
 
 

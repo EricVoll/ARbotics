@@ -19,10 +19,5 @@ public class AttachablesManagerDemo : MonoBehaviour
         am.Subscribe("test/arm", upperArm);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
 }

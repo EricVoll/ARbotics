@@ -11,20 +11,19 @@ using UnityEngine;
 namespace ARRobotInteraction.Data 
 {
     /// <summary>
-    /// Class for Tooltip object
-    /// Creates a floating tooltip that is attached to an object and moves to stay in view as object rotates with respect to the view.
+    /// Class for External Plot object
+    /// Creates a floating plot that is attached to an object and moves to stay in view as object rotates with respect to the view.
     /// </summary>
     [ExecuteAlways]
-    [HelpURL("https://microsoft.github.io/MixedRealityToolkit-Unity/Documentation/README_Tooltip.html")]
     [AddComponentMenu("Scripts/MRTK/SDK/ExternalPlot")]
     public class ExternalPlot : MonoBehaviour
     {
         [SerializeField]
-        [Tooltip("Show the opaque background of tooltip.")]
+        [Tooltip("Show the opaque background of the plot.")]
         private bool showBackground = true;
 
         /// <summary>
-        /// Show the opaque background of tooltip.
+        /// Show the opaque background of plot.
         /// </summary>
         public bool ShowBackground
         {
@@ -36,7 +35,7 @@ namespace ARRobotInteraction.Data
         private bool showHighlight = false;
 
         /// <summary>
-        /// Shows white trim around edge of tooltip.
+        /// Shows white trim around edge of plot.
         /// </summary>
         public bool ShowHighlight
         {
@@ -51,11 +50,11 @@ namespace ARRobotInteraction.Data
         }
 
         [SerializeField]
-        [Tooltip("Show the connecting stem between the tooltip and its parent GameObject.")]
+        [Tooltip("Show the connecting stem between the plot and its parent GameObject.")]
         private bool showConnector = true;
 
         /// <summary>
-        /// Show the connecting stem between the tooltip and its parent GameObject.
+        /// Show the connecting stem between the plot and its parent GameObject.
         /// </summary>
         public bool ShowConnector
         {
@@ -64,11 +63,11 @@ namespace ARRobotInteraction.Data
         }
 
         [SerializeField]
-        [Tooltip("Display the state of the tooltip.")]
+        [Tooltip("Display the state of the plot.")]
         private DisplayMode tipState = DisplayMode.On;
 
         /// <summary>
-        /// The display the state of the tooltip.
+        /// The display the state of the plot.
         /// </summary>
         public DisplayMode TipState
         {
@@ -77,11 +76,11 @@ namespace ARRobotInteraction.Data
         }
 
         [SerializeField]
-        [Tooltip("Display the state of a group of tooltips.")]
+        [Tooltip("Display the state of a group of plots.")]
         private DisplayMode groupTipState;
 
         /// <summary>
-        /// Display the state of a group of tooltips.
+        /// Display the state of a group of plots.
         /// </summary>
         public DisplayMode GroupTipState
         {
@@ -90,11 +89,11 @@ namespace ARRobotInteraction.Data
         }
 
         [SerializeField]
-        [Tooltip("Display the state of the master tooltip.")]
+        [Tooltip("Display the state of the master plot.")]
         private DisplayMode masterTipState;
 
         /// <summary>
-        /// Display the state of the master tooltip.
+        /// Display the state of the master plot.
         /// </summary>
         public DisplayMode MasterTipState
         {
@@ -124,12 +123,8 @@ namespace ARRobotInteraction.Data
         public GameObject Pivot => pivot;
 
         [SerializeField]
-        [Tooltip("GameObject text that is displayed on the tooltip.")]
+        [Tooltip("GameObject text that is displayed on the plot.")]
         private GameObject label;
-
-        // [SerializeField]
-        // [Tooltip("GameObject Canvas that is displayed on the tooltip.")]
-        // private GameObject contentCanvas;
 
         [SerializeField]
         [Tooltip("Parent of the Text and Background")]
@@ -137,17 +132,17 @@ namespace ARRobotInteraction.Data
 
 
         [SerializeField]
-        [Tooltip("Title Bar of the Tooltip")]
+        [Tooltip("Title Bar of the plot")]
         private GameObject titleBar;
 
         [SerializeField]
-        [Tooltip("Title Bar of the Tooltip")]
+        [Tooltip("Title Bar of the plot")]
         private GameObject titleBarBackground;
 
 
         [TextArea]
         [SerializeField]
-        [Tooltip("Text for the ToolTip to display")]
+        [Tooltip("Text for the plot to display")]
         private string toolTipText;
 
         /// <summary>
@@ -202,7 +197,7 @@ namespace ARRobotInteraction.Data
 
         [SerializeField]
         [Range(10, 60)]
-        [Tooltip("The font size of the tooltip.")]
+        [Tooltip("The font size of the plot.")]
         private int fontSize = 30;
 
         /// <summary>
@@ -300,12 +295,12 @@ namespace ARRobotInteraction.Data
         }
 
         /// <summary>
-        /// Transform of object to which ToolTip is attached
+        /// Transform of object to which plot is attached
         /// </summary>
         public Transform ContentParentTransform => contentParent.transform;
 
         /// <summary>
-        /// is ToolTip active and displaying
+        /// is plot active and displaying
         /// </summary>
         public bool IsOn
         {
@@ -363,7 +358,7 @@ namespace ARRobotInteraction.Data
         }
 
         /// <summary>
-        /// does the ToolTip have focus.
+        /// does the plot have focus.
         /// </summary>
         public virtual bool HasFocus
         {
@@ -448,7 +443,7 @@ namespace ARRobotInteraction.Data
             contentParent.transform.localScale = Vector3.one * contentScale;
             label.transform.localScale = Vector3.one * 0.005f;
             // Set the content using a text mesh by default
-            // This function can be overridden for tooltips that use Unity UI
+            // This function can be overridden for plots that use Unity UI
 
             // Has content or fontSize changed?
             int currentTextLength = toolTipText.Length;
@@ -479,17 +474,6 @@ namespace ARRobotInteraction.Data
 
                     localContentSize.x = localScale.x + backgroundPadding.x;
                     localContentSize.y = localScale.y + backgroundPadding.y;
-
-                    // if (contentCanvas != null)
-                    // {
-                    //     // Get the world scale of the text
-                    //     // Convert that to local scale using the content parent
-                    //     RectTransform ccRectTransform = contentCanvas.GetComponent<RectTransform>();
-                    //     //     float h = canvas.GetComponent<RectTransform>().rect.height;
-                    //     //     float w = canvas.GetComponent<RectTransform>().rect.width;
-                    //     localContentSize.x = Mathf.Max(ccRectTransform.rect.width + backgroundPadding.x, localContentSize.x);
-                    //     localContentSize.y += (float)1.5 * ccRectTransform.rect.height;
-                    // }
                 }
 
                 // attach title bar to plot area
@@ -625,7 +609,7 @@ namespace ARRobotInteraction.Data
 
         private void ValidateHeirarchy()
         {
-            // Generate default objects if we haven't set up our tooltip yet
+            // Generate default objects if we haven't set up our plot yet
             if (anchor == null)
             {
                 Transform anchorTransform = transform.Find("Anchor");

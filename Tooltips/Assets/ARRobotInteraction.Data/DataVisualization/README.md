@@ -1,0 +1,1 @@
+This package is a modified version of the MRTK Tooltip component.

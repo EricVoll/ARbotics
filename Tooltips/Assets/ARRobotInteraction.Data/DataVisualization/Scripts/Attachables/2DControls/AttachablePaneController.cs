@@ -15,15 +15,11 @@ public class AttachablePaneController : MonoBehaviour
 
     public void Add(string topic){
 
-        // create the 2d component
+        // create the 2D component
          GameObject attachableControl = Instantiate<GameObject>(this.attachableControlPrefab);
         ButtonController bc = attachableControl.GetComponent<ButtonController>();
         attachableControl.transform.SetParent(this.attachablePanel.transform, worldPositionStays: false); 
-        // LayoutRebuilder.MarkLayoutForRebuild(this.attachablePanel.transform as RectTransform);
-        // LayoutRebuilder.ForceRebuildLayoutImmediate(this.attachablePanel.transform as RectTransform);
-        // LayoutRebuilder.MarkLayoutForRebuild(this.canvas.transform as RectTransform);
         bc.Topic = topic;
-        // (attachableControl.transform as RectTransform).localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         this.controls.Add(topic, attachableControl);
     }

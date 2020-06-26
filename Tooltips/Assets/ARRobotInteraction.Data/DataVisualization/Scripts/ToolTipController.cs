@@ -22,11 +22,6 @@ public class ToolTipController : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-
-    }
-
     public void TaskShow()
     {
         //Output this to console when Button1 or Button3 is clicked
