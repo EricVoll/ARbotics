@@ -62,6 +62,10 @@ crashlytics-build.properties
 Microsoft.MixedReality*
 MixedRealityToolkit
 MixedRealityToolkit*
+Holokit_Related_SpatialMapping/
+*/Holokit_Related_SpatialMapping/
+MRTK/
+MRTK.meta
 
 Assets/Urdf/
 Assets/Urdf/Models/
