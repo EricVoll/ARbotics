@@ -46,6 +46,6 @@ public class SubscribeEndeffectorPublishState : Subscriber<RosSharp.RosBridgeCli
         valueChangedCallBack?.Invoke(message.data);
     }
     protected override void Start() {
-        RosConnector.Instance.RosSocket.Subscribe<RosSharp.RosBridgeClient.Messages.Standard.Int32>(Topic, ReceiveMessage, (int)(TimeStep * 1000)); // the rate(in ms in between messages) at which to throttle the topics
+    RosConnector.Instance.RosSocket.Subscribe<RosSharp.RosBridgeClient.Messages.Standard.Int32>(Topic, ReceiveMessage, (int)(TimeStep * 1000)); // the rate(in ms in between messages) at which to throttle the topics
     }
 }

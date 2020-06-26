@@ -1,6 +1,7 @@
 ﻿
 using RosSharp.RosBridgeClient;
 using RosSharp.Urdf;
+using RosSharp.Urdf.Attachables;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -76,6 +77,12 @@ public class UrdfSyncher
         ReportSynch();
 
         Robot robot = Robot.FromContent(urdf);
+
+        foreach(var c in robot.attachedComponents) {
+            if(c.component is AttachedDataValue av && String.IsNullOrEmpty(av.topic)) {
+                av.topic = "/img/joint_position";
+            }
+        }
 
 
         if (!hasUrdfAssetsImported)

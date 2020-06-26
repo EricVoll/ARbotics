@@ -52,61 +52,82 @@ public class AttachablesManager : Singleton<AttachablesManager> {
     }
 
     public void Subscribe(string topic, GameObject parent) {
-        Debug.Log($"Subscribing {parent.name} to topic {topic}");
-        //this.paneControl.Add(topic);
+        if (!this.attachables.ContainsKey(topic)) {
+            Debug.Log($"Subscribing {parent.name} to topic {topic}");
+            //this.paneControl.Add(topic);
 
 
-        var visuals = parent.transform.Find("Visuals");
-        if(visuals != null) {
-            var c = visuals.GetComponentsInChildren<Renderer>();
-            parent = c[0].gameObject;
-        };
+            var visuals = parent.transform.Find("Visuals");
+            if (visuals != null) {
+                var c = visuals.GetComponentsInChildren<Renderer>();
+                parent = c[0].gameObject;
+            };
 
-        //foreach (var render in r) {
-        //    render.material = activeMaterial;
-        //}
+            //foreach (var render in r) {
+            //    render.material = activeMaterial;
+            //}
 
 
-        // modify the parent's interactability (collision with the pointer) 
-        parent.GetComponent<Renderer>().material = activeMaterial;
-        NearInteractionTouchable touchable = parent.AddComponent<NearInteractionTouchable>();
-        BoxCollider collider = parent.AddComponent<BoxCollider>();
-        touchable.SetTouchableCollider(collider);
+            // modify the parent's interactability (collision with the pointer) 
+            parent.GetComponent<Renderer>().material = activeMaterial;
+            NearInteractionTouchable touchable = parent.AddComponent<NearInteractionTouchable>();
+            BoxCollider collider = parent.AddComponent<BoxCollider>();
+            touchable.SetTouchableCollider(collider);
 
-        // instanciate an interactable that processes all kinds of events to the respective function.
-        Interactable interactable = attachInteractible(topic, parent);
-        PressableButton button = parent.AddComponent<PressableButton>();
+            // instanciate an interactable that processes all kinds of events to the respective function.
+            Interactable interactable = attachInteractible(topic, parent);
+            PressableButton button = parent.AddComponent<PressableButton>();
 
-        // route physical presses to the interactable
-        PhysicalPressEventRouter physicalEvents = parent.AddComponent<PhysicalPressEventRouter>();
-        physicalEvents.routingTarget = interactable;
+            // route physical presses to the interactable
+            PhysicalPressEventRouter physicalEvents = parent.AddComponent<PhysicalPressEventRouter>();
+            physicalEvents.routingTarget = interactable;
 
-        // create the 3d component
-        GameObject attachable = Instantiate<GameObject>(this.externalPlotPrefab);
+            //PointerHandler ph = parent.AddComponent<PointerHandler>();
+            //new PointerUnityEvent()
+            //ph.OnPointerClicked(() => this.Toggle(topic));
 
-        ToolTipController toolTipController = attachable.GetComponent<ToolTipController>();
-        toolTipController.Topic = topic;
-        var texture = attachable.AddComponent<TextureProvider>();
-        texture.InitRosSource(topic, toolTipController.ImageRenderer);
-        ExternalPlot eplot = attachable.GetComponent<ExternalPlot>();
-        eplot.ToolTipText = topic;
-        eplot.FontSize = 20;
+            // create the 3d component
+            GameObject attachable = Instantiate<GameObject>(this.externalPlotPrefab);
 
-        ExternalPlotConnector con = attachable.GetComponent<ExternalPlotConnector>();
-        con.Target = parent;
-        attachable.transform.SetParent(this.attachablesRoot.transform);
+            ToolTipController toolTipController = attachable.GetComponent<ToolTipController>();
+            toolTipController.Topic = topic;
+            var texture = attachable.AddComponent<TextureProvider>();
+            texture.InitRosSource(topic, toolTipController.ImageRenderer);
+            ExternalPlot eplot = attachable.GetComponent<ExternalPlot>();
+            eplot.ToolTipText = topic;
+            eplot.FontSize = 20;
 
-        Vector3 offset = new Vector3(0.0f, 0.1f, 0.0f);
-        attachable.transform.position = parent.transform.position + offset;
+            ExternalPlotConnector con = attachable.GetComponent<ExternalPlotConnector>();
+            con.Target = parent;
+            attachable.transform.SetParent(this.attachablesRoot.transform);
 
-        // create the reference object
-        AttachableReference aref;
-        aref.attachable = attachable;
-        aref.parent = parent;
-        aref.active = true;
-        aref.following = false;
+            Vector3 offset = new Vector3(0.0f, 0.1f, 0.0f);
+            attachable.transform.position = parent.transform.position + offset;
 
-        this.attachables.Add(topic, aref);
+            // create the reference object
+            AttachableReference aref;
+            aref.attachable = attachable;
+            aref.parent = parent;
+            aref.active = true;
+            aref.following = false;
+
+            this.attachables.Add(topic, aref);
+        } else {
+            this.Show(topic);
+        }
+    }
+
+    public bool ShouldCreate(string topic) => !attachables.ContainsKey(topic);
+
+
+    public void ReapplyMaterials() {
+        foreach (var aref in attachables.Values) {
+            if  (aref.active) {
+                aref.parent.GetComponent<Renderer>().material = activeMaterial;
+            } else { 
+                aref.parent.GetComponent<Renderer>().material = inactiveMaterial;
+            }
+        }
     }
 
     private Interactable attachInteractible(string topic, GameObject parent) {

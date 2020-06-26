@@ -74,8 +74,7 @@ namespace ARCommander
                 }
 
                 //try
-                //{
-                    currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
+                currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
                 //}
                 //catch (Exception ex)
                 //{
@@ -84,7 +83,6 @@ namespace ARCommander
                 //}
             }
 
-            return;
             for (int i = currentSceneDicionary.Values.Count - 1; i >= 0; i--)
             {
                 var currentInstance = currentSceneDicionary.Values.ElementAt(i);
@@ -95,6 +93,8 @@ namespace ARCommander
                     currentSceneDicionary.Remove(currentKey);
                 }
             }
+
+            AttachablesManager.Instance.ReapplyMaterials();
         }
 
 

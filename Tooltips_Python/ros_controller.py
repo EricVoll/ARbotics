@@ -5,6 +5,7 @@ import time
 import logging
 import threading
 import json
+import logging
 
 
 
@@ -23,9 +24,9 @@ class DebugReceiver:
   def rec_handler(self, message):
     try:
       debug_msg = json.loads(message['data'])
-      print('Heard talking: ' + debug_msg['content'])
+      logging.info('Heard talking: ' + debug_msg['content'])
     except Exception:
-      print('ERROR: ' + str(message))
+      logging.info('ERROR: ' + str(message))
 
 
 
