@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace ARRobotInteraction.Base
 {
+    /// <summary>
+    /// Handles the synchronization life-cycle of a Robot GameObject with its URDF Counterpart
+    /// </summary>
     public class UrdfSyncher
     {
 
@@ -38,13 +41,14 @@ namespace ARRobotInteraction.Base
         /// <param name="sceneContainerObject">The gameobject which should be used to contain this robot</param>
         /// <param name="robotName">The name of the robot instance</param>
         /// <param name="recreateObjectAfterSynchronizations">A counter that specifies after how many urdf synchronizations a complete rebuild should be performed</param>
-        public UrdfSyncher(GameObject sceneContainerObject, RosConnector rosConnector, string robotName, GameObject robotPrefab, int recreateObjectAfterSynchronizations = -1)
+        public UrdfSyncher(GameObject sceneContainerObject, RosConnector rosConnector, string robotName, GameObject robotPrefab, int recreateObjectAfterSynchronizations = -1, bool useUnityPhysics = false)
         {
             RosConnector = rosConnector;
             SceneContainerGameObject = sceneContainerObject;
             synchronizationCounterMax = recreateObjectAfterSynchronizations;
             RobotName = robotName;
             RobotPrefab = robotPrefab;
+            this.useUnityPhysics = useUnityPhysics;
         }
 
         public RosConnector RosConnector;
@@ -65,10 +69,9 @@ namespace ARRobotInteraction.Base
 
         private bool hasUrdfAssetsImported = false;
 
-        private string assetsRootDirectoryName;
-
         private int synchronizationCounterWithoutFullRegeneration = 0;
         private int synchronizationCounterMax = -1;
+        private bool useUnityPhysics;
 
         /// <summary>
         /// Compares the current devices in the scene with the urdf file and performs adjustments
@@ -96,8 +99,6 @@ namespace ARRobotInteraction.Base
             }
 
             //we do not return here since we want to apply any possible changes that were passed in the last urdf update.
-            //the imported downloads the urdf from the file_server so it might be an old version.
-            //If there are no changes to be made - even better.
 
             RobotBuilder builder = new RobotBuilder();
             builder.Synchronize(robot, RobotRootObject);
@@ -122,10 +123,13 @@ namespace ARRobotInteraction.Base
             RobotBuilder builder = new RobotBuilder();
             builder.Synchronize(robot, RobotRootObject);
 
+            if (!useUnityPhysics)
+            {
+                foreach (Rigidbody rb in RobotRootObject.GetComponentsInChildren<Rigidbody>())
+                    rb.isKinematic = true;
+            }
 
-            foreach (Rigidbody rb in RobotRootObject.GetComponentsInChildren<Rigidbody>())
-                rb.isKinematic = true;
-
+            //Attach a joint state subscriber that subscribes all joints to the state published by Gazebo or another source
             RosConnector.gameObject.AddComponentIfNotExists<JointStateSubscriber>(out var jointStateSubscriber);
 
             jointStateSubscriber.Topic = @"/joint_states";
@@ -149,6 +153,9 @@ namespace ARRobotInteraction.Base
             hasUrdfAssetsImported = true;
         }
 
+        /// <summary>
+        /// If drift errors occurr in the system (e.g. by Unity physics etc.) this method forces a re-import after a number of updates
+        /// </summary>
         private void ReportSynch()
         {
             if (synchronizationCounterMax == -1) return;
@@ -162,7 +169,9 @@ namespace ARRobotInteraction.Base
         }
 
 
-
+        /// <summary>
+        /// Destroys everything managed by this instance
+        /// </summary>
         internal void Destroy()
         {
             GameObject.Destroy(RobotRootObject);

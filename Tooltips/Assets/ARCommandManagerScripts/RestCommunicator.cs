@@ -8,21 +8,20 @@ using UnityEngine.Networking;
 namespace ARRobotInteraction.Base
 {
 
-
+    /// <summary>
+    /// The RestCommunicator handles all the REST request to the REST API and provides some untiliy functions
+    /// </summary>
     public class RestCommunicator : MonoBehaviour
     {
-
+        /// <summary>
+        /// The URL that will be used to send the requests to
+        /// </summary>
         public string RestServerUrl = "http://127.17.0.1:5000/";
 
         public enum RequestUrl
         {
             AvailableComponents,
             Instances
-        };
-        public enum RequestType
-        {
-            Get,
-            Post
         };
 
         Dictionary<RequestUrl, string> RestUrl;
@@ -60,10 +59,10 @@ namespace ARRobotInteraction.Base
         }
 
         /// <summary>
-        /// Sends 
+        /// Sends a Get-Request to the specified url without a body and calls the callback after completion
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="requestObject"></param>
+        /// <param name="callBack">The callback called after completion with the return json deserialized into <typeparamref name="T"/></param>
         /// <returns></returns>
         public void SendGetRequest<T>(RequestUrl url, Action<T> callBack)
         {
@@ -74,10 +73,11 @@ namespace ARRobotInteraction.Base
 
 
         /// <summary>
-        /// Sends 
+        /// Sends a Post-Request to the specified url and calls the optional callback after completion.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="requestObject"></param>
+        /// <param name="callBack">An optional callback called after completion with the parameter being a boolean that indicates whether or not the request succeeded</param>
+        /// <param name="url">The url to send the request to</param>
+        /// <param name="requestObject">An optional object that is serialized and sent as a json body with the request</param>
         /// <returns></returns>
         public void SendPostRequest(RequestUrl url, Action<bool> callBack = null, object requestObject = null)
         {

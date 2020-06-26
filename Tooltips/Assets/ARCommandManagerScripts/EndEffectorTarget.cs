@@ -17,7 +17,7 @@ namespace ARRobotInteraction.Base
 
         private float lastPublish;
 
-        // Start is called before the first frame update
+
         void Start()
         {
             publisher = RosConnector.Instance.gameObject.AddComponent<EndEffectorTargetPublisher>();

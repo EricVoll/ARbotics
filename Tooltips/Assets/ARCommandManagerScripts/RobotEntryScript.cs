@@ -8,9 +8,11 @@ using UnityEngine.UI;
 
 namespace ARRobotInteraction.Base
 {
+    /// <summary>
+    /// An entry in the available components list.
+    /// </summary>
     public class RobotEntryScript : MonoBehaviour
     {
-
         public void Init(string robName, Action<string> spawnCallBack)
         {
             this.GetComponentInChildren<Text>().text = robName;

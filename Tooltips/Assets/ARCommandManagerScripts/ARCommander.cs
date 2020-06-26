@@ -24,6 +24,13 @@ namespace ARRobotInteraction.Base
             Application.logMessageReceived += Application_logMessageReceived;
         }
 
+        /// <summary>
+        /// Hook into Unity's Logs
+        /// Called whenever an Log or Error is printed to Debug Console
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="stackTrace"></param>
+        /// <param name="type"></param>
         private void Application_logMessageReceived(string condition, string stackTrace, LogType type)
         {
             if (publishDebugLogsViaRos)
@@ -60,7 +67,11 @@ namespace ARRobotInteraction.Base
             ReceiveMessage(FilterList(allRunningInstances, (x) => x.comp.pretty_name));
         }
 
-        public void ReceiveMessage(RunningInstance[] runningInstances)
+        /// <summary>
+        /// Interprets the received list and spawns / destroys instances of robots
+        /// </summary>
+        /// <param name="runningInstances">Instances of robots that should be synchronized with the scene</param>
+        private void ReceiveMessage(RunningInstance[] runningInstances)
         {
 #if DEBUG
             Debug.Log($"Recevied {runningInstances.Length} filtered instances");
@@ -74,16 +85,10 @@ namespace ARRobotInteraction.Base
                     currentSceneDicionary[instance.inst.inst_id] = syncher;
                 }
 
-                //try
                 currentSceneDicionary[instance.inst.inst_id].SynchUrdf(instance.inst.urdf_dyn);
-                //}
-                //catch (Exception ex)
-                //{
-                //    Debug.LogError("Robot Synchronization failed! " + ex.Message);
-                //    Debug.LogError(ex.StackTrace);
-                //}
             }
 
+            //Destroy components that are not present anymore
             for (int i = currentSceneDicionary.Values.Count - 1; i >= 0; i--)
             {
                 var currentInstance = currentSceneDicionary.Values.ElementAt(i);
@@ -98,52 +103,32 @@ namespace ARRobotInteraction.Base
             AttachablesManager.Instance.ReapplyMaterials();
         }
 
-
-        ARCommandAvailableComponentResponse currentResponse;
-
+        /// <summary>
+        /// Fetch the available components from the REST-API-Endpoint and display them to the user
+        /// with the option of spawning robots
+        /// </summary>
         private void InitializeAvailableComponents()
         {
-            this.GetComponent<RestCommunicator>().RequestAvailableRobots(ProcessResponse);
-        }
+            Action<bool> RobotSpawnSuccessPrinter = (bool success) => Debug.Log($"The Robot request {(success ? "succeeded" : "failed")}!");
 
-        private void ProcessResponse(ARCommandAvailableComponentResponse res)
-        {
-            foreach (var item in res.components)
+            Action<ARCommandAvailableComponentResponse> ProcessAvailableComponentsResponse = (ARCommandAvailableComponentResponse res) =>
             {
-                Debug.Log(item.pretty_name);
-            }
+                UIHandler?.ShowRobots(
+                    res.components.Select(x => x.pretty_name).ToList(),
+                    (name) => this.GetComponent<RestCommunicator>().RequestNewComponentIntsance(name, RobotSpawnSuccessPrinter)
+                    );
+            };
 
-            UIHandler?.ShowRobots(res.components.Select(x => x.pretty_name).ToList(), SpawnRobot);
+            this.GetComponent<RestCommunicator>().RequestAvailableRobots(ProcessAvailableComponentsResponse);
         }
 
-        private void SpawnRobot(string name)
-        {
-            this.GetComponent<RestCommunicator>().RequestNewComponentIntsance(name, RobotAdded);
-        }
-
-        private void RobotAdded(bool success)
-        {
-            if (success)
-                Debug.Log("Robot request succeeded!");
-            else
-                Debug.Log("Robot request failed!");
-        }
-
-        //This should not be necessary in the long run.
-        private void RequestRunningIntsances()
-        {
-            this.GetComponent<RestCommunicator>().SendGetRequest<RunningInstance[]>(RestCommunicator.RequestUrl.Instances, RunningInstancesReceived);
-        }
-
-        private void RunningInstancesReceived(RunningInstance[] instances)
-        {
-            ReceiveUnfilteredMessage(instances);
-        }
-
-        private T[] FilterList<T>(List<T> inputList, Func<T, string> name_selector)
-        {
-            return FilterList<T>(inputList.ToArray(), name_selector);
-        }
+        /// <summary>
+        /// Filters the incoming instances list and removes un-spawnable robots
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inputArray"></param>
+        /// <param name="name_selector"></param>
+        /// <returns></returns>
         private T[] FilterList<T>(T[] inputArray, Func<T, string> name_selector)
         {
             string[] ignoreNames = new[] { "ros-sharp-com", "UnityCollision" };

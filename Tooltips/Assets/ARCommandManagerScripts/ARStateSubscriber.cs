@@ -19,7 +19,7 @@ namespace ARRobotInteraction.Base
         {
             if (!Enabled) return;
 
-            //filter unchanged strings
+            //filter unchanged strings to avoid unnecessary updates
             if (lastMsg == str.data && !ForceUpdateOnce)
                 return;
 
