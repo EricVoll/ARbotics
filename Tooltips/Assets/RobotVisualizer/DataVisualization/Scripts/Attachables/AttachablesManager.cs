@@ -38,6 +38,7 @@ public class AttachablesManager : Singleton<AttachablesManager> {
         this.attachablesRoot = new GameObject("Attachables");
         this.attachablesRoot.transform.SetParent(transform);
 
+        if(attachablePane != null)
         this.paneControl = this.attachablePane.GetComponent<AttachablePaneController>();
         // StartCoroutine(ManagerUpdateLoop());
     }

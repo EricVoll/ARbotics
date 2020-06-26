@@ -95,28 +95,25 @@ public class CameraMesh : MonoBehaviour
 					}
 
 
-						if (Physics.Raycast(Camera.transform.position, dir, out hit))
-							{
-								//GLDebug.DrawLine(Camera.transform.position, dir, Color.red, 0, true);
-								DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "red");
-						//		GLDebug.DrawRay(Camera.transform.position, hit.point, Color.green, 0, true);
-						//		GLDebug.DrawRay(hit.point, dir, Color.red, 0, true);
-
+					if (Physics.Linecast(Camera.transform.position, dir, out hit)) {
+						//GLDebug.DrawLine(Camera.transform.position, dir, Color.red, 0, true);
+						DrawScript.DrawLineTRC(Camera.transform.position, hit.point, 0.02f, "green");
+						DrawScript.DrawLineTRC(hit.point, dir, 0.02f, "red");
 					}
+					else
+					{
+						if (i == 0)
+						{
+							//GLDebug.DrawLine(Camera.transform.position, dir, Color.black, 0, true);
+							DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "blue");
+						}
 						else
 						{
-							if (i == 0)
-							{
-								//GLDebug.DrawLine(Camera.transform.position, dir, Color.black, 0, true);
-								DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "blue");
-						}
-							else
-							{
-								//GLDebug.DrawLine(Camera.transform.position, dir, Color.green, 0, true);
-								DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "green");
-						}
+							//GLDebug.DrawLine(Camera.transform.position, dir, Color.green, 0, true);
+							DrawScript.DrawLineTRC(Camera.transform.position, dir, 0.02f, "green");
 						}
 					}
+				}
 			}
 		}
 	} // end RaySweep

@@ -42,7 +42,11 @@ namespace ARRobotInteraction.Base
             UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
 
             UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
-        }
+        
 
+            foreach(var child in rootObject.GetComponentsInChildren<Transform>()) {
+                child.gameObject.tag = "Robot";
+            }
+        }
     }
 }

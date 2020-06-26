@@ -3,7 +3,25 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Rays
+  - Occlusion
+  - NearClipSlider
+  - Projection
+  - SensorType
+  - FoV
+  - FocalLength
+  - Depth
+  - PhysicalProperties
+  - FarClipSlider
+  - MainCanvas
+  - PointCloudBase
+  - Lidar
+  - pSystem
+  - AngleOfVision
+  - SightDepth
+  - Robot
+  - MMenu
   layers:
   - Default
   - TransparentFX

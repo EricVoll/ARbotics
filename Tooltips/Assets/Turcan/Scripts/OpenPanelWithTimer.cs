@@ -8,7 +8,7 @@ public class OpenPanelWithTimer : MonoBehaviour //, IPointerEnterHandler, IPoint
     // Start is called before the first frame update
     public GameObject Obj;
     public GameObject depthBacking;
-    public static float TimeToWait=2.5f;
+    public static float TimeToWait=5.0f;
     public static bool IsHovering = false;
     //float countdownLength = 1.0f;
     //private void Update()

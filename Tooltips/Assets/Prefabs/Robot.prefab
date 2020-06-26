@@ -224,7 +224,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deee0fcd91fb23e41855248ac1a2666d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RelativeTransformation: {fileID: 7475532212237106533}
   Topic: /euclidean_goal_pose
   Publish: 0
 --- !u!114 &6240348694215419762
@@ -275,7 +274,7 @@ GameObject:
   - component: {fileID: 1069857089957386947}
   m_Layer: 0
   m_Name: Robot
-  m_TagString: Untagged
+  m_TagString: Robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
