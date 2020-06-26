@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 public class RestCommunicator : MonoBehaviour {
-    public TextAsset GetAvailableComponentsTestResponse;
 
     public string RestServerUrl = "http://127.17.0.1:5000/";
 
