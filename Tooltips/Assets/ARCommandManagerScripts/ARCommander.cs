@@ -7,13 +7,14 @@ using System.Linq;
 using UnityEngine;
 
 
-namespace ARCommander
+namespace ARRobotInteraction.Base
 {
     public class ARCommander : MonoBehaviour
     {
         public void Awake()
         {
-            RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
+            if (UIHandler != null)
+                RosSharp.Output.SetHandlers(UIHandler.ShowText, UIHandler.ShowError);
             UrdfSyncher.InitializeUrdfSyncher();
         }
 

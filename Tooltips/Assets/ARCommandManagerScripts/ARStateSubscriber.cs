@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RosSharp.RosBridgeClient
+
+namespace ARRobotInteraction.Base
 {
-    [RequireComponent(typeof(RosConnector))]
-    public class ARStateSubscriber : Subscriber<RosSharp.RosBridgeClient.Messages.Standard.String>
+    [RequireComponent(typeof(RosSharp.RosBridgeClient.RosConnector))]
+    public class ARStateSubscriber : RosSharp.RosBridgeClient.Subscriber<RosSharp.RosBridgeClient.Messages.Standard.String>
     {
         string lastMsg = "";
-        public ARCommander.ARCommander ArCommander;
+        public ARCommander ArCommander;
 
         public bool Enabled = true;
         public bool ForceUpdateOnce = false;

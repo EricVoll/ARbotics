@@ -3,27 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EndEffectorTargetPublisher : Publisher<RosSharp.RosBridgeClient.Messages.Geometry.Pose>
+namespace ARRobotInteraction.Base
 {
-    public void Publish(Vector3 position, Quaternion orientation)
+    public class EndEffectorTargetPublisher : Publisher<RosSharp.RosBridgeClient.Messages.Geometry.Pose>
     {
-        //var q = new Vector3(0,-90,0) * orientation
-        var m = new RosSharp.RosBridgeClient.Messages.Geometry.Pose()
+        public void Publish(Vector3 position, Quaternion orientation)
         {
-            position = new RosSharp.RosBridgeClient.Messages.Geometry.Point()
+            //var q = new Vector3(0,-90,0) * orientation
+            var m = new RosSharp.RosBridgeClient.Messages.Geometry.Pose()
             {
-                x = position.x,
-                y = position.y,
-                z = position.z
-            },
-            orientation = new RosSharp.RosBridgeClient.Messages.Geometry.Quaternion()
-            {
-                w = orientation.w,
-                x = orientation.x,
-                y = orientation.y,
-                z = orientation.z
-            }
-        };
-        Publish(m);
+                position = new RosSharp.RosBridgeClient.Messages.Geometry.Point()
+                {
+                    x = position.x,
+                    y = position.y,
+                    z = position.z
+                },
+                orientation = new RosSharp.RosBridgeClient.Messages.Geometry.Quaternion()
+                {
+                    w = orientation.w,
+                    x = orientation.x,
+                    y = orientation.y,
+                    z = orientation.z
+                }
+            };
+            Publish(m);
+        }
     }
 }

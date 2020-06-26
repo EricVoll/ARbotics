@@ -4,37 +4,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIHandler : MonoBehaviour
+
+namespace ARRobotInteraction.Base
 {
-    public GameObject robUIPrefab;
-    public GameObject robUIContainer;
-    public GameObject logContainer;
-
-    public GameObject logPrefab;
-    public GameObject errorPrefab;
-
-    public void ShowRobots(List<string> names, Action<string> spawnCallBack)
+    public class UIHandler : MonoBehaviour
     {
-        foreach (var robotName in names)
+        public GameObject robUIPrefab;
+        public GameObject robUIContainer;
+        public GameObject logContainer;
+
+        public GameObject logPrefab;
+        public GameObject errorPrefab;
+
+        public void ShowRobots(List<string> names, Action<string> spawnCallBack)
         {
-            GameObject go = Instantiate(robUIPrefab);
-            go.GetComponent<RobotEntryScript>().Init(robotName, spawnCallBack);
-            go.transform.SetParent(robUIContainer.transform);
+            foreach (var robotName in names)
+            {
+                GameObject go = Instantiate(robUIPrefab);
+                go.GetComponent<RobotEntryScript>().Init(robotName, spawnCallBack);
+                go.transform.SetParent(robUIContainer.transform);
+            }
         }
-    }
 
-    int logCounter = 0;
-    public void ShowText(string text)
-    {
-        GameObject log = GameObject.Instantiate(logPrefab);
-        log.GetComponent<Text>().text = logCounter++ + text;
-        log.transform.SetParent(logContainer.transform);
+        int logCounter = 0;
+        public void ShowText(string text)
+        {
+            GameObject log = GameObject.Instantiate(logPrefab);
+            log.GetComponent<Text>().text = logCounter++ + text;
+            log.transform.SetParent(logContainer.transform);
+        }
+        public void ShowError(string text)
+        {
+            GameObject log = GameObject.Instantiate(errorPrefab);
+            log.GetComponent<Text>().text = logCounter++ + text;
+            log.transform.SetParent(logContainer.transform);
+        }
+
     }
-    public void ShowError(string text)
-    {
-        GameObject log = GameObject.Instantiate(errorPrefab);
-        log.GetComponent<Text>().text = logCounter++ + text;
-        log.transform.SetParent(logContainer.transform);
-    }
-    
 }

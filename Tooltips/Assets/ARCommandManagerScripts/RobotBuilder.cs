@@ -20,26 +20,29 @@ using RosSharp.Urdf;
 using RosSharp.Urdf.Editor;
 using UnityEngine;
 
-public class RobotBuilder
+namespace ARRobotInteraction.Base
 {
-    public RobotBuilder()
+    public class RobotBuilder
     {
-        AttachedDataSynchronizer.Instance.ShouldCreate = AttachablesManager.Instance.ShouldCreate;
-        AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
-        AttachedDataSynchronizer.Instance.DestroyCallBack = AttachablesManager.Instance.Unsubscribe;
+        public RobotBuilder()
+        {
+            AttachedDataSynchronizer.Instance.ShouldCreate = AttachablesManager.Instance.ShouldCreate;
+            AttachedDataSynchronizer.Instance.CreateCallBack = AttachablesManager.Instance.Subscribe;
+            AttachedDataSynchronizer.Instance.DestroyCallBack = AttachablesManager.Instance.Unsubscribe;
+        }
+
+        public void Synchronize(Robot robot, GameObject rootObject)
+        {
+            LocateAssetHandler.SetRobotName(robot.name);
+
+            GameObject robotGameObject = rootObject;
+
+            robotGameObject.AddComponentIfNotExists<UrdfRobot>();
+
+            UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
+
+            UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
+        }
+
     }
-
-    public void Synchronize(Robot robot, GameObject rootObject)
-    {
-        LocateAssetHandler.SetRobotName(robot.name);
-
-        GameObject robotGameObject = rootObject;
-
-        robotGameObject.AddComponentIfNotExists<UrdfRobot>();
-        
-        UrdfPlugins.Synchronize(robotGameObject.transform, robot.plugins);
-
-        UrdfLinkExtensions.Synchronize(robotGameObject.transform, robot.root);
-    }
-
 }

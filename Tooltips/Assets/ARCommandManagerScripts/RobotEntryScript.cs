@@ -4,19 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RobotEntryScript : MonoBehaviour
+
+
+namespace ARRobotInteraction.Base
 {
-    
-    public void Init(string robName, Action<string> spawnCallBack)
+    public class RobotEntryScript : MonoBehaviour
     {
-        this.GetComponentInChildren<Text>().text = robName;
-        SpawnCallBack = spawnCallBack;
-        PrettyName = robName;
-    }
-    public Action<string> SpawnCallBack;
-    public string PrettyName { get; set; }
-    public void SpawnRobot()
-    {
-        SpawnCallBack(PrettyName);
+
+        public void Init(string robName, Action<string> spawnCallBack)
+        {
+            this.GetComponentInChildren<Text>().text = robName;
+            SpawnCallBack = spawnCallBack;
+            PrettyName = robName;
+        }
+        public Action<string> SpawnCallBack;
+        public string PrettyName { get; set; }
+        public void SpawnRobot()
+        {
+            SpawnCallBack(PrettyName);
+        }
     }
 }
