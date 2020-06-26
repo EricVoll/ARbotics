@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using RobotVisualizer;
+using ARRobotInteraction.Data;
 using RosSharp.Urdf;
 using RosSharp.Urdf.Editor;
 using UnityEngine;
