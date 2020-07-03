@@ -16,15 +16,24 @@ coloredlogs.install(level='WARNING')
 
 from flask import Flask
 from flask_restful import Resource, Api
+from flask_cors import CORS
 
 import signal
 import time
 import sys
 
 if __name__ == '__main__':
+	config = {
+		'ORIGINS': [
+			'*'
+		],
 
+		'SECRET_KEY': '...'
+	}
 	try:
 		app = Flask(__name__)
+		CORS(app, resources={ r'/*': {'origins': config['ORIGINS']}}, supports_credentials=False)
+
 		stop_signal = False
 
 		api = Api(app)

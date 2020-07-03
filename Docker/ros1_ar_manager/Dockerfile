@@ -9,8 +9,9 @@ RUN apt-get install -y python3-pip
 RUN pip3 install rospkg catkin_pkg docker
 RUN pip3 install dataclasses dataclasses-json PyYaml
  
-RUN pip3 install flask_restful APScheduler coloredlogs
+RUN pip3 install flask_restful APScheduler coloredlogs 
+RUN pip3 install -U flask-cors
 RUN echo "HELLO"
 #block using cache
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+#ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN git clone -b ros_docker_dev https://github.com/luchspeter/3D_Vision_AR_RobotVis.git
