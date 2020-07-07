@@ -1,0 +1,16 @@
+{
+    "name": "ARRobotInteraction.Sensor",
+    "references": [
+        "GUID:9737ade946268224d8fbd8162286d37d",
+        "GUID:8b7cc3e86d77403b8b984c08cbaeaf8f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
