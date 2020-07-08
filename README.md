@@ -1,13 +1,17 @@
 # ARbotics
 A soft real-time interactive simulation and visualization framework in AR for robotic systems based on ROS
+This project allows you to integrate Augmented Reality / Mixed Reality (AR/MR) applications in your ROS based robotic system easily. 
+It provides functionalities for an easy setup and configuration, utilizes commonly used tools and standards (urdf files, etc.) and is easily extendable.
 
 (Wiki is in the works currently)
 
+## Architecture:
+
 ![](project_overview.png)
-# AR-Manager Overview
+## AR-Manager Overview
 ![](OverviewARManagerREST.svg)
 
-## Starting the AR-Manager:
+### Starting the AR-Manager:
 1. Build all containers and start everything:
 
 ```
@@ -29,7 +33,7 @@ python /home/catkin_ws/src/universal_robot/ur_rossharp/ur5_demo_script.py"
 ```
 
 
-## REST-API
+### REST-API
 At first have a look at [client implementation](https://github.com/luchspeter/3D_Vision_AR_RobotVis/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
 
 To test REST_API use google chrome plug in ```Advanced REST```
