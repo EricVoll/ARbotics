@@ -1,4 +1,8 @@
-# 3D_Vision_AR_RobotVis
+# ARbotics
+A soft real-time interactive simulation and visualization framework in AR for robotic systems based on ROS
+
+(Wiki is in the works currently)
+
 ![](project_overview.png)
 # AR-Manager Overview
 ![](OverviewARManagerREST.svg)
