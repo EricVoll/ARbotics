@@ -242,8 +242,8 @@ class Server():
 				inst.update_urdf_dyn(data)
 				return inst.get_data()
 
-		logging.warning("id not found")
-		raise ValueError("Invalid inst_id. No instance in self._instances with the given ID was found")
+		logging.warning(f'ID {inst_id} not found')
+		raise ValueError(f'Invalid inst_id. No instance in self._instances with ID {inst_id} found')
 		
 	def add_comps(self,cfg,store=False):
 		"""Adding a new component to the available components of the Server
@@ -359,7 +359,8 @@ def cfg_to_comps(cfg_file, docker_client):
 	elif isinstance(cfg_file, list):
 		data = cfg_file
 	else:
-		logging.error('invalid cfg type')
+		logging.error('Invalid configuration type provided. Given configuration is not added.')
+		return
 	
 	comps = []
 	for single_cfg in data:

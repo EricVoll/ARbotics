@@ -1,11 +1,9 @@
 FROM ros1_base:latest
 
+# Install offical universal_robot ros package
 RUN sudo apt-get install -y apt-utils
 RUN mkdir -p /home/catkin_ws/src
-
 RUN cd /home/catkin_ws/src/ && git clone -b $ROS_DISTRO-devel https://github.com/ros-industrial/universal_robot.git 
-
-
 RUN source /opt/ros/melodic/setup.bash && \
 		cd /home/catkin_ws/ && rosdep update && \
 		rosdep install --rosdistro $ROS_DISTRO --ignore-src --from-paths src -y && \

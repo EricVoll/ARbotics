@@ -89,7 +89,7 @@ python /home/catkin_ws/src/universal_robot/ur_rossharp/ur5_demo_script.py"
 
 
 ## REST-API
-At first have a look at [client implementation](https://github.com/luchspeter/ARbotics/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
+At first have a look at [client implementation](https://github.com/EricVoll/ARbotics/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
 
 To test REST_API use google chrome plug in ```Advanced REST```
 **http://127.17.0.1:5000**
@@ -208,3 +208,121 @@ Includes the bridge to Unity.
 Docker and ROS Tutorial: https://link.springer.com/chapter/10.1007/978-3-319-54927-9_9
 
 
+
+```
+
+
+** dns (list) ** – Set custom DNS servers.
+dns_opt (list) – Additional options to be added to the container’s resolv.conf file.
+dns_search (list) – DNS search domains.
+domainname (str or list) – Set custom DNS search domains.
+entrypoint (str or list) – The entrypoint for the container.
+environment (dict or list) – Environment variables to set inside the container, as a dictionary or a list of strings in the format ["SOMEVARIABLE=xxx"].
+extra_hosts (dict) – Additional hostnames to resolve inside the container, as a mapping of hostname to IP address.
+group_add (list) – List of additional group names and/or IDs that the container process will run as.
+healthcheck (dict) – Specify a test to perform to check that the container is healthy.
+hostname (str) – Optional hostname for the container.
+init (bool) – Run an init inside the container that forwards signals and reaps processes
+init_path (str) – Path to the docker-init binary
+ipc_mode (str) – Set the IPC mode for the container.
+isolation (str) – Isolation technology to use. Default: None.
+kernel_memory (int or str) – Kernel memory limit
+labels (dict or list) – A dictionary of name-value labels (e.g. {"label1": "value1", "label2": "value2"}) or a list of names of labels to set with empty values (e.g. ["label1", "label2"])
+links (dict) – Mapping of links using the {'container': 'alias'} format. The alias is optional. Containers declared in this dict will be linked to the new container using the provided alias. Default: None.
+log_config (LogConfig) – Logging configuration.
+lxc_conf (dict) – LXC config.
+mac_address (str) – MAC address to assign to the container.
+mem_limit (int or str) – Memory limit. Accepts float values (which represent the memory limit of the created container in bytes) or a string with a units identification char (100000b, 1000k, 128m, 1g). If a string is specified without a units character, bytes are assumed as an intended unit.
+mem_reservation (int or str) – Memory soft limit.
+mem_swappiness (int) – Tune a container’s memory swappiness behavior. Accepts number between 0 and 100.
+memswap_limit (str or int) – Maximum amount of memory + swap a container is allowed to consume.
+mounts (list) – Specification for mounts to be added to the container. More powerful alternative to volumes. Each item in the list is expected to be a docker.types.Mount object.
+name (str) – The name for this container.
+nano_cpus (int) – CPU quota in units of 1e-9 CPUs.
+network (str) – Name of the network this container will be connected to at creation time. You can connect to additional networks using Network.connect(). Incompatible with network_mode.
+network_disabled (bool) – Disable networking.
+network_mode (str) –
+One of:
+
+bridge Create a new network stack for the container on on the bridge network.
+none No networking for this container.
+container:<name|id> Reuse another container’s network stack.
+host Use the host network stack.
+Incompatible with network.
+
+oom_kill_disable (bool) – Whether to disable OOM killer.
+oom_score_adj (int) – An integer value containing the score given to the container in order to tune OOM killer preferences.
+pid_mode (str) – If set to host, use the host PID namespace inside the container.
+pids_limit (int) – Tune a container’s pids limit. Set -1 for unlimited.
+platform (str) – Platform in the format os[/arch[/variant]]. Only used if the method needs to pull the requested image.
+ports (dict) –
+Ports to bind inside the container.
+
+The keys of the dictionary are the ports to bind inside the container, either as an integer or a string in the form port/protocol, where the protocol is either tcp, udp, or sctp.
+
+The values of the dictionary are the corresponding ports to open on the host, which can be either:
+
+The port number, as an integer. For example, {'2222/tcp': 3333} will expose port 2222 inside the container as port 3333 on the host.
+None, to assign a random host port. For example, {'2222/tcp': None}.
+A tuple of (address, port) if you want to specify the host interface. For example, {'1111/tcp': ('127.0.0.1', 1111)}.
+A list of integers, if you want to bind multiple host ports to a single container port. For example, {'1111/tcp': [1234, 4567]}.
+privileged (bool) – Give extended privileges to this container.
+publish_all_ports (bool) – Publish all ports to the host.
+read_only (bool) – Mount the container’s root filesystem as read only.
+remove (bool) – Remove the container when it has finished running. Default: False.
+restart_policy (dict) –
+Restart the container when it exits. Configured as a dictionary with keys:
+
+Name One of on-failure, or always.
+MaximumRetryCount Number of times to restart the container on failure.
+For example: {"Name": "on-failure", "MaximumRetryCount": 5}
+
+runtime (str) – Runtime to use with this container.
+security_opt (list) – A list of string values to customize labels for MLS systems, such as SELinux.
+shm_size (str or int) – Size of /dev/shm (e.g. 1G).
+stdin_open (bool) – Keep STDIN open even if not attached.
+stdout (bool) – Return logs from STDOUT when detach=False. Default: True.
+stderr (bool) – Return logs from STDERR when detach=False. Default: False.
+stop_signal (str) – The stop signal to use to stop the container (e.g. SIGINT).
+storage_opt (dict) – Storage driver options per container as a key-value mapping.
+stream (bool) – If true and detach is false, return a log generator instead of a string. Ignored if detach is true. Default: False.
+sysctls (dict) – Kernel parameters to set in the container.
+tmpfs (dict) –
+Temporary filesystems to mount, as a dictionary mapping a path inside the container to options for that path.
+
+For example:
+
+{
+    '/mnt/vol2': '',
+    '/mnt/vol1': 'size=3G,uid=1000'
+}
+tty (bool) – Allocate a pseudo-TTY.
+ulimits (list) – Ulimits to set inside the container, as a list of docker.types.Ulimit instances.
+use_config_proxy (bool) – If True, and if the docker client configuration file (~/.docker/config.json by default) contains a proxy configuration, the corresponding environment variables will be set in the container being built.
+user (str or int) – Username or UID to run commands as inside the container.
+userns_mode (str) – Sets the user namespace mode for the container when user namespace remapping option is enabled. Supported values are: host
+uts_mode (str) – Sets the UTS namespace mode for the container. Supported values are: host
+version (str) – The version of the API to use. Set to auto to automatically detect the server’s version. Default: 1.35
+volume_driver (str) – The name of a volume driver/plugin.
+volumes (dict or list) –
+A dictionary to configure volumes mounted inside the container. The key is either the host path or a volume name, and the value is a dictionary with the keys:
+
+bind The path to mount the volume inside the container
+mode Either rw to mount the volume read/write, or ro to mount it read-only.
+For example:
+
+{'/home/user1/': {'bind': '/mnt/vol2', 'mode': 'rw'},
+ '/var/www': {'bind': '/mnt/vol1', 'mode': 'ro'}}
+volumes_from (list) – List of container names or IDs to get volumes from.
+working_dir (str) – Path to the working directory.
+Returns:	
+The container logs, either STDOUT, STDERR, or both, depending on the value of the stdout and stderr arguments.
+
+STDOUT and STDERR may be read only if either json-file or journald logging driver used. Thus, if you are using none of these drivers, a None object is returned instead. See the Engine API documentation for full details.
+
+If detach is True, a Container object is returned instead.
+
+Raises:	
+docker.errors.ContainerError – If the container exits with a non-zero exit code and detach is False.
+docker.errors.ImageNotFound – If the specified image does not exist.
+docker.errors.APIError – If the server returns an error.

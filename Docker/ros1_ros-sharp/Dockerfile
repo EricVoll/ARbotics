@@ -9,7 +9,7 @@ RUN source /opt/ros/melodic/setup.bash && \
 RUN apt-get -y install ros-melodic-rosbridge-server 
 RUN source /home/ros-sharp_ws/devel/setup.bash
 
-RUN cd /home/ && git clone -b ros_docker_dev https://github.com/luchspeter/ARbotics.git
+RUN cd /home/ && git clone -b ros_docker_dev https://github.com/EricVoll/ARbotics.git
 RUN mv /home/ARbotics/ROS/file_server /home/ros-sharp_ws/src
 RUN rm -r -f /home/ARbotics
 

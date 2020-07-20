@@ -72,7 +72,7 @@ services:
     ports:
       - "5001:8080"
     volumes:
-      - "/home/jonas/Documents/Repos/ARbotics/Docker/swagger_config:/foo"
+      - "./swagger_config:/foo"
     environment:
      - SWAGGER_JSON=/foo/AR-Manager_swagger_cfg.json
 
