@@ -15,11 +15,11 @@ This project was originally started as a lecture project at ETH in cooperation w
 # List of external Libraries
 | Library  | Description  | usage  | licence
 |---|---|---|---|
-| [Ros#](https://github.com/siemens/ros-sharp) | .NET ROS for Hololens | modified | Apache 2.0 license | 
-| [MRTK](https://github.com/Microsoft/MixedRealityToolkit-Unity) | Hololens Toolkit | dependency |
-| [ROS](https://www.ros.org/) | Robot Operating System |dependency |
-| [roslibpy](https://roslibpy.readthedocs.io/en/latest/) | Python ROS library |dependency |
-| [MoveIt](https://moveit.ros.org/) | Path Planning | dependency |
-| [Gazebo](http://gazebosim.org/) | Robot Simulation | dependency |
-| [Docker](https://www.docker.com/) | Containerization | dependency |
-| [docker-py](https://docker-py.readthedocs.io/en/stable/index.html) | Python Docker API | dependency |
+| [Ros#](https://github.com/siemens/ros-sharp) | .NET ROS for Hololens | modified | Apache 2.0 | 
+| [MRTK](https://github.com/Microsoft/MixedRealityToolkit-Unity) | Hololens Toolkit | dependency | MIT
+| [ROS](https://www.ros.org/) | Robot Operating System |dependency | BSD |
+| [roslibpy](https://roslibpy.readthedocs.io/en/latest/) | Python ROS library |dependency | MIT |
+| [MoveIt](https://moveit.ros.org/) | Path Planning | dependency | BSD 3.0
+| [Gazebo](http://gazebosim.org/) | Robot Simulation | dependency | Apache 2.0 | 
+| [Docker](https://www.docker.com/) | Containerization | dependency | Apache 2.0 |
+| [docker-py](https://docker-py.readthedocs.io/en/stable/index.html) | Python Docker API | dependency | Apache 2.0 |
