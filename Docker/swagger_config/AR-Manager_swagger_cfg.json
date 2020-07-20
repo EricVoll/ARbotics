@@ -18,7 +18,7 @@
   "tags": [
     {
       "name": "AvailComps",
-      "description": "Availalble Components"
+      "description": "Available Components"
     },
     {
       "name": "Instances",
@@ -34,12 +34,12 @@
         "tags": [
           "AvailComps"
         ],
-        "summary": "Add new available component config to server",
+        "summary": "Register new available component to AR-Manager",
         "parameters": [
           {
             "in": "body",
-            "name": "robot",
-            "description": "The user to create.",
+            "name": "Component",
+            "description": "Component to be registered to server",
             "schema": {
               "$ref": "#/definitions/ros_comp"
             }
@@ -60,7 +60,7 @@
         "tags": [
           "AvailComps"
         ],
-        "summary": "Get AvailComponents",
+        "summary": "Get components",
         "description": "",
         "operationId": "getAvailComps",
         "responses": {
@@ -135,7 +135,7 @@
         "parameters": [
           {
             "in": "body",
-            "name": "body",
+            "name": "Component name",
             "description": "Component to start",
             "required": true,
             "schema": {
@@ -234,7 +234,7 @@
         "tags": [
           "Instances"
         ],
-        "summary": "Update URDF of Instance",
+        "summary": "Update URDF of instance",
         "description": "",
         "consumes": [
           "application/json",
@@ -254,9 +254,9 @@
             "format": "int32"
           },
           {
-            "name": "body",
+            "name": "URDF",
             "in": "body",
-            "description": "Component to start",
+            "description": "String serialized URDF",
             "required": true,
             "schema": {
               "$ref": "#/definitions/urdf"
@@ -280,7 +280,7 @@
         }
       },
       "example": {
-        "data": "updated urdf file costum xml-tags"
+        "data": "string serialized URDF with custom xml-tags"
       }
     },
     "start_comp": {
@@ -351,8 +351,8 @@
             "max_instances": 10,
             "pretty_name": "UR6",
             "urdf": {
-              "dyn": "nice_udrf",
-              "stat": "nive_urdf_stat"
+              "dyn": "example urdf with custom urdf tags",
+              "stat": "example urdf"
             }
           }
         ]
