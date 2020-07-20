@@ -67,7 +67,7 @@
         "requestBody": {
           "description": "Component to be registered to server",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ros_comp"
               }
@@ -156,7 +156,7 @@
         "requestBody": {
           "description": "Component to start",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/start_comp"
               }
