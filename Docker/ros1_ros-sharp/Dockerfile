@@ -1,3 +1,5 @@
+# Communication container including rosbridge 
+# exposes ROS network via WebSockets useing rosbridge
 FROM ros1_base:latest
 
 RUN mkdir -p /home/ros-sharp_ws/src
@@ -7,9 +9,9 @@ RUN source /opt/ros/melodic/setup.bash && \
 RUN apt-get -y install ros-melodic-rosbridge-server 
 RUN source /home/ros-sharp_ws/devel/setup.bash
 
-RUN cd /home/ && git clone -b ros_docker_dev https://github.com/luchspeter/3D_Vision_AR_RobotVis.git
-RUN mv /home/3D_Vision_AR_RobotVis/ROS/file_server /home/ros-sharp_ws/src
-RUN rm -r -f /home/3D_Vision_AR_RobotVis
+RUN cd /home/ && git clone -b ros_docker_dev https://github.com/luchspeter/ARbotics.git
+RUN mv /home/ARbotics/ROS/file_server /home/ros-sharp_ws/src
+RUN rm -r -f /home/ARbotics
 
 RUN source /opt/ros/melodic/setup.bash && \
 		source /home/ros-sharp_ws/devel/setup.bash && \
@@ -20,6 +22,4 @@ RUN apt-get update
 RUN apt install -y python3-pip
 RUN apt-get install -y python-pip 
 RUN pip install autobahn tornado bson pymongo pillow
-RUN echo "HELLO"
-RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc
 RUN echo 'source /home/ros-sharp_ws/devel/setup.bash' >> ~/.bashrc 

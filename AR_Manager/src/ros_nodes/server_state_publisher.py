@@ -4,7 +4,7 @@ from std_msgs.msg import String
 import json
 
 def shutdown_hook():
-  print ("Closes ARServerStatePublisher Node")
+  print("Closes ARServerStatePublisher Node")
 
 class ARServerStatePublisher():
 	"""ARServerStatePublisher publishes initalizes ar_state_publisher ros node.
@@ -34,9 +34,9 @@ class ARServerStatePublisher():
 				dict must contain <data> key entry"
 		"""
 		if not isinstance(data, dict):
-			raise TypeError("data is not a dict")
+			raise TypeError("Data is not a dict")
 		if not ( 'data' in data.keys() ):
-			raise ValueError("dict must contain <data> key entry")
+			raise ValueError("Dict must contain <data> key entry")
 		
 		#pass by string #serialization could also be done by protobuff
 		json_mylist = json.dumps(data, separators=(',', ':'))	

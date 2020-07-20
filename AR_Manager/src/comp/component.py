@@ -187,7 +187,7 @@ class Component(ABC):
 		if self._aci.instances > 0: 
 			self._aci.instances -= 1
 		else:
-			logging.error('Confirmed closed instance but no instances is running')
+			logging.error('Received confirmation of a closed instance but no instances is running')
 
 	def add_instance(self):
 		self._aci.instances += 1
@@ -258,10 +258,9 @@ class RosComponent(Component):
 		"""		
 		super(RosComponent, self).start()
 		self._rci.docker['command']= '''bash -c '%s' '''%self._rci.docker['command']
-		print('START ROS CONTAINER')
-		print(self._rci.docker['image'], self._rci.docker['network'],self._rci.docker['ports'], self._rci.docker['volumes'] )
+		#print(self._rci.docker['image'], self._rci.docker['network'],self._rci.docker['ports'], self._rci.docker['volumes'] )
 		container = self.docker_client.containers.run(** self._rci.docker)
-		print('executed docker run got container:', container)
+		#print('executed docker run got container:', container)
 		
 		return container 
 

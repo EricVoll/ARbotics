@@ -1,0 +1,400 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The AR-Manager contains a configuration for components and instances. If a components is started the AR-Manger automatically creates an instance of the specified component. An component can be defined via a Docker Container or Unity Script. This allows to dynamically start and stop containers in an ordered manner and allows mutiple clients to manipulate the state of the system. Components can be additionally configured during runtime. Instances can also be changed dynamically by adding costum xml tags to the robot description.",
+    "version": "1.0.0",
+    "title": "AR-Manager REST API-Client",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "jonfrey@ethz.ch"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "127.0.0.1:5000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "AvailComps",
+      "description": "Availalble Components"
+    },
+    {
+      "name": "Instances",
+      "description": "Running instances of components"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/AvailComps": {
+      "post": {
+        "tags": [
+          "AvailComps"
+        ],
+        "summary": "Add new available component config to server",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "robot",
+            "description": "The user to create.",
+            "schema": {
+              "$ref": "#/definitions/ros_comp"
+            }
+          }
+        ],
+        "description": "",
+        "operationId": "postAvailCops",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "AvailComps"
+        ],
+        "summary": "Get AvailComponents",
+        "description": "",
+        "operationId": "getAvailComps",
+        "responses": {
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/AvailComps/{name}": {
+      "get": {
+        "tags": [
+          "AvailComps"
+        ],
+        "summary": "Get component by name",
+        "description": "Returns the specified component",
+        "operationId": "getAvailComp",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Pretty name of the component",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Component not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "AvailComps"
+        ],
+        "summary": "Delete component by name",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "deleteAvailComp",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Pretty name of the component",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Component not found"
+          }
+        }
+      }
+    },
+    "/Instances": {
+      "post": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Start new instance of component",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Component to start",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/start_comp"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Stop all instances",
+        "description": "",
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get all running instances",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/Instances/{inst_id}": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Get instance by id",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "inst_id",
+            "in": "path",
+            "description": "ID of the instance",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Stop instance by name",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "inst_id",
+            "in": "path",
+            "description": "ID of the instance",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/Instances/{inst_id}/inst/urdf": {
+      "post": {
+        "tags": [
+          "Instances"
+        ],
+        "summary": "Update URDF of Instance",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "inst_id",
+            "in": "path",
+            "description": "ID of the instance",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Component to start",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/urdf"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "urdf": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "data": "updated urdf file costum xml-tags"
+      }
+    },
+    "start_comp": {
+      "type": "object",
+      "properties": {
+        "comp_name": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "comp_name": "UR5"
+      }
+    },
+    "ros_comp": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "comp_type": {
+              "type": "string",
+              "default": "ros"
+            },
+            "docker": {
+              "type": "object"
+            },
+            "max_instances": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "pretty_name": {
+              "type": "string"
+            },
+            "urdf": {
+              "type": "object",
+              "properties": {
+                "dyn": {
+                  "type": "string"
+                },
+                "stat": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "example": {
+        "components": [
+          {
+            "comp_type": "ros",
+            "docker": {
+              "command": "roslaunch ur6 ur6_gazebo",
+              "detach": true,
+              "environment": [
+                "ROS_MASTER_URI=http://ros1_base:11311"
+              ],
+              "image": "ros1_ur6",
+              "network": "docker_rosnet",
+              "ports": null,
+              "volumes": {
+                "docker_MeshVolume": {
+                  "bind": "/home/Mesh",
+                  "mode": "rw"
+                }
+              }
+            },
+            "max_instances": 10,
+            "pretty_name": "UR6",
+            "urdf": {
+              "dyn": "nice_udrf",
+              "stat": "nive_urdf_stat"
+            }
+          }
+        ]
+      }
+    },
+    "unity_comp": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "comp_type": {
+              "type": "string",
+              "default": "unity"
+            },
+            "max_instances": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "pretty_name": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "example": {
+        "components": [
+          {
+            "comp_type": "unity",
+            "max_instances": 1,
+            "pretty_name": "Lidar4D",
+            "urdf": {
+              "dyn": "nice_udrf",
+              "stat": "nicer_urdf_stat"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about our framework",
+    "url": "https://github.com/luchspeter/ARbotics"
+  }
+}
