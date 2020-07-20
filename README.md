@@ -22,3 +22,4 @@ This project was originally started as a lecture project at ETH in cooperation w
 | [MoveIt](https://moveit.ros.org/) | Path Planning | dependency |
 | [Gazebo](http://gazebosim.org/) | Robot Simulation | dependency |
 | [Docker](https://www.docker.com/) | Containerization | dependency |
+| [docker-py](https://docker-py.readthedocs.io/en/stable/index.html) | Python Docker API | dependency |
