@@ -272,6 +272,7 @@ def menu(fps):
 	print(''.ljust(l,'-') + '+'.ljust(l2,'-')+'+')
 
 t_start = time.time()
+time.sleep(1)
 while ros.is_connected:
 
 	#menu and fps
