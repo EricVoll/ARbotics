@@ -4,7 +4,6 @@ import roslibpy
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 import math
-import requests
 import json
 from pynput.keyboard import Key, Listener
 from rest_keyboard_interface import RestKeyboardListener

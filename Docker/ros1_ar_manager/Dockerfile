@@ -15,4 +15,4 @@ RUN pip3 install -U flask-cors
 
 # Blocks using cache to always repull the repository 
 RUN echo "HELLO"
-RUN git clone -b ros_docker_dev https://github.com/EricVoll/ARbotics.git
+RUN git clone https://github.com/EricVoll/ARbotics.git
