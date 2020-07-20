@@ -13,7 +13,7 @@ It provides functionalities for an easy setup and configuration, utilizes common
 This project was originally started as a lecture project at ETH in cooperation with Microsoft Mixed Reality and AI Lab Zürich.
 
 # List of external Libraries
-| Library  | Description  | usage  | licence
+| Library  | Description  | Usage  | Licence
 |---|---|---|---|
 | [Ros#](https://github.com/siemens/ros-sharp) | .NET ROS for Hololens | modified | Apache 2.0 | 
 | [MRTK](https://github.com/Microsoft/MixedRealityToolkit-Unity) | Hololens Toolkit | dependency | MIT
