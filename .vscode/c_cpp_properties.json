@@ -1,22 +1,27 @@
 {
-  "configurations": [
-    {
-      "browse": {
-        "databaseFilename": "",
-        "limitSymbolsToIncludedHeaders": true
-      },
-      "includePath": [
-        "/home/jonas/Documents/catkin_ws/devel/include/**",
-        "/opt/ros/melodic/include/**",
-        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_control/include/**",
-        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_example_controllers/include/**",
-        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_gripper/include/**",
-        "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_hw/include/**",
-        "/home/jonas/Documents/catkin_ws/src/test_moveit_interface/include/**",
-        "/home/jonas/Documents/catkin_ws/src/universal_robot/ur_kinematics/include/**",
-        "/usr/include/**"
-      ],
-      "name": "ROS"
-    }
-  ]
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/jonas/Documents/catkin_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_control/include/**",
+                "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_example_controllers/include/**",
+                "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_gripper/include/**",
+                "/home/jonas/Documents/catkin_ws/src/franka_ros/franka_hw/include/**",
+                "/home/jonas/Documents/catkin_ws/src/test_moveit_interface/include/**",
+                "/home/jonas/Documents/catkin_ws/src/universal_robot/ur_kinematics/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "msvc-x64",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
 }
