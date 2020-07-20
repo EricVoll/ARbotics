@@ -4,8 +4,8 @@ from scipy.spatial.transform import Rotation as R
 import yaml 
 
 
-ip ='http://vservice-host-001.chera.ch' #127.0.0.1
-ip_ros ='vservice-host-001.chera.ch' 
+ip ='http://127.0.0.1' #127.0.0.1
+ip_ros ='127.0.0.1' 
 port_rest = 5000
 port_rossharp = 9090
 

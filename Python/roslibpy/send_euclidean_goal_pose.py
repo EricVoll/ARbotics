@@ -11,7 +11,6 @@ from rest_keyboard_interface import RestKeyboardListener
 
 import base64
 import matplotlib
-#from matplotlib import plt
 import matplotlib.pyplot as plt
 from math import pi
 import queue
@@ -21,8 +20,8 @@ from PIL import Image
 import numpy
 
 
-ip ='http://vservice-host-001.chera.ch' #127.0.0.1
-ip_ros ='vservice-host-001.chera.ch' 
+ip ='http://127.0.0.1' #127.0.0.1
+ip_ros ='127.0.0.1' 
 port_rest = 5000
 port_rossharp = 9090
  
@@ -68,39 +67,21 @@ class Plot ():
 		self.fig_joint.canvas.flush_events()
 
 	def image_png(self):
-		#im = fig2img(self.fig_joint)
+
 		def fig2rgb_array(fig):
 			buf = self.fig_joint.canvas.tostring_rgb() 
 			return np.fromstring(buf, dtype=np.uint8).reshape(self.h, self.w, 3)
 
-		#print(self.fig_joint.canvas.get_width_height())
 		buf = fig2rgb_array(self.fig_joint)
-
 		im = Image.fromarray(buf)
-		#im.show()
-		#print(self.fig_joint.canvas.get_width_height())
-		#im = Image.frombytes('RGB', self.fig_joint.canvas.get_width_height(),self.fig_joint.canvas.tostring_rgb())
 		img = BytesIO()
 		im.save(img, "PNG")
-		#plt.savefig(img, format='png', dpi=50,quality=1)
-		#img.seek(0)
 		return img
 
 
 class PlotSub ():
 	def __init__(self, line_cfgs):
-		"""
-		provide a list of line_namessub
-		plot(2,1,1)
-		xticks([]), yticks([])
-		title('subplot(2,1,1)')
-		plot(t,s)
 
-		subplot(2,1,2)
-		xticks([]), yticks([])
-		title('subplot(2,1,2)')
-		plot(t,s,'r-')
-		"""
 		self.fig_joint = plt.figure(dpi=50)
 		self.ax_joint = []
 		self.lines = []
@@ -169,7 +150,7 @@ def create_Pose(t,xyz):
 	return { 'position': {'x':t[0], 'y':t[1], 'z':t[2]} , 'orientation':{'x':q[0] ,'y':q[1],'z':q[2],'w':q[3] } }
 
 def create_Img(data):
-	"""creates ros compatible img
+	"""Creates ROS compatible
 	Parameters
 	----------
 	data : numpy.array
@@ -209,15 +190,6 @@ def create_ModelState(data):
 		'reference_frame':reference_frame
 	}
 
-   
-ros = roslibpy.Ros(host=ip_ros, port= port_rossharp)
-ros.run()
-xyz = []
-
-talker = roslibpy.Topic(ros, '/euclidean_goal_pose', 'geometry_msgs/Pose')
-talker_img_joint_position = roslibpy.Topic(ros, '/img/joint_position', 'String')
-talker_img_tooltip_position = roslibpy.Topic(ros, '/img/tool_position', 'String')
-
 def monitor_topic(topic,ros,size):
 	lis = roslibpy.Topic(ros, topic,  ros.get_topic_type(topic))
 	inp = [queue.Queue(maxsize=size)]
@@ -228,28 +200,11 @@ def monitor_topic(topic,ros,size):
 			inp[0].put(message['position'])
 		
 		if  'twist' in message.keys():
-			lin = message['twist'][6][linear]
+			lin = message['twist'][6]['linear']
 			inp[0].put([lin['x'],lin['y'],lin['z']])
 	
 	lis.subscribe( partial(cb_topic, inp = inp) )
 	return inp
-
-
-length = 100
-
-scene_data = monitor_topic('/gazebo/link_states',ros,length)
-joint_data = monitor_topic('/joint_states',ros,length)
-
-joint_position_plot = Plot([{'name':'JointAngle-0','color':'r'} ,{'name':'JointAngle','color':'b'}])
-tool_position_plot = PlotSub([{'name':'X-Tool','color':'r','ylabel':'Meter'} ,
-											{'name':'Y-Tool','color':'g','ylabel':'Meter'} ,
-											{'name':'Z-Tool','color':'b','ylabel':'Meter'}])
-
-
-i = 0
-amp = 0.4
-keylis = RestKeyboardListener(ip_adr=ip, port_rest=str(port_rest),ros=ros )
-keylis.listener.start()
 
 def menu(fps):
 	os.system('cls' if os.name == 'nt' else 'clear')
@@ -271,46 +226,75 @@ def menu(fps):
 
 	print(''.ljust(l,'-') + '+'.ljust(l2,'-')+'+')
 
-t_start = time.time()
-while ros.is_connected:
+if __name__ == "__main__":
+		
+	ros = roslibpy.Ros(host=ip_ros, port= port_rossharp)
+	ros.run()
+	xyz = []
 
-	#menu and fps
-	fps= 1/(time.time()-t_start)
-	menu(fps)
+	talker = roslibpy.Topic(ros, '/euclidean_goal_pose', 'geometry_msgs/Pose')
+	talker_img_joint_position = roslibpy.Topic(ros, '/img/joint_position', 'String')
+	talker_img_tooltip_position = roslibpy.Topic(ros, '/img/tool_position', 'String')
+
+	length = 100
+	scene_data = monitor_topic('/gazebo/link_states',ros,length)
+	joint_data = monitor_topic('/joint_states',ros,length)
+
+	joint_position_plot = Plot([{'name':'JointAngle-0','color':'r'} ,{'name':'JointAngle','color':'b'}])
+	tool_position_plot = PlotSub([{'name':'X-Tool','color':'r','ylabel':'Meter'} ,
+												{'name':'Y-Tool','color':'g','ylabel':'Meter'} ,
+												{'name':'Z-Tool','color':'b','ylabel':'Meter'}])
+
+	i = 0
+	amp = 0.4
+	keylis = RestKeyboardListener(ip_adr=ip, port_rest=str(port_rest),ros=ros )
+	keylis.listener.start()
+
 	t_start = time.time()
-	
+	time.sleep(1)
 
-	#plotting
-	jp_list = np.array(list(joint_data[0].queue))
-	y1 = jp_list[:,0].tolist()
-	y2 = jp_list[:,1].tolist()
-	x1 =  range(0,len(y1))
 
-	link_list = np.array(list(joint_data[0].queue))
-	y3 = link_list[:,0].tolist()
-	y4 = link_list[:,1].tolist()
-	y5 = link_list[:,2].tolist()
-	x2 =  range(0,len(y3))
+	while ros.is_connected:
+		try:
+			# menu and fps
+			fps= 1/(time.time()-t_start)
+			menu(fps)
+			t_start = time.time()
+			
+			# plotting
+			jp_list = np.array(list(joint_data[0].queue))
+			y1 = jp_list[:,0].tolist()
+			y2 = jp_list[:,1].tolist()
+			x1 =  range(0,len(y1))
 
-	if keylis.t_status == False:
-		random_col = np.random.randint(0,255)
-		i += pi/4
-		xyz = [math.sin(i)*amp,math.sin(i)*amp,math.sin(i)*amp]
-		msg =  create_Pose( xyz, [0,0,0] ) 
-		talker.publish(roslibpy.Message( msg ) )
-	
-	joint_position_plot.update(x1, [y1,y2])
-	tool_position_plot.update(x2, [y3,y4,y5])
+			link_list = np.array(list(joint_data[0].queue))
+			y3 = link_list[:,0].tolist()
+			y4 = link_list[:,1].tolist()
+			y5 = link_list[:,2].tolist()
+			x2 =  range(0,len(y3))
 
-	img = joint_position_plot.image_png()
-	img3 = tool_position_plot.image_png()
+			if keylis.t_status == False:
+				random_col = np.random.randint(0,255)
+				i += pi/4
+				xyz = [math.sin(i)*amp,math.sin(i)*amp,math.sin(i)*amp]
+				msg =  create_Pose( xyz, [0,0,0] ) 
+				talker.publish(roslibpy.Message( msg ) )
+			
+			joint_position_plot.update(x1, [y1,y2])
+			tool_position_plot.update(x2, [y3,y4,y5])
 
-	msg = base64_string(img)
-	msg2 = base64_string(img3)
-	
-	talker_img_joint_position.publish(  roslibpy.Message( msg ) )
-	talker_img_tooltip_position.publish(  roslibpy.Message( msg2 ) )
-	time.sleep(0.01)
+			img = joint_position_plot.image_png()
+			img3 = tool_position_plot.image_png()
 
-talker.unadvertise()
-ros.terminate()
+			msg = base64_string(img)
+			msg2 = base64_string(img3)
+			
+			talker_img_joint_position.publish(  roslibpy.Message( msg ) )
+			talker_img_tooltip_position.publish(  roslibpy.Message( msg2 ) )
+			time.sleep(0.01)
+		except:
+			print('Error while plotting and publishing data')
+
+	talker.unadvertise()
+
+	ros.terminate()
