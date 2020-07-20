@@ -36,7 +36,7 @@ get(ip+'AvailComps/UR3')
 input("GET: AvailInstances")
 get(ip+'Instances')
 
-wd = '/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/AR_Manager/src/'
+wd = '/home/jonas/Documents/Repos/ARbotics/AR_Manager/src/'
 with open('src/client/two_avail_comps.json') as json_file:
 	data = json.load(json_file)
 	

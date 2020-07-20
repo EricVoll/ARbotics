@@ -63,7 +63,7 @@ services:
       - "/bin/bash" 
       - "-c" 
       - "source /opt/ros/melodic/setup.bash && \
-        cd /home/3D_Vision_AR_RobotVis/AR_Manager && \
+        cd /home/ARbotics/AR_Manager && \
         python3 src/main.py"
         
   swagger_server:
@@ -72,7 +72,7 @@ services:
     ports:
       - "5001:8080"
     volumes:
-      - "/home/jonas/Documents/Repos/3D_Vision_AR_RobotVis/Docker/swagger_config:/foo"
+      - "/home/jonas/Documents/Repos/ARbotics/Docker/swagger_config:/foo"
     environment:
      - SWAGGER_JSON=/foo/AR-Manager_swagger_cfg.json
 

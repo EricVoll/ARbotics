@@ -1,13 +1,76 @@
-# 3D_Vision_AR_RobotVis
+# ARbotics
+
+
+
+
 ![](project_overview.png)
-# AR-Manager Overview
+## Docker Overview
+We provide multiple Docker Images in ```Docker``` showing the full functionality of our framework.
+
+### Provided Images Overview 
+- **ros1_base:** Base ROS1 Image to create costume container running Ubuntu 18.04LTS and ROS1 Melodic
+- **ros1_ros-sharp:** Exposes Docker Network via ROSBridge
+- **ros1_ar_manager:** Responsible for managing containers.  
+- **swagger_server:** REST-API Documentation. Offers example REST-Client WebInterface
+- **ros1_anymal:** Anymal ROS-package
+- **ros1_ur:** Universal Robot ROS-package
+
+The **ros1_base** image can be used to create custom docker images with ROS code tailored to your specific needs of the user.
+An example extension of the **ros1_base** can be found under ```ROS1/ros1_ur```
+Additionally a ```Docker/docker-compose.yml``` is provided to start the complete example system and build all related containers.
+
+### Creating Custom Docker Images
+To run your own ROS code in a Docker container simply create a new Dockerfile. Simply inherit from the **ros1_base** container by including `FROM ros1_base:latest` at the top of the Dockerfile. Afterwards include all command necessary to install your ROS-Code. 
+
+One handy feature that eases Container development is using VisualStudio Codes Docker Plugin. With this you can simply develop inside a container your code with the popular VSCode GUI. Given the isolation between your highly costmized personal developer computer and the docker container you avoid mutiple problems before arising. Additionally you don`t have to worry about incompatitle version or crashing your personal Operating System while developing new features. Here is the offical VSCode Remote container tutorial: https://code.visualstudio.com/docs/remote/containers
+We highly recommend using this or other tools if you ar not absolutly familar with the command line. 
+
+### AR-Manager Getting Started
+The example docker containers are started via:
+```cd Docker && sudo docker compose-up ```
+
+If the images are not build, all images will be build. This might take several minutes.
+After successfully running the command the AR-Manager is ready to accept REST requests to start and stop containers.
+The rest server can be accessed on port 5000 of the local host network.
+By navigating in the Webbrowser of your choice to http://localhost:5002 the Swagger-ui REST-API documentation can be accessed.
+
+### SwaggerUI API-Documentation
+Swagger-ui is an open source project to document REST-APIs. The complete configuration of the Webside is provided by a single json config at ```Docker\swagger_config\AR-Manager_swagger_cfg.json```. 
+We refer the reader to the documentation Swager-ui for further instructions on how to extend this API-Documentation. 
+
+For sending custom REST request without Swagger-UI we recommend using Postman.
+
+#### REST-API 
+The AR_Manager manges components. A component is either of comp_type: [ros, unity]. Each component represents a container that can be instanciated within the docker network offering a specific functionality (robot or sensor) or Unity GameObject for example a simulated camera, or lidar sensor. A component can be started by a REST-POST request. The AR-Manager accepts the request and creats an instance of the given component. This instance can be stopped by a REST-DELETE request. The full functionality of the REST-API can be explored via the provided Swagger-UI Documentation. 
+
+### Configuring new Components
+There are two options available to add register container configrations to the AR_Manger.
+The first option is to adjust the standard configuration file provided in ```AR_Manager/src/cfg/cfg_ros_comp.yml```
+This file is loaded when the AR_Manager is started and therefore contains the base functionality of the ARbotics.
+
+Each component must include the following parameters:
+```
+comp_type: [ros, unity]
+docker: [native docker run python interface] 
+max_instances: [maximum instances allowed to run simultainously]
+pretty_name: [unique pretty front end name for the component]
+urdf: 
+	dyn: [xml of the robot]
+	stat: [xml containg custom tags to define additional information]
+```
+Here the docker parameters offer to include Docker run parameters to the configured container by the native docker python API. 
+All arguments present in the docker run command can be passed as a argument and found here: https://docker-py.readthedocs.io/en/stable/containers.html 
+
+
+
+
 ![](OverviewARManagerREST.svg)
 
 ## Starting the AR-Manager:
 1. Build all containers and start everything:
 
 ```
-cd <PATH>/3D_Vision_AR_RobotVis/Docker/
+cd <PATH>/ARbotics/Docker/
 docker-compose up
 ```
 
@@ -26,7 +89,7 @@ python /home/catkin_ws/src/universal_robot/ur_rossharp/ur5_demo_script.py"
 
 
 ## REST-API
-At first have a look at [client implementation](https://github.com/luchspeter/3D_Vision_AR_RobotVis/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
+At first have a look at [client implementation](https://github.com/luchspeter/ARbotics/blob/ros_docker_dev/AR_Manager/src/client/python_rest_demo.py)
 
 To test REST_API use google chrome plug in ```Advanced REST```
 **http://127.17.0.1:5000**

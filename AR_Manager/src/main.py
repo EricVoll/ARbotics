@@ -80,9 +80,9 @@ if __name__ == '__main__':
 		try:
 			s.start('ros-sharp-com')
 		except ValueError:
-			print("Can`t find ros-shap-com to start automatically")
+			logging.error("Ros-shap-com container not configured. ROS bridge is not running.")
 
 		app.run(debug=False,host='0.0.0.0') 
 
 	except Exception as e:
-		print("ERROR", e)
+		logging.error("AR-Manager Error:", e)
