@@ -23,3 +23,4 @@ This project was originally started as a lecture project at ETH in cooperation w
 | [Gazebo](http://gazebosim.org/) | Robot Simulation | dependency | Apache 2.0 | 
 | [Docker](https://www.docker.com/) | Containerization | dependency | Apache 2.0 |
 | [docker-py](https://docker-py.readthedocs.io/en/stable/index.html) | Python Docker API | dependency | Apache 2.0 |
+| [Lidar-Simulator](https://github.com/ptibom/Lidar-Simulator) | 3D-Lidar Simulator | modified | MIT |
