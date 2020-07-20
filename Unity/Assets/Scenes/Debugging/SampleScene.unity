@@ -685,12 +685,12 @@ PrefabInstance:
     - target: {fileID: 4176953072863468925, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
         type: 3}
       propertyPath: RosBridgeServerUrl
-      value: ws://vservice-host-001.chera.ch:9090
+      value: ws://192.168.70.10:9090
       objectReference: {fileID: 0}
     - target: {fileID: 4176953072863468928, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
         type: 3}
       propertyPath: RestServerUrl
-      value: http://vservice-host-001.chera.ch:5000/
+      value: http://192.168.70.10:5000/
       objectReference: {fileID: 0}
     - target: {fileID: 4176953072863468930, guid: 65fe086d375d1d34888df6e3bd5b1e9e,
         type: 3}
