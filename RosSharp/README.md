@@ -4,7 +4,8 @@
 
 Find some examples what you can do with ROS# [here](https://github.com/siemens/ros-sharp/wiki/Info_Showcases).
 
-## Notes On This Fork ##
+## Notes On this subfolder ##
+This is a copy of the fork of ROS# from [here](https://github.com/EricVoll/ros-sharp)
 ## Change 1: URDF Parsing capabilities ##
 This fork has some changes to allow a broader range of XML-Tags to be imported in the URDF files. The original repository included classes called "Plugins" that were used whenever no matching class was found. This fork allows to define XML-classNames that are mapped into instances of defined classes. Like the main ROS# branch, use 2019.x or later.
 
@@ -57,6 +58,12 @@ The AttachableComponentFactory offers methods to extract all objects that were f
 On the Unity side this fork contains two main features:
 - The code was adjusted to run with multiple robot instances during runtime
 - The code can now synchronize Robots with URDF files, instead of only creating them. This means, that if a URDF file dynamically changes (for example a sensor was attached during the runtime), the new urdf can be passed into the `RobotBuilder` and it adjusts updates the existing GameObject with it.
+
+## Change 3: AOT compilability
+In order to build for the HoloLens using the IL2CPP compiler, all libraries used must be AOT compilable. Even though many aspects of the System.Reflection namespace should not make problems, it did not work in our case. Thus, this repo has all System.Reflection parts removed and the issues were solved in another way.
+
+## Change 4: Unity.Editor Mode
+Alot of the original ROS# repo was written for the Editor mode, which means, that alot of the functionalieties would not work in built and deployed apps. This was fixed here.
 
 ## Original ReadMe:
 #### Installation ### 
