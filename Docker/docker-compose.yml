@@ -20,7 +20,7 @@ services:
 
   ros1_ur:
     depends_on: [ros1_base]
-    image: ros1_ur
+    image: jonasfrey96/ros1_ur:1.0
     container_name: ros1_ur
     networks:
       - rosnet
@@ -34,7 +34,7 @@ services:
 
   ros1_anymal:
     depends_on: [ros1_base]
-    image: ros1_anymal
+    image: jonasfrey96/ros1_anymal:1.0
     container_name: ros1_anymal
     networks:
       - rosnet
